@@ -9,8 +9,8 @@ public class HRservice {
 
     private employeeController empController;
 
-    public HRservice() {
-        this.empController = new employeeController();
+    public HRservice(employeeController employeeController) {
+        this.empController = employeeController;
     }
 
     public String getConstrains(String Id) throws ExecutionControl.NotImplementedException {

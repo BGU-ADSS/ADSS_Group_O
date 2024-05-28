@@ -9,8 +9,8 @@ public class employeeService {
 
     private employeeController empController;
 
-    public employeeService() {
-        empController = new employeeController();
+    public employeeService(employeeController employeeController) {
+        empController = employeeController;
     }
 
     public String addConstrains(String Id, Date day, Enum shift) throws ExecutionControl.NotImplementedException{
