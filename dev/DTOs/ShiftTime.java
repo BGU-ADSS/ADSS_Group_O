@@ -1,5 +1,5 @@
 package DTOs;
 
-public enum Shift {
+public enum ShiftTime {
     Day,Nigth
 }

@@ -4,21 +4,15 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import javax.swing.GroupLayout.Group;
-
-import org.junit.Before;
 import org.junit.Test;
 
 import BuisnessLayer.Controller.*;
 import BuisnessLayer.Workers.*;
 import DTOs.Role;
-import DTOs.Shift;
+import DTOs.ShiftTime;
 import ServiceLayer.HRservice;
 // import jdk.vm.ci.meta.Local;
 import ServiceLayer.employeeService;
@@ -26,7 +20,7 @@ import ServiceLayer.employeeService;
 public class HRserviceTest {
 
     private HRservice hrs;
-    private employeeController empC;
+    private EmployeeController empC;
     private HRManager hrManager;
     private String HRPassword;
     private List<Employee> employees;
@@ -46,7 +40,7 @@ public class HRserviceTest {
         // Manager, Start Date: June 1, 2024, End Date: June 1, 2025
         // Store : Name : lee sheeba , address beer sheeba , Num : 1.
         hrManager = new HRManager(HRPassword);
-        empC = new employeeController(hrManager);
+        empC = new EmployeeController(hrManager);
         employees = getEmployees();
         emS = new employeeService(empC);
         empC.setStoreForTest("lee sheeba", "Beer Sheba", employees.remove(4), employees, 0);
@@ -114,13 +108,13 @@ public class HRserviceTest {
     
     //====================================================== set shift
     private void beforeTest2_1(){
-        emS.addConstrains("1", "1234567", LocalDate.of(2024, 7, 15), Shift.Day);
+        emS.addConstrains("1", "1234567", LocalDate.of(2024, 7, 15), ShiftTime.Day);
     }
 
     @Test
     public void setShiftTest2_1(){
         beforeTest2_1();
-        String JSONresponse = hrs.setShift(LocalDate.of(2024, 7, 15), Shift.Day, "1");
+        String JSONresponse = hrs.setShift(LocalDate.of(2024, 7, 15), ShiftTime.Day, "1");
         //error ? success: fail;
     }
 
