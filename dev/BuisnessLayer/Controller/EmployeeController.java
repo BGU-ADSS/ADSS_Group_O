@@ -1,13 +1,19 @@
 package BuisnessLayer.Controller;
 
+import java.util.Dictionary;
 import java.util.List;
 
 import BuisnessLayer.Workers.Employee;
 import BuisnessLayer.Workers.HRManager;
 
-public class employeeController {
+public class EmployeeController {
 
-    public employeeController(HRManager hrManager) {
+    private Dictionary<Integer, Store> stores;
+    private Dictionary<String, Integer> employeeStore;
+    private HRManager hrManager;
+
+
+    public EmployeeController(HRManager hrManager) {
         //TODO Auto-generated constructor stub
     }
 

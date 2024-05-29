@@ -1,7 +1,7 @@
 #password of the manager
 ManagerPassword <12345678>
 
-#minimal workers in shift:
+#minimal workers in shiftTime:
 MinWorker <1>
 MinCashier <1>
 MinStorekeeper <1>

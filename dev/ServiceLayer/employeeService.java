@@ -1,18 +1,16 @@
 package ServiceLayer;
 
-import BuisnessLayer.Controller.employeeController;
+import BuisnessLayer.Controller.EmployeeController;
 import DTOs.*;
-import jdk.jshell.spi.ExecutionControl;
-import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 
 import java.time.LocalDate;
 import java.util.Date;
 
 public class employeeService {
 
-    private employeeController empController;
+    private EmployeeController empController;
 
-    public employeeService(employeeController employeeController) {
+    public employeeService(EmployeeController employeeController) {
         empController = employeeController;
     }
 
@@ -21,7 +19,7 @@ public class employeeService {
 
     }
 
-    public String addConstrains(String Id,String password, LocalDate localDate, Shift shift) {
+    public String addConstrains(String Id,String password, LocalDate localDate, ShiftTime shiftTime) {
            throw new UnsupportedOperationException("This method is not yet implemented");
     }
 

@@ -1,6 +1,6 @@
 package ServiceLayer;
 
-import BuisnessLayer.Controller.employeeController;
+import BuisnessLayer.Controller.EmployeeController;
 import DTOs.*;
 import jdk.jshell.spi.ExecutionControl;
 
@@ -9,9 +9,9 @@ import java.util.Date;
 
 public class HRservice {
 
-    private employeeController empController;
+    private EmployeeController empController;
 
-    public HRservice(employeeController employeeController) {
+    public HRservice(EmployeeController employeeController) {
         this.empController = employeeController;
     }
 
@@ -19,7 +19,7 @@ public class HRservice {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public String setShift(LocalDate localDate , Shift shift , String emplId)  {
+    public String setShift(LocalDate localDate , ShiftTime shiftTime, String emplId)  {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
@@ -31,7 +31,7 @@ public class HRservice {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public String addBreakDay(Date day, Shift shift)  {
+    public String addBreakDay(Date day, ShiftTime shiftTime)  {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
