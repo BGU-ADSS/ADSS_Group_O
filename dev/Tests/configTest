@@ -1,0 +1,11 @@
+#password of the manager
+ManagerPassword <12345678>
+
+#minimal workers in shift:
+MinWorker <1>
+MinCashier <1>
+MinStorekeeper <1>
+MinShiftManager <1>
+MinGroubManager <1>
+
+#
