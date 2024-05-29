@@ -2,6 +2,7 @@ package ServiceLayer;
 
 import BuisnessLayer.Controller.employeeController;
 import jdk.jshell.spi.ExecutionControl;
+import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 
 import java.util.Date;
 
@@ -13,19 +14,23 @@ public class employeeService {
         empController = employeeController;
     }
 
-    public String addConstrains(String Id, Date day, Enum shift) throws ExecutionControl.NotImplementedException{
+    public String setPassword(String empId,String password) throws NotImplementedException{
         throw new ExecutionControl.NotImplementedException("Not implemented");
     }
 
-    public String addRole(String Id, Enum role) throws ExecutionControl.NotImplementedException{
+    public String addConstrains(String Id,String password, Date day, Enum shift) throws ExecutionControl.NotImplementedException{
         throw new ExecutionControl.NotImplementedException("Not implemented");
     }
 
-    public String removeRole(String Id, Enum role) throws ExecutionControl.NotImplementedException{
+    public String addRole(String Id, String password,Enum role) throws ExecutionControl.NotImplementedException{
         throw new ExecutionControl.NotImplementedException("Not implemented");
     }
 
-    public String terminateJobReq(String Id, Date day) throws ExecutionControl.NotImplementedException{
+    public String removeRole(String Id,String password, Enum role) throws ExecutionControl.NotImplementedException{
+        throw new ExecutionControl.NotImplementedException("Not implemented");
+    }
+
+    public String terminateJobReq(String Id,String password, Date day) throws ExecutionControl.NotImplementedException{
         throw new ExecutionControl.NotImplementedException("Not implemented");
     }
 
@@ -33,11 +38,11 @@ public class employeeService {
         throw new ExecutionControl.NotImplementedException("Not implemented");
     }
 
-    public String setBankAccount(String Id, String newAccount) throws ExecutionControl.NotImplementedException{
+    public String setBankAccount(String Id,String password, String newAccount) throws ExecutionControl.NotImplementedException{
         throw new ExecutionControl.NotImplementedException("Not implemented");
     }
 
-    public String logIn(String Id, String userName) throws ExecutionControl.NotImplementedException{
+    public String logIn(String Id,String password, String userName) throws ExecutionControl.NotImplementedException{
         throw new ExecutionControl.NotImplementedException("Not implemented");
     }
 }
