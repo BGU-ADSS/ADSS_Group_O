@@ -1,6 +1,7 @@
 package ServiceLayer;
 
 import BuisnessLayer.Controller.employeeController;
+import DTOs.*;
 import jdk.jshell.spi.ExecutionControl;
 
 import java.time.LocalDate;
@@ -18,7 +19,7 @@ public class HRservice {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public String setShift(LocalDate localDate , Enum shift , String emplId)  {
+    public String setShift(LocalDate localDate , Shift shift , String emplId)  {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
@@ -30,7 +31,7 @@ public class HRservice {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public String addBreakDay(Date day, Enum shift)  {
+    public String addBreakDay(Date day, Shift shift)  {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 

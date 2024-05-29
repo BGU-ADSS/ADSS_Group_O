@@ -1,6 +1,7 @@
 package ServiceLayer;
 
 import BuisnessLayer.Controller.employeeController;
+import DTOs.*;
 import jdk.jshell.spi.ExecutionControl;
 import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 
@@ -20,15 +21,15 @@ public class employeeService {
 
     }
 
-    public String addConstrains(String Id,String password, LocalDate localDate, Enum shift) {
+    public String addConstrains(String Id,String password, LocalDate localDate, Shift shift) {
            throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public String addRole(String Id, String password,Enum role){
+    public String addRole(String Id, String password, Role role){
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public String removeRole(String Id,String password, Enum role) {
+    public String removeRole(String Id,String password, Role role) {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
