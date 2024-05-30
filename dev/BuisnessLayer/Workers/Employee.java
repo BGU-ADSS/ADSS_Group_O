@@ -22,8 +22,28 @@ public class Employee {
         //TODO Auto-generated constructor stub
     }
 
+    public Employee(String string, String string2, String string3, int i, int j, List<Role> roles1, LocalDate start1,
+            LocalDate end1, int storeNum) {
+        //TODO Auto-generated constructor stub
+    }
+
     public String getID() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getID'");
+    }
+
+    public Object getRolesSize() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getRolesSize'");
+    }
+
+    public Object getName() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getName'");
+    }
+
+    public Object getMounthSalary() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getMounthSalary'");
     }
 }

@@ -19,11 +19,11 @@ public class HRservice {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public String setShift(LocalDate localDate , ShiftTime shiftTime, String emplId)  {
+    public Response setShift(LocalDate localDate , ShiftTime shiftTime, String emplId)  {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public String addEmployee(String emplId , String emplName)  {
+    public Response addEmployee(String emplId , String emplName,String bankAccount,int mounthSalary,Role[] roles,LocalDate startDate,LocalDate endDate,int storeNum)  {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
@@ -43,7 +43,7 @@ public class HRservice {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public String updateSalary(String emplId , int hourSalary , int monthSalary) throws ExecutionControl.NotImplementedException {
+    public Response updateSalary(String emplId , int monthSalary)  {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 }

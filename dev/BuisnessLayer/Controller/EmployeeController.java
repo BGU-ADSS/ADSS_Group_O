@@ -22,6 +22,21 @@ public class EmployeeController {
         throw new UnsupportedOperationException("Unimplemented method 'setStoreForTest'");
     }
 
+    public Employee getEmployee(String string) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getEmployee'");
+    }
+
+    public Dictionary<Integer, Store> getStores() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getStores'");
+    }
+
+    public Store getStore(int i) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getStore'");
+    }
+
 
 
 }
