@@ -2,20 +2,23 @@ package Tests;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-
+// import static DTOs.Errors;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.List;
-
 import org.junit.Test;
 
 import BuisnessLayer.Controller.*;
+import BuisnessLayer.Schedule.Shift;
 import BuisnessLayer.Workers.*;
+import DTOs.Errors;
+import DTOs.Response;
 import DTOs.Role;
 import DTOs.ShiftTime;
 import ServiceLayer.HRservice;
-// import jdk.vm.ci.meta.Local;
 import ServiceLayer.employeeService;
+// import jdk.vm.ci.meta.Local;
 
 public class HRserviceTest {
 
@@ -50,40 +53,41 @@ public class HRserviceTest {
     }
 
     private List<Employee> getEmployees() {
+        int storeNum = 1;
         // one Employee
         LocalDate start1 = LocalDate.of(2024, 6, 1);
         LocalDate end1 = LocalDate.of(2025, 6, 1);
         List<Role> roles1 = new ArrayList<>();
         roles1.add(Role.Cashier);
-        Employee em1 = new Employee("1", "bhaa", "777-55555", 5000, -1, roles1, start1, end1);
+        Employee em1 = new Employee("1", "bhaa", "777-55555", 5000, -1, roles1, start1, end1,storeNum);
 
         // one Employee
         LocalDate start2 = LocalDate.of(2024, 6, 1);
         LocalDate end2 = LocalDate.of(2025, 1, 1);
         List<Role> roles2 = new ArrayList<>();
         roles2.add(Role.GroubManager);
-        Employee em2 = new Employee("2", "ghanem", "777-55556", 5000, -1, roles2, start2, end2);
+        Employee em2 = new Employee("2", "ghanem", "777-55556", 5000, -1, roles2, start2, end2,storeNum);
 
         // one Employee
         LocalDate start3 = LocalDate.of(2024, 6, 1);
         LocalDate end3 = LocalDate.of(2025, 6, 1);
         List<Role> roles3 = new ArrayList<>();
         roles3.add(Role.Storekeeper);
-        Employee em3 = new Employee("3", "rami", "777-55557", 5000, -1, roles3, start3, end3);
+        Employee em3 = new Employee("3", "rami", "777-55557", 5000, -1, roles3, start3, end3,storeNum);
 
         // one Employee
         LocalDate start4 = LocalDate.of(2024, 6, 1);
         LocalDate end4 = LocalDate.of(2024, 7, 1);
         List<Role> roles4 = new ArrayList<>();
         roles4.add(Role.ShiftManager);
-        Employee em4 = new Employee("4", "dahleh", "777-55558", 5000, -1, roles4, start4, end4);
+        Employee em4 = new Employee("4", "dahleh", "777-55558", 5000, -1, roles4, start4, end4,storeNum);
 
         // one Employee
         LocalDate start5 = LocalDate.of(2024, 6, 1);
         LocalDate end5 = LocalDate.of(2025, 6, 1);
         List<Role> roles5 = new ArrayList<>();
         roles5.add(Role.StoreManager);
-        Employee em5 = new Employee("5", "alaoi", "777-55559", 5000, -1, roles5, start5, end5);
+        Employee em5 = new Employee("5", "alaoi", "777-55559", 5000, -1, roles5, start5, end5,storeNum);
 
         List<Employee> employees = new ArrayList<>();
         employees.add(em1);
@@ -113,10 +117,80 @@ public class HRserviceTest {
 
     @Test
     public void setShiftTest2_1(){
+        
         beforeTest2_1();
-        String JSONresponse = hrs.setShift(LocalDate.of(2024, 7, 15), ShiftTime.Day, "1");
-        //error ? success: fail;
+        //String JSONresponse = ;
+        Response res = hrs.setShift(LocalDate.of(2024, 7, 15), ShiftTime.Day, "1");
+        assertEquals(true, res.isErrorOccured());
+        assertEquals(Errors.cantSetShiftDueConstrains, res.getErrorMessage());
+
     }
+
+   
+
+    @Test
+    public void setShiftTest2_2(){
+        Response res = hrs.setShift(LocalDate.of(2024, 7, 15), ShiftTime.Day, "2");
+        assertEquals(false, res.isErrorOccured());
+        assertEquals(true,res.getReturnValue() );
+    }
+    
+
+
+    //========================================= add Employee
+    
+    @Test
+    public void addEmployeeTest2_1Posetive(){
+        Response res = hrs.addEmployee("6","abo elmori","777-5555",5000,new Role[]{Role.Cashier,Role.ShiftManager},LocalDate.now(),LocalDate.of(2025, 6, 1),1);
+        assertEquals(true, res.getReturnValue());
+        checkIfContainsEmployee("6", "abo elmori",true,true );
+    }
+
+    private void checkIfContainsEmployee(String EmpId,String name,Boolean mustExist,Boolean UniqeID){
+        Employee empToTest = empC.getEmployee(EmpId);
+        assertEquals(mustExist||UniqeID, empToTest.getID().equals(EmpId));
+        Store store = empC.getStore(1);
+        Dictionary<String,Employee> storeWorkers = store.getWorkers();
+        assertEquals(mustExist, storeWorkers.get(EmpId)!=null);
+        LocalDate nextWeek = LocalDate.now().plusDays(7);
+        Shift shift = store.getShift(nextWeek,ShiftTime.Day);
+        assertEquals(mustExist, shift.empCanWork(EmpId));
+    }
+
+
+    @Test
+    public void addEmployeeTest2_2Negative(){
+        Response resOfGroubManagerError = hrs.addEmployee("7","omar" , "666-5555", 5000, new Role[]{Role.GroubManager}, LocalDate.now(), LocalDate.of(2025,6, 1),1);
+        assertEquals(true,resOfGroubManagerError.isErrorOccured());
+        assertEquals(true,Errors.cantSetGroubManagerToNewEmployee);
+        checkIfContainsEmployee("7", HRPassword, false,false);
+
+        Response resOfTheSameId = hrs.addEmployee("5","abo elmori","777-5555",5000,new Role[]{Role.Cashier,Role.ShiftManager},LocalDate.now(),LocalDate.of(2025, 6, 1), 1);
+        assertEquals(true,resOfTheSameId.isErrorOccured());
+        assertEquals(true,Errors.cantSetGroubManagerToNewEmployee);
+        checkIfContainsEmployee("7", HRPassword, false,true);
+    }
+
+    //==================================== update salary
+
+    @Test
+    public void updateSalaryTest3Positive(){
+        Response res= hrs.updateSalary("1", 7000);
+        Employee emp = empC.getEmployee("1");
+        assertEquals(true, res.getReturnValue());
+        assertEquals(7000, emp.getMounthSalary());
+    }
+
+    @Test
+    public void updateSalaryTest3Neg(){
+        Response res= hrs.updateSalary("1", -7000);
+        Employee emp = empC.getEmployee("1");
+        assertEquals(false, res.getReturnValue());
+        assertEquals(7000, emp.getMounthSalary());
+        assertEquals(Errors.cantUpdateNegativeSalary, res.getErrorMessage());
+    }
+
+    //=================================== 
 
     
 
