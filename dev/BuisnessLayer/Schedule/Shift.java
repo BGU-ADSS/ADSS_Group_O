@@ -16,4 +16,5 @@ public class Shift {
     private Dictionary<Role, List<Employee>> workersAvailable;
     private Dictionary<Role, Integer> constrainsForRole;
 
+    public void
 }
