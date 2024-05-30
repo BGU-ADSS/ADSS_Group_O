@@ -181,6 +181,18 @@ public class HRserviceTest {
         assertEquals(7000, emp.getMounthSalary());
     }
 
-    
+    @Test
+    public void updateSalaryTest3Neg(){
+        Response res= hrs.updateSalary("1", -7000);
+        Employee emp = empC.getEmployee("1");
+        assertEquals(false, res.getReturnValue());
+        assertEquals(7000, emp.getMounthSalary());
+        assertEquals(Errors.cantUpdateNegativeSalary, res.getErrorMessage());
+    }
+
+
+
+
+    //=================================== 
 
 }

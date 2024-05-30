@@ -23,11 +23,11 @@ public class employeeService {
            throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public String addRole(String Id, String password, Role role){
+    public Response addRole(String Id, String password, Role role){
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public String removeRole(String Id,String password, Role role) {
+    public Response removeRole(String Id,String password, Role role) {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 

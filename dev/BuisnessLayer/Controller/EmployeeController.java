@@ -37,6 +37,11 @@ public class EmployeeController {
         throw new UnsupportedOperationException("Unimplemented method 'getStore'");
     }
 
+    public Object[] getEmployeeRoles(String string) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getEmployeeRoles'");
+    }
+
 
 
 }
