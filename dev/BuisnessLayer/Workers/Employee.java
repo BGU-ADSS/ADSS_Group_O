@@ -14,8 +14,8 @@ public class Employee {
     private int hourSalary;
     private int monthSalary;
     private List<Role> roles;
-    private Date startDate;
-    private Date endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     public Employee(String string, String string2, String string3, int i, int j, List<Role> roles, LocalDate localDate,
                     LocalDate localDate2) {

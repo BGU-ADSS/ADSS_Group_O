@@ -24,4 +24,10 @@ public class Store {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getShift'");
     }
+    public Boolean containsEmp(String empId) {
+        return employees.get(empId)!=null;
+    }
+    public Dictionary<LocalDate, Dictionary<ShiftTime, Boolean>> getAvaliableDayesForEmployee(String empId) {
+        return schedule.getAvaliableDaysForEmployee(empId);
+    }
 }

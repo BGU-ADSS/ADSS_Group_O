@@ -31,15 +31,15 @@ public class HRservice {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public String addBreakDay(Date day, ShiftTime shiftTime)  {
+    public String addBreakDay(LocalDate day, ShiftTime shiftTime)  {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public String addConstrainsDeadline(Date day)  {
+    public String addConstrainsDeadline(LocalDate day)  {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public String getShiftHistory(Date day) throws ExecutionControl.NotImplementedException {
+    public String getShiftHistory(LocalDate day) throws ExecutionControl.NotImplementedException {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 

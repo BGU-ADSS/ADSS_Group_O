@@ -4,13 +4,14 @@ import BuisnessLayer.Workers.Employee;
 import DTOs.Role;
 import DTOs.ShiftTime;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Dictionary;
 import java.util.List;
 
 public class Shift {
 
-    private Date day;
+    private LocalDate day;
     private ShiftTime shiftTime;
     private Dictionary<Role, Employee> workersInShift;
     private Dictionary<Role, List<Employee>> workersAvailable;

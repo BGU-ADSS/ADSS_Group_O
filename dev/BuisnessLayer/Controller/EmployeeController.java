@@ -1,10 +1,12 @@
 package BuisnessLayer.Controller;
 
+import java.time.LocalDate;
 import java.util.Dictionary;
 import java.util.List;
 
 import BuisnessLayer.Workers.Employee;
 import BuisnessLayer.Workers.HRManager;
+import DTOs.ShiftTime;
 
 public class EmployeeController {
 
@@ -43,5 +45,21 @@ public class EmployeeController {
     }
 
 
+    public Boolean containsEmp(String empId,String empName){
+        Boolean containsInEmpDict =  employeeStore.get(empId)!=null;
+        int storeNum = employeeStore.get(empId);
+        Store store = stores.get(storeNum);
+        Boolean contatinsInStore = store.containsEmp(empId);
+        return containsInEmpDict && contatinsInStore;
+    }
+
+
+    public Dictionary<LocalDate,Dictionary<ShiftTime,Boolean>> getAvaliableDaysForEmployee(String empId){
+        int storeNumOfEmployee = employeeStore.get(empId);
+        Store storeOfEmployee = stores.get(storeNumOfEmployee);
+        return storeOfEmployee.getAvaliableDayesForEmployee(empId);
+    }
+
+    
 
 }
