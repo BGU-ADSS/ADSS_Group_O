@@ -1,6 +1,7 @@
 package BuisnessLayer.Schedule;
 
 import BuisnessLayer.Workers.Employee;
+import DTOs.Errors;
 import DTOs.ShiftTime;
 
 import java.time.LocalDate;
@@ -14,6 +15,8 @@ public class Schedule {
     private Dictionary<LocalDate, Shift[]> dayShifts;
     private LocalDate deadline;
     private LocalDate currentWeek;
+    private LocalDate nextWeek;
+
 
 
     public void addConstrains(String empId, LocalDate day, ShiftTime shiftTime) {
@@ -53,5 +56,45 @@ public class Schedule {
             }
         }
         return shifts;
+    }
+
+    public void startAddingConstrainsForNextWeek() {
+
+        this.currentWeek = this.nextWeek;
+        this.nextWeek = nextWeek.plusWeeks(1);
+        LocalDate d = nextWeek;
+        while ( d.isBefore(nextWeek.plusWeeks(1)) ){
+            dayShifts.put(d, new Shift[2]);
+            d = d.plusDays(1);
+        }
+    }
+
+    public List<Shift[]> getCurrentWeekSchedule() {
+
+        List<Shift[]> currentWeekShifts = new ArrayList<>();
+        LocalDate curr = currentWeek;
+        while (curr.isBefore(nextWeek)) {
+
+            currentWeekShifts.add(dayShifts.get(curr));
+            curr = curr.plusDays(1);
+
+        }
+        return currentWeekShifts;
+    }
+
+    public List<Shift[]> getNextWeekSchedule() {
+
+        if ( LocalDate.now().isBefore(deadline) ){
+            throw new IllegalArgumentException("next week schedule is not ready yet!");
+        }
+        List<Shift[]> nextWeekShifts = new ArrayList<>();
+        LocalDate curr = nextWeek;
+
+        while (curr.isBefore(nextWeek.plusWeeks(1)) ){
+            nextWeekShifts.add(dayShifts.get(curr));
+            curr = curr.plusDays(1);
+        }
+
+        return nextWeekShifts;
     }
 }

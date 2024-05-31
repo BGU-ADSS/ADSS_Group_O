@@ -87,8 +87,34 @@ public class EmployeeController {
         return store.removeRoleFromEmployee(empId,role);
     }
 
-    public List<Shift[]> getWeekSchedule(){
-        return null;
+    public List<Shift[]> getCurrentWeekSchedule(String storeNum){
+
+        if ( stores.get(storeNum) == null ){
+            throw new IllegalArgumentException("Store does not exist");
+        }
+
+        Store store = stores.get(storeNum);
+        return store.getCurrentWeekSchedule();
+    }
+
+    public List<Shift[]> getNextWeekSchedule(String storeNum){
+
+        if ( stores.get(storeNum) == null ){
+            throw new IllegalArgumentException("Store does not exist");
+        }
+
+        Store store = stores.get(storeNum);
+        return store.getNextWeekSchedule();
+    }
+
+    public void startAddingConstrainsForNextWeek(int storeNum){
+
+        if ( stores.get(storeNum) == null ){
+            throw new IllegalArgumentException("Store does not exist");
+        }
+        Store store = stores.get(storeNum);
+        store.startAddingConstrainsForNextWeek();
+
     }
 
 

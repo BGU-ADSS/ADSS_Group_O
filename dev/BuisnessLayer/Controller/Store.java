@@ -7,6 +7,7 @@ import DTOs.Role;
 import DTOs.ShiftTime;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.List;
 
@@ -73,5 +74,19 @@ public class Store {
             throw  new IllegalArgumentException("Employee does not exist in this store");
         }
         return employees.get(empId).removeRole(role);
+    }
+
+    public void startAddingConstrainsForNextWeek() {
+        schedule.startAddingConstrainsForNextWeek();
+    }
+
+    public List<Shift[]> getCurrentWeekSchedule() {
+
+        return schedule.getCurrentWeekSchedule();
+    }
+
+    public List<Shift[]> getNextWeekSchedule() {
+
+        return schedule.getNextWeekSchedule();
     }
 }
