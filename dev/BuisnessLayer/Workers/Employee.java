@@ -16,6 +16,7 @@ public class Employee {
     private List<Role> roles;
     private LocalDate startDate;
     private LocalDate endDate;
+    private int storeNum; // notify bahaa !!!!!!!!!!!!!!!!!!
 
     public Employee(String string, String string2, String string3, int i, int j, List<Role> roles, LocalDate localDate,
                     LocalDate localDate2) {
@@ -45,5 +46,22 @@ public class Employee {
     public Object getMounthSalary() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getMounthSalary'");
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public int getStoreNum(){
+        return storeNum;
+    }
+
+    public boolean removeRole(Role role) {
+
+        if ( !roles.contains(role) ) {
+            throw new IllegalArgumentException("employee does not have role " + role);
+        }
+        roles.remove(role);
+        return true;
     }
 }
