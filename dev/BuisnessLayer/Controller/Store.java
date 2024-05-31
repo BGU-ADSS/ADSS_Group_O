@@ -3,6 +3,7 @@ package BuisnessLayer.Controller;
 import BuisnessLayer.Schedule.Schedule;
 import BuisnessLayer.Schedule.Shift;
 import BuisnessLayer.Workers.Employee;
+import DTOs.Errors;
 import DTOs.Role;
 import DTOs.ShiftTime;
 
@@ -20,15 +21,12 @@ public class Store {
     private int storeNumber;
 
     public void addConstrains(String empId, LocalDate day, ShiftTime shiftTime) {
-
-        if( employees.get(empId) == null ) {
-            throw  new IllegalArgumentException("Employee does not exist");
-        }
-        schedule.addConstrains(empId,day,shiftTime);
+        isEmployeeExist(empId);
+        schedule.addConstrains(empId, day, shiftTime);
     }
 
-    public Dictionary<LocalDate, Dictionary<ShiftTime, Boolean>> getAvailableDaysForEmployee(String empId) {
-        return null;
+    public List<Shift> getAvailableDaysForEmployee(String empId) {
+        return schedule.getAvaliableDaysForEmployee(empId);
     }
 
     public Boolean containsEmp(String empId) {
@@ -37,10 +35,10 @@ public class Store {
 
     public void addEmployee(Employee employee) {
 
-        if( employees.get(employee.getID()) != null ){
-            throw  new IllegalArgumentException("Employee already exists");
+        if (employees.get(employee.getID()) != null) {
+            throw new IllegalArgumentException(Errors.EmployeeAlreadyExistInStore);
         }
-        employees.put(employee.getID(),employee);
+        employees.put(employee.getID(), employee);
         schedule.addEmployee(employee);
     }
 
@@ -57,21 +55,53 @@ public class Store {
         return schedule.getShiftsHistory(fromDate);
     }
 
-    public boolean terminateJobReq(String empId, LocalDate finishDate){
-
-        if ( employees.get(empId) == null ){
-            throw  new IllegalArgumentException("Employee does not exist in this store");
-        }
+    public boolean terminateJobReq(String empId, LocalDate finishDate) {
+        isEmployeeExist(empId);
         return LocalDate.now().isBefore(finishDate.minusMonths(1)) ||
                 LocalDate.now().isEqual(finishDate.minusMonths(1));
     }
 
-
     public boolean removeRoleFromEmployee(String empId, Role role) {
-
-        if ( employees.get(empId) == null ){
-            throw  new IllegalArgumentException("Employee does not exist in this store");
-        }
+        isEmployeeExist(empId);
         return employees.get(empId).removeRole(role);
+    }
+
+    public void removeEmployee(String empId) {
+        isEmployeeExist(empId);
+        employees.remove(empId);
+        schedule.removeEmployee(empId);
+    }
+
+    private void isEmployeeExist(String empId) {
+        if (employees.get(empId) == null) {
+            throw new IllegalArgumentException(Errors.EmployeeNotFoundInStore);
+        }
+    }
+
+    public void setEmployeeInShift(LocalDate date, ShiftTime shiftTime, String empId,Role role) {
+        isEmployeeExist(empId);
+        schedule.setEmployeeInShift(date,shiftTime,empId,role);
+    }
+
+    public void addRoleForEmployee(String empId, Role role) {
+        isEmployeeExist(empId);
+        Employee employee = employees.get(role);
+        employee.addRole(role);
+        schedule.addRoleForEmployee(empId,role);
+    }
+
+    public Employee getEmployee(String empId) {
+        isEmployeeExist(empId);
+        return employees.get(empId);
+    }
+
+    public Role[] getEmployeeRoles(String empId) {
+        isEmployeeExist(empId);
+        return (Role[]) employees.get(empId).getRoles().toArray();
+    }
+
+    public void setBankAccountForEmployee(String empId, String newBankAccount) {
+        isEmployeeExist(empId);
+        employees.get(empId).setBankAccount(newBankAccount);
     }
 }

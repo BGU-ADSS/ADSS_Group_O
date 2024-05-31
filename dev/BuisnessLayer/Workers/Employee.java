@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
+import DTOs.Errors;
 import DTOs.Role;
 
 public class Employee {
@@ -29,23 +30,19 @@ public class Employee {
     }
 
     public String getID() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getID'");
+        return empID;
     }
 
     public Object getRolesSize() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getRolesSize'");
+        return roles.size();
     }
 
     public Object getName() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getName'");
+        return empName;
     }
 
     public Object getMounthSalary() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMounthSalary'");
+        return monthSalary;
     }
 
     public List<Role> getRoles() {
@@ -63,5 +60,18 @@ public class Employee {
         }
         roles.remove(role);
         return true;
+    }
+
+    public boolean containsRole(Role role) {
+        return roles.contains(role);
+    }
+
+    public void addRole(Role role) {
+        if(!containsRole(role)) roles.add(role);
+    }
+
+    public void setBankAccount(String newBankAccount) {
+        if(newBankAccount==null) throw new IllegalArgumentException(Errors.bankAccountIsNull);
+        bankAccount= newBankAccount;
     }
 }

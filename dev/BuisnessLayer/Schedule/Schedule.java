@@ -1,6 +1,7 @@
 package BuisnessLayer.Schedule;
 
 import BuisnessLayer.Workers.Employee;
+import DTOs.Role;
 import DTOs.ShiftTime;
 
 import java.time.LocalDate;
@@ -15,17 +16,15 @@ public class Schedule {
     private LocalDate deadline;
     private LocalDate currentWeek;
 
-
     public void addConstrains(String empId, LocalDate day, ShiftTime shiftTime) {
 
         if (dayShifts.get(day) == null) {
             throw new IllegalArgumentException("not suitable date!");
         }
         Shift[] shifts = dayShifts.get(day);
-        if ( shiftTime == ShiftTime.Day ){
+        if (shiftTime == ShiftTime.Day) {
             shifts[0].removeFromAvailableWorkers(empId);
-        }
-        else {
+        } else {
             shifts[1].removeFromAvailableWorkers(empId);
         }
     }
@@ -48,10 +47,67 @@ public class Schedule {
         Iterator<LocalDate> iter = dayShifts.keys().asIterator();
         while (iter.hasNext()) {
             LocalDate day = iter.next();
-            if( fromDate.isBefore(day) || fromDate.isEqual(day) ){
+            if (fromDate.isBefore(day) || fromDate.isEqual(day)) {
                 shifts.add(dayShifts.get(day));
             }
         }
         return shifts;
     }
+
+    public List<Shift> getAvaliableDaysForEmployee(String empId) {
+        List<Shift> shiftsInCurrentWeak = getShiftsInWeak(currentWeek);
+        List<Shift> shiftsWithAvaliableEmployee = new ArrayList<>();
+        for (Shift shift : shiftsInCurrentWeak) {
+            if (shift.empCanWork(empId))
+                shiftsWithAvaliableEmployee.add(shift);
+        }
+        return shiftsWithAvaliableEmployee;
+    }
+
+    private List<Shift> getShiftsInWeak(LocalDate sunday) {
+        List<Shift> toRet = new ArrayList<>();
+
+        for (int day = 0; day < 7; day++) {
+            LocalDate date = sunday.plusDays(day);
+            Shift[] shiftsInDate = dayShifts.get(date);
+            for (int index = 0; index < shiftsInDate.length; index++) {
+                toRet.add(shiftsInDate[index]);
+            }
+        }
+
+        return toRet;
+    }
+
+    public void removeEmployee(String empId) {
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        for (int days = 0; days < 14; days++) {
+            LocalDate nextDay = tomorrow.plusDays(days);
+            if (dayShifts.get(nextDay) != null) {
+                for (Shift shift : dayShifts.get(nextDay))
+                    shift.removeEmployee(empId);
+            }
+        }
+    }
+
+    public void setEmployeeInShift(LocalDate date, ShiftTime shiftTime, String empId, Role role) {
+        checkRelatedDateShift(date);
+        Shift[] shiftsInDate = dayShifts.get(empId);
+        for (Shift shift : shiftsInDate) {
+            if (shift.getShiftTime() == shiftTime) {
+                shift.setEmployeeToShift(empId, role);
+            }
+        }
+    }
+
+    // this function must check if there are shift in the given date
+    private void checkRelatedDateShift(LocalDate date) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'checkRelatedDateShift'");
+    }
+
+    //we have to employee to the avaliable , but we have to know when can employee start
+	public void addRoleForEmployee(String empId, Role role) {
+		
+	}
+
 }

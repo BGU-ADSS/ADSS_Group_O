@@ -1,6 +1,7 @@
 package BuisnessLayer.Schedule;
 
 import BuisnessLayer.Workers.Employee;
+import DTOs.Errors;
 import DTOs.Role;
 import DTOs.ShiftTime;
 
@@ -13,14 +14,13 @@ public class Shift {
 
     private LocalDate day;
     private ShiftTime shiftTime;
-    private Dictionary<Role, Employee> workersInShift;
+    private Dictionary<Role, List<Employee>> workersInShift;
     private Dictionary<Role, List<Employee>> workersAvailable;
     private Dictionary<Role, Integer> constrainsForRole;
 
 
-    public Object empCanWork(String string) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'empCanWork'");
+    public boolean empCanWork(String empId) {
+        return getEmployeeFromAvailable(empId)!=null;
     }
 
     public void removeFromAvailableWorkers(String empId) {
@@ -40,17 +40,7 @@ public class Shift {
     }
 
     public Employee getEmployeeFromAvailable(String empId){
-
-        Employee employee = null;
-        Iterator<Role> iter = workersAvailable.keys().asIterator();
-        while (iter.hasNext()){
-            for (Employee emp : workersAvailable.get(iter.next())){
-                if ( emp.getID().equals(empId)){
-                    employee = emp;
-                }
-            }
-        }
-        return employee;
+        return getEmployeeFromgivenDict(empId, workersAvailable);
     }
 
     public boolean checkIfCanAddConstrain(Employee employee) {
@@ -69,5 +59,46 @@ public class Shift {
             workersAvailable.get(r).add(employee);
             constrainsForRole.put(r,constrainsForRole.get(r) + 1);
         }
+    }
+
+    private Employee getEmployeeFromgivenDict(String empId,Dictionary<Role,List<Employee>> toSearchIn){
+        Employee employee = null;
+        Iterator<Role> iter = toSearchIn.keys().asIterator();
+        while (iter.hasNext()){
+            for (Employee emp : toSearchIn.get(iter.next())){
+                if ( emp.getID().equals(empId)){
+                    employee = emp;
+                }
+            }
+        }
+        return employee;
+    }
+
+    private void removeEmployeeFromGivenDict(String empId ,Dictionary<Role,List<Employee>> toRemoveFrom ){
+        Iterator<Role> iter = toRemoveFrom.keys().asIterator();
+        while (iter.hasNext()){
+            List<Employee> employees = toRemoveFrom.get(iter.next());
+            for(int i =0;i<employees.size();i++){
+                if(employees.get(i).getID().equals(empId)) employees.remove(i);
+            }
+        }
+    }
+
+
+    public void removeEmployee(String empId){
+        removeEmployeeFromGivenDict(empId, workersAvailable);
+        removeEmployeeFromGivenDict(empId, workersInShift);
+    }
+
+    public ShiftTime getShiftTime() {
+        return shiftTime;
+    }
+
+    public void setEmployeeToShift(String empId, Role role) {
+        Employee empl = getEmployeeFromAvailable(empId);
+        if(empl.containsRole(role) && workersAvailable.get(role).contains(empl)){
+            removeEmployeeFromGivenDict(empId, workersAvailable);
+            workersInShift.get(role).add(empl);
+        }else throw new IllegalArgumentException(Errors.EmployeeHasNoGivenRole);
     }
 }
