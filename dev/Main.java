@@ -1,4 +1,5 @@
 import BuisnessLayer.Workers.HRManager;
+import PresentationLayer.Logs;
 import ServiceLayer.employeeService;
 
 public class Main {
@@ -9,5 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
         Logs.logWelcomeToSystem();
+        employeeService em = new employeeService();
+        em.logIn(null, null);
     }
 }

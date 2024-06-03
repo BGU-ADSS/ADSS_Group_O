@@ -7,6 +7,7 @@ import DTOs.ShiftTime;
 
 import java.time.LocalDate;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -14,13 +15,12 @@ public class Shift {
 
     private LocalDate day;
     private ShiftTime shiftTime;
-    private Dictionary<Role, List<Employee>> workersInShift;
-    private Dictionary<Role, List<Employee>> workersAvailable;
-    private Dictionary<Role, Integer> constrainsForRole;
+    private HashMap<Role, List<Employee>> workersInShift;
+    private HashMap<Role, List<Employee>> workersAvailable;
+    private HashMap<Role, Integer> constrainsForRole;
 
 
-    public Shift(LocalDate day,ShiftTime shiftTime,List<Employee> employees,Dictionary<Constr)
-
+    
 
     public boolean empCanWork(String empId) {
         return getEmployeeFromAvailable(empId)!=null;
@@ -64,9 +64,9 @@ public class Shift {
         }
     }
 
-    private Employee getEmployeeFromgivenDict(String empId,Dictionary<Role,List<Employee>> toSearchIn){
+    private Employee getEmployeeFromgivenDict(String empId,HashMap<Role,List<Employee>> toSearchIn){
         Employee employee = null;
-        Iterator<Role> iter = toSearchIn.keys().asIterator();
+        Iterator<Role> iter = toSearchIn.keySet().iterator();
         while (iter.hasNext()){
             for (Employee emp : toSearchIn.get(iter.next())){
                 if ( emp.getID().equals(empId)){
@@ -77,8 +77,8 @@ public class Shift {
         return employee;
     }
 
-    private void removeEmployeeFromGivenDict(String empId ,Dictionary<Role,List<Employee>> toRemoveFrom ){
-        Iterator<Role> iter = toRemoveFrom.keys().asIterator();
+    private void removeEmployeeFromGivenDict(String empId ,HashMap<Role,List<Employee>> toRemoveFrom ){
+        Iterator<Role> iter = toRemoveFrom.keySet().iterator();
         while (iter.hasNext()){
             List<Employee> employees = toRemoveFrom.get(iter.next());
             for(int i =0;i<employees.size();i++){
