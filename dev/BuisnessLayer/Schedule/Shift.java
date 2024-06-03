@@ -19,6 +19,9 @@ public class Shift {
     private Dictionary<Role, Integer> constrainsForRole;
 
 
+    public Shift(LocalDate day,ShiftTime shiftTime,List<Employee> employees,Dictionary<Constr)
+
+
     public boolean empCanWork(String empId) {
         return getEmployeeFromAvailable(empId)!=null;
     }

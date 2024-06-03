@@ -19,14 +19,19 @@ public class Employee {
     private LocalDate endDate;
     private int storeNum; // notify bahaa !!!!!!!!!!!!!!!!!!
 
-    public Employee(String string, String string2, String string3, int i, int j, List<Role> roles, LocalDate localDate,
-                    LocalDate localDate2) {
-        //TODO Auto-generated constructor stub
-    }
+   
 
-    public Employee(String string, String string2, String string3, int i, int j, List<Role> roles1, LocalDate start1,
-            LocalDate end1, int storeNum) {
-        //TODO Auto-generated constructor stub
+    public Employee(String empId, String empName, String bankAccount, int monthSalary, int hourSalary, List<Role> roles, LocalDate startDate,
+            LocalDate enddDate, int storeNum) {
+        this.bankAccount=bankAccount;
+        this.empID=empId;
+        this.empName=empName;
+        this.hourSalary = hourSalary;
+        this.roles = roles;
+        this.monthSalary=monthSalary;
+        this.startDate=startDate;
+        this.endDate = enddDate;
+        this.storeNum=storeNum;
     }
 
     public String getID() {
