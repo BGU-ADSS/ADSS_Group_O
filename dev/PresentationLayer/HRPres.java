@@ -14,14 +14,16 @@ public class HRPres {
         hrService = new HRservice();
     }
 
-    public void loginAndStart(String password) {
+    public boolean loginAndStart(String password) {
         String res = hrService.login(password);
         if (hasFailed(res)) {
             System.out.println("Failed :" + getError(res));
+            return false;
         } else {
             loggedIn = true;
             System.out.println("Login successed!!");
             dealWithActions();
+            return false;
         }
     }
 

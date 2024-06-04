@@ -29,14 +29,16 @@ public class EmployeePres {
     
 
 
-    public void login(String id,String password){
+    public boolean login(String id,String password){
         String res = employeeService.logIn(id, password);
         if(hasFailed(res)){
             System.out.println("Failed :"+getError(res));
+            return false;
         }else{
             setIdPassword(res);
             System.out.println("Login successed!!");
             dealWithActions();
+            return true;
         }
     }
 
