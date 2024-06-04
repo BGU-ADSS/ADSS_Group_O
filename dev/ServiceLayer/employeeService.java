@@ -43,7 +43,7 @@ public class employeeService {
         try
         {
             empController.addConstrains(Id, localDate, shiftTime);
-            res = new Response("Successfully add constrains");
+            res = new Response(null,"Successfully add constrains");
         }
         catch (Exception e){
             res = new Response(e.getMessage());
