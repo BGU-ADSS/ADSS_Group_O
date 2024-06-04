@@ -71,8 +71,13 @@ public class Logs {
 
     public static ShiftTime logGetShiftInGivenDate() {
         print("Enter shift time (Day/Night): ");
-        String input = getInput();
         
+        return getInputShiftTime();
+    }
+
+    private static ShiftTime getInputShiftTime(){
+        String input = getInput();
+
         try {
             return ShiftTime.valueOf(input);
         } catch (IllegalArgumentException e) {
@@ -101,78 +106,90 @@ public class Logs {
     }
 
     public static String getIdForNewEmpl() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getIdForNewEmpl'");
+        print("enter the id of the new employee : ");
+        return getInput();
     }
 
     public static String getNameForNewEmpl() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getNameForNewEmpl'");
+        print("enter the name of the employee:");
+        return getInput();
     }
 
     public static String getBankForNEwEmpl() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getBankForNEwEmpl'");
+        print("set Bank Account for employee");
+        return getInput();
     }
 
     public static int getSalaryForEmployee() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getSalaryForEmployee'");
+        print("enter salary number ")    ;
+        return getIntInput();
+    }
+
+    private static int getIntInput() {
+        try{
+            String input = getInput();
+            return Integer.parseInt(input);
+        }catch(Exception e){
+            return getIntInput();
+        }
     }
 
     public static Role[] getRoleForNewEmpl() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getRoleForNewEmpl'");
+        print ("enter an role number : ");
+        logRolesInShift();
+        String input = getInput();
+        Role role =  getRoleToRemove();
+        return new Role[]{role};
     }
 
     public static LocalDate getStartDateForNewEmpl() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getStartDateForNewEmpl'");
+        print("enter start date of contract : ");
+        return getInputDate();
     }
 
     public static LocalDate getEndDateForNewEmpl() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getEndDateForNewEmpl'");
+        print("enter end date of contract : ");
+        return getInputDate();
     }
 
     public static int getStoreNumForNewEmpl() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getStoreNumForNewEmpl'");
+        print("enter the number of the store:");
+        return getIntInput();    
     }
 
     public static String logRemoveEmplAndGetId() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'logRemoveEmplAndGetId'");
+        print("enter the id of the employee to remove:");
+        return getInput();    
     }
 
     public static String getIdToGetConstrains() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getIdToGetConstrains'");
+        print("enter the id of the employee you want to check:");
+        return getInput();
     }
 
     public static LocalDate getDateTogetShiftHistory() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getDateTogetShiftHistory'");
+        print("enter the date of the shift history:");
+        return getInputDate();    
     }
 
     public static int getNewMounthSalary() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getNewMounthSalary'");
+        print("enter the new mounth salary");
+        return getIntInput();    
     }
 
     public static LocalDate chooseShift() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'chooseShift'");
+        print("enter the date:");
+        return getInputDate();
     }
 
     public static ShiftTime chooseShiftTime() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'chooseShiftTime'");
+        print("enter the shift time (Day/Night):");
+        return getInputShiftTime();
     }
 
     public static String getEmployeeIdToWorkIn() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getEmployeeIdToWorkIn'");
+        print("enter the id of the employee");
+        return getInput();    
     }
 
 

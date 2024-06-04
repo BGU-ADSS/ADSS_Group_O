@@ -18,6 +18,10 @@ public class employeeService {
         empController = employeeController;
     }
 
+    public employeeService() {
+        //TODO Auto-generated constructor stub
+    }
+
     public String setPassword(String empId,String password) {
         throw new UnsupportedOperationException("This method is not yet implemented");
 
