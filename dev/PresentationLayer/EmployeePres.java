@@ -14,7 +14,6 @@ public class EmployeePres {
     
     
     public static final String GET_WEAK_SHIFT_FOR_ALL_INPUT_FORMAT = "get-weak-shift-for-all";
-    public static final String GET_WEAK_SHIFT_FOR_EMP_INPUT_FORMAT = "get-weak-shift-for-emp";
     public static final String ADD_CONSTRAINS_INPUT_FORMAT = "add-constrains";
     public static final String ADD_ROLE_INPUT_FORMAT = "add-role";
     public static final String REMOVE_ROLE_INPUT_FORMAT = "remove-role";
@@ -59,9 +58,7 @@ public class EmployeePres {
     private void dealWithInput(String input) {
         if(isEqualWithoutSpaces(GET_WEAK_SHIFT_FOR_ALL_INPUT_FORMAT,input)){
             printAllShiftsWithEmployees();
-        }else if(isEqualWithoutSpaces(input, GET_WEAK_SHIFT_FOR_EMP_INPUT_FORMAT)){
-            printEmpShifts();
-        }else if( isEqualWithoutSpaces(input, ADD_ROLE_INPUT_FORMAT)){
+        }else  if( isEqualWithoutSpaces(input, ADD_ROLE_INPUT_FORMAT)){
             addRole();
         }else if(isEqualWithoutSpaces(input, ADD_CONSTRAINS_INPUT_FORMAT)){
             addConstrains();
@@ -98,11 +95,7 @@ public class EmployeePres {
         String res = employeeService.getWeekShiftForAll();
         printValue(res);
     }
-    
-    private void printEmpShifts() {
-        String res = employeeService.getWeekShiftForEmp(empId);
-        printValue(res);
-    }
+   
     
     private void addRole() {
         Logs.logRolesInShift();

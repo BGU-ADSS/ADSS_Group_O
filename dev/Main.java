@@ -1,3 +1,5 @@
+import java.util.HashMap;
+
 import BuisnessLayer.Workers.HRManager;
 import PresentationLayer.Logs;
 import ServiceLayer.employeeService;
@@ -10,7 +12,10 @@ public class Main {
 
     public static void main(String[] args) {
         Logs.logWelcomeToSystem();
-        employeeService em = new employeeService();
-        em.logIn(null, null);
+        HashMap<String,Object> toRet = new HashMap<>();
+        toRet.put("value", new A());
+        toRet.put("errorMessage",null);
+        System.out.println(toRet.toString());
+        
     }
 }

@@ -11,7 +11,7 @@ public class Logs {
     private static Scanner scanner = new Scanner(System.in);
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    private static void print(String toPrint){
+    static void print(String toPrint){
         System.out.println(toPrint);
     }
 
@@ -28,7 +28,6 @@ public class Logs {
         print(EmployeePres.ADD_ROLE_INPUT_FORMAT+" :to add role.");
         print(EmployeePres.REMOVE_ROLE_INPUT_FORMAT+" :to remove role.");
         print(EmployeePres.GET_WEAK_SHIFT_FOR_ALL_INPUT_FORMAT+" :to get the shifts of the weak with the employees that work in.");
-        print(EmployeePres.GET_WEAK_SHIFT_FOR_EMP_INPUT_FORMAT+" :to get the shifts that you work in.");
         print(EmployeePres.TERMINATE_JOB_INPUT_FORMAT+" to terminate from job.");
         print(EmployeePres.LOGOUT_INPUT_FORMAT+" :to logout from the employee user.");
     }
@@ -99,6 +98,81 @@ public class Logs {
 
     public static void logSetNewBankAccount() {
         print ("enter the bank account number");
+    }
+
+    public static String getIdForNewEmpl() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getIdForNewEmpl'");
+    }
+
+    public static String getNameForNewEmpl() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getNameForNewEmpl'");
+    }
+
+    public static String getBankForNEwEmpl() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getBankForNEwEmpl'");
+    }
+
+    public static int getSalaryForEmployee() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getSalaryForEmployee'");
+    }
+
+    public static Role[] getRoleForNewEmpl() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getRoleForNewEmpl'");
+    }
+
+    public static LocalDate getStartDateForNewEmpl() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getStartDateForNewEmpl'");
+    }
+
+    public static LocalDate getEndDateForNewEmpl() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getEndDateForNewEmpl'");
+    }
+
+    public static int getStoreNumForNewEmpl() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getStoreNumForNewEmpl'");
+    }
+
+    public static String logRemoveEmplAndGetId() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'logRemoveEmplAndGetId'");
+    }
+
+    public static String getIdToGetConstrains() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getIdToGetConstrains'");
+    }
+
+    public static LocalDate getDateTogetShiftHistory() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getDateTogetShiftHistory'");
+    }
+
+    public static int getNewMounthSalary() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getNewMounthSalary'");
+    }
+
+    public static LocalDate chooseShift() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'chooseShift'");
+    }
+
+    public static ShiftTime chooseShiftTime() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'chooseShiftTime'");
+    }
+
+    public static String getEmployeeIdToWorkIn() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getEmployeeIdToWorkIn'");
     }
 
 

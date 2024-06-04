@@ -15,15 +15,19 @@ public class HRservice {
         this.empController = employeeController;
     }
 
+    public HRservice() {
+        //TODO Auto-generated constructor stub
+    }
+
     public String getConstrains(String Id)  {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public Response setShift(LocalDate localDate , ShiftTime shiftTime, String emplId)  {
+    public String setShift(LocalDate localDate , ShiftTime shiftTime, String emplId)  {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public Response addEmployee(String emplId , String emplName,String bankAccount,int mounthSalary,Role[] roles,LocalDate startDate,LocalDate endDate,int storeNum)  {
+    public String addEmployee(String emplId , String emplName,String bankAccount,int mounthSalary,Role[] roles,LocalDate startDate,LocalDate endDate,int storeNum)  {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
@@ -35,11 +39,16 @@ public class HRservice {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public String getShiftHistory(LocalDate day) throws ExecutionControl.NotImplementedException {
+    public String getShiftHistory(LocalDate day)  {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public Response updateSalary(String emplId , int monthSalary)  {
+    public String updateSalary(String emplId , int monthSalary)  {
         throw new UnsupportedOperationException("This method is not yet implemented");
+    }
+
+    public String login(String password) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'login'");
     }
 }
