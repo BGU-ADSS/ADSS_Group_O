@@ -31,10 +31,6 @@ public class HRservice {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public String addBreakDay(LocalDate day, ShiftTime shiftTime)  {
-        throw new UnsupportedOperationException("This method is not yet implemented");
-    }
-
     public String addConstrainsDeadline(LocalDate day)  {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }

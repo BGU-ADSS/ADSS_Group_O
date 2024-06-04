@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
+import DTOs.Errors;
 import DTOs.Role;
 
 public class Employee {
@@ -18,34 +19,35 @@ public class Employee {
     private LocalDate endDate;
     private int storeNum; // notify bahaa !!!!!!!!!!!!!!!!!!
 
-    public Employee(String string, String string2, String string3, int i, int j, List<Role> roles, LocalDate localDate,
-                    LocalDate localDate2) {
-        //TODO Auto-generated constructor stub
-    }
+   
 
-    public Employee(String string, String string2, String string3, int i, int j, List<Role> roles1, LocalDate start1,
-            LocalDate end1, int storeNum) {
-        //TODO Auto-generated constructor stub
+    public Employee(String empId, String empName, String bankAccount, int monthSalary, int hourSalary, List<Role> roles, LocalDate startDate,
+            LocalDate enddDate, int storeNum) {
+        this.bankAccount=bankAccount;
+        this.empID=empId;
+        this.empName=empName;
+        this.hourSalary = hourSalary;
+        this.roles = roles;
+        this.monthSalary=monthSalary;
+        this.startDate=startDate;
+        this.endDate = enddDate;
+        this.storeNum=storeNum;
     }
 
     public String getID() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getID'");
+        return empID;
     }
 
     public Object getRolesSize() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getRolesSize'");
+        return roles.size();
     }
 
     public Object getName() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getName'");
+        return empName;
     }
 
     public Object getMounthSalary() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMounthSalary'");
+        return monthSalary;
     }
 
     public List<Role> getRoles() {
@@ -63,5 +65,18 @@ public class Employee {
         }
         roles.remove(role);
         return true;
+    }
+
+    public boolean containsRole(Role role) {
+        return roles.contains(role);
+    }
+
+    public void addRole(Role role) {
+        if(!containsRole(role)) roles.add(role);
+    }
+
+    public void setBankAccount(String newBankAccount) {
+        if(newBankAccount==null) throw new IllegalArgumentException(Errors.bankAccountIsNull);
+        bankAccount= newBankAccount;
     }
 }

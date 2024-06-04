@@ -115,39 +115,33 @@ public class EmployeeController {
 
     }
 
-
-
-
-
-
-
-
-
-
-
     //--------------------------------------------------------------------------------------------------//
-    public Employee getEmployee(String string) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getEmployee'");
+    public Employee getEmployee(String empId) {
+        Store store = getStoreForEmployee(empId);
+        return store.getEmployee(empId);
     }
 
     public Dictionary<Integer, Store> getStores() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getStores'");
+        return stores;
     }
 
-    public Store getStore(int i) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getStore'");
+    public Store getStore(int numOfStore) {
+        return stores.get(numOfStore);
     }
 
-    public Object[] getEmployeeRoles(String string) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getEmployeeRoles'");
+    public Object[] getEmployeeRoles(String empId) {
+        Store store = getStoreForEmployee(empId);
+        return store.getEmployeeRoles(empId);
+
     }
 
+    private Store getStoreForEmployee(String empId){
+        if(!containsEmp(empId)) throw new IllegalArgumentException(Errors.EmployeeNotFound);
+        int storeNumber = employeesStore.get(empId);
+        return stores.get(storeNumber);
+    }
 
-    public Boolean containsEmp(String empId,String empName){
+    public Boolean containsEmp(String empId){
         Boolean containsInEmpDict =  employeesStore.get(empId)!=null;
         int storeNum = employeesStore.get(empId);
         Store store = stores.get(storeNum);
@@ -156,15 +150,46 @@ public class EmployeeController {
     }
 
 
-    public Dictionary<LocalDate,Dictionary<ShiftTime,Boolean>> getAvaliableDaysForEmployee(String empId){
+    public List<Shift> getAvaliableDaysForEmployee(String empId){
         int storeNumOfEmployee = employeesStore.get(empId);
         Store storeOfEmployee = stores.get(storeNumOfEmployee);
         return storeOfEmployee.getAvailableDaysForEmployee(empId);
+    }
+
+    public boolean removeEmployee(String empId){
+        Store store = getStoreForEmployee(empId);
+        store.removeEmployee(empId);
+        employeesStore.remove(empId);
+        return true;
+    }
+
+
+    //to check if we have to add hour
+    public void addConstrainsDeadLine(LocalDate date){
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getEmployeeRoles'");
     }
 
     //
     //addBreakDay()
     //
 
+    public void setEmployeeInShift(LocalDate date,ShiftTime shiftTime , String empId,Role role){
+        Store store = getStoreForEmployee(empId);
+        store.setEmployeeInShift(date,shiftTime,empId,role);
+    }
+
+
+    public boolean addRoleForEmployee(String empId,Role role){
+        Store store = getStoreForEmployee(empId);
+        store.addRoleForEmployee(empId,role);
+        return true;
+    }
+
+
+    public void setBankAccountForEmployee(String empId,String newBankAccount){
+        Store store = getStoreForEmployee(empId);
+        store.setBankAccountForEmployee(empId,newBankAccount);
+    }
 
 }

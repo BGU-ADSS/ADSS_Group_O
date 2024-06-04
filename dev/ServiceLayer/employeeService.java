@@ -5,6 +5,8 @@ import DTOs.*;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Dictionary;
+import java.util.HashMap;
 
 public class employeeService {
 
@@ -12,6 +14,10 @@ public class employeeService {
 
     public employeeService(EmployeeController employeeController) {
         empController = employeeController;
+    }
+
+    public employeeService() {
+        //TODO Auto-generated constructor stub
     }
 
     public String setPassword(String empId,String password) {
@@ -23,11 +29,11 @@ public class employeeService {
            throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public Response addRole(String Id, String password, Role role){
+    public String addRole(String Id, String password, Role role){
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public Response removeRole(String Id,String password, Role role) {
+    public String removeRole(String Id,String password, Role role) {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
@@ -35,15 +41,20 @@ public class employeeService {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public String getWeekShift(){
+    public String getWeekShiftForAll(){
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
+
+    public String getWeekShiftForEmp(String Id){
+        throw new UnsupportedOperationException("This method is not yet implemented");
+    }
+
 
     public String setBankAccount(String Id,String password, String newAccount){
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public String logIn(String Id,String password, String userName){
+    public String logIn(String Id,String password){
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 }
