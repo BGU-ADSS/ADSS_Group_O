@@ -4,7 +4,9 @@ import BuisnessLayer.Workers.Employee;
 import DTOs.Role;
 import DTOs.ShiftTime;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Iterator;
@@ -17,6 +19,18 @@ public class Schedule {
     private LocalDate currentWeek;
     private LocalDate nextWeek;
 
+    public Schedule(int deadline,List<Employee> employees,int minEmployees){
+        this.deadline = deadline;
+        this.currentWeek = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
+        this.nextWeek=currentWeek.plusDays(7);
+        for(int day=0;day<14;day++){
+            LocalDate dateForDayToAdd = currentWeek.plusDays(day);
+            Shift[] shiftsInDayToAdd = new Shift[2];
+            shiftsInDayToAdd[0]= new Shift(employees,dateForDayToAdd,ShiftTime.Day,minEmployees);
+            shiftsInDayToAdd[1]= new Shift(employees,dateForDayToAdd,ShiftTime.Nigth,minEmployees);
+            dayShifts.put(dateForDayToAdd, shiftsInDayToAdd);
+        }
+    }
 
 
     public void addConstrains(String empId, LocalDate day, ShiftTime shiftTime) {
