@@ -1,7 +1,6 @@
 package BuisnessLayer.Schedule;
 
 import BuisnessLayer.Workers.Employee;
-import DTOs.Errors;
 import DTOs.Role;
 import DTOs.ShiftTime;
 
@@ -14,7 +13,7 @@ import java.util.List;
 public class Schedule {
 
     private Dictionary<LocalDate, Shift[]> dayShifts;
-    private LocalDate deadline;
+    private int deadline;
     private LocalDate currentWeek;
     private LocalDate nextWeek;
 
@@ -22,7 +21,8 @@ public class Schedule {
 
     public void addConstrains(String empId, LocalDate day, ShiftTime shiftTime) {
 
-        if (dayShifts.get(day) == null) {
+        boolean valid = LocalDate.now().isBefore(currentWeek.plusDays(deadline));
+        if (dayShifts.get(day) == null || !valid ) {
             throw new IllegalArgumentException("not suitable date!");
         }
         Shift[] shifts = dayShifts.get(day);
@@ -62,6 +62,7 @@ public class Schedule {
 
         this.currentWeek = this.nextWeek;
         this.nextWeek = nextWeek.plusWeeks(1);
+        deadline += 7;
         LocalDate d = nextWeek;
         while ( d.isBefore(nextWeek.plusWeeks(1)) ){
             dayShifts.put(d, new Shift[2]);
@@ -69,7 +70,7 @@ public class Schedule {
         }
     }
 
-    public List<Shift[]> getCurrentWeekSchedule() {
+    public String getCurrentWeekSchedule() {
 
         List<Shift[]> currentWeekShifts = new ArrayList<>();
         LocalDate curr = currentWeek;
@@ -79,12 +80,12 @@ public class Schedule {
             curr = curr.plusDays(1);
 
         }
-        return currentWeekShifts;
+        return weekShiftsToString(currentWeekShifts);
     }
 
-    public List<Shift[]> getNextWeekSchedule() {
+    public String getNextWeekSchedule() {
 
-        if ( LocalDate.now().isBefore(deadline) ){
+        if ( LocalDate.now().isBefore(currentWeek.plusDays(deadline)) ){
             throw new IllegalArgumentException("next week schedule is not ready yet!");
         }
         List<Shift[]> nextWeekShifts = new ArrayList<>();
@@ -95,7 +96,7 @@ public class Schedule {
             curr = curr.plusDays(1);
         }
 
-        return nextWeekShifts;
+        return weekShiftsToString(nextWeekShifts);
     }
 
     public List<Shift> getAvaliableDaysForEmployee(String empId) {
@@ -154,4 +155,16 @@ public class Schedule {
 		
 	}
 
+    public String weekShiftsToString(List<Shift[]> weekShifts) {
+
+        String schedule = "~WEEK SCHEDULE~\n";
+
+        for ( int i = 0; i < weekShifts.size(); i++ ) {
+
+            schedule += weekShifts.get(i)[0].toStringForSchedule();
+            schedule += weekShifts.get(i)[1].toStringForSchedule();
+
+        }
+        return schedule + "\n";
+    }
 }

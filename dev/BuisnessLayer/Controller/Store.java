@@ -34,6 +34,11 @@ public class Store {
         return null;
     }
 
+    public void setPassword(String password, String empId){
+        isEmployeeExist(empId);
+        employees.get(empId).setPassword(password);
+    }
+
     public void addEmployee(Employee employee) {
 
         if (employees.get(employee.getID()) != null) {
@@ -110,13 +115,17 @@ public class Store {
         schedule.startAddingConstrainsForNextWeek();
     }
 
-    public List<Shift[]> getCurrentWeekSchedule() {
+    public String getCurrentWeekSchedule() {
 
         return schedule.getCurrentWeekSchedule();
     }
 
-    public List<Shift[]> getNextWeekSchedule() {
+    public String getNextWeekSchedule() {
 
         return schedule.getNextWeekSchedule();
+    }
+
+    public boolean loginForEmployee(String empId, String password) {
+        return employees.get(empId).login(password);
     }
 }

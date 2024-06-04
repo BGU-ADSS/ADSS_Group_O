@@ -87,4 +87,11 @@ public class Employee {
         }
         this.password = newPassword;
     }
+
+    public boolean login(String password) {
+        if( !this.password.equals(password) ){
+            throw new IllegalArgumentException("wrong password");
+        }
+        return true;
+    }
 }
