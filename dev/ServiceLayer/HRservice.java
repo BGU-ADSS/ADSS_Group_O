@@ -108,6 +108,6 @@ public class HRservice {
         catch (Exception e){
             res = new Response(e.getMessage());
         }
-        return gson.tojson(res);
+        return gson.toJson(res);
     }
 }

@@ -28,7 +28,7 @@ public class employeeService {
         try
         {
             empController.setPassword(password,empId);
-            res = new Response("Successfully set password");
+            res = new Response(null,"Successfully set password");
         }
         catch (Exception e){
             res = new Response(e.getMessage());
@@ -43,7 +43,7 @@ public class employeeService {
         try
         {
             empController.addConstrains(Id, localDate, shiftTime);
-            res = new Response("Successfully add constrains");
+            res = new Response(null,"Successfully add constrains");
         }
         catch (Exception e){
             res = new Response(e.getMessage());
@@ -57,7 +57,7 @@ public class employeeService {
         try
         {
             empController.addRoleForEmployee(Id,role);
-            res = new Response("Successfully add role");
+            res = new Response(null,"Successfully add role");
         }
         catch (Exception e){
             res = new Response(e.getMessage());
@@ -72,7 +72,7 @@ public class employeeService {
         {
 
             empController.removeRoleFromEmployee(Id,role);
-            res = new Response("Successfully remove role");
+            res = new Response(null,"Successfully remove role");
         }
         catch (Exception e){
             res = new Response(e.getMessage());
@@ -86,7 +86,7 @@ public class employeeService {
         try
         {
             empController.terminateJobReq(Id,day);
-            res = new Response("Successfully terminate job request");
+            res = new Response(null,"Successfully terminate job request");
         }
         catch (Exception e){
             res = new Response(e.getMessage());
@@ -114,7 +114,7 @@ public class employeeService {
         try
         {
             empController.setBankAccountForEmployee(Id,newAccount);
-            res = new Response("Successfully set bank account");
+            res = new Response(null,"Successfully set bank account");
         }
         catch (Exception e){
             res = new Response(e.getMessage());
@@ -128,7 +128,7 @@ public class employeeService {
         try
         {
             empController.loginForEmployee(Id,password);
-            res = new Response("Successfully logged in");
+            res = new Response(null,"Successfully logged in");
         }
         catch (Exception e){
             res = new Response(e.getMessage());
