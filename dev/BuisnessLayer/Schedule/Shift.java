@@ -29,6 +29,9 @@ public class Shift {
         }
     }
 
+    public Shift(List<Employee> employees, LocalDate dateForDayToAdd, ShiftTime day2, int minEmployees) {
+        //TODO Auto-generated constructor stub
+    }
     public HashMap<Role, List<Employee>> getWorkersInShift() {
         return workersInShift;
     }

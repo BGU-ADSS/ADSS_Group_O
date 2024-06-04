@@ -89,7 +89,7 @@ public class HRservice {
     public String updateSalary(String emplId, int monthSalary) {
         Response res;
         try {
-            empController.updateSalary(emplId,monthSalary)
+            empController.updateSalary(emplId,monthSalary);
             res = new Response(true);
         } catch (Exception ex) {
             res = new Response(ex.getMessage(), null);
@@ -103,7 +103,7 @@ public class HRservice {
         try
         {
             empController.loginForHR(password);
-            res = new Response("Login Successful");
+            res = new Response(null,"Login Successful");
         }
         catch (Exception e){
             res = new Response(e.getMessage());
