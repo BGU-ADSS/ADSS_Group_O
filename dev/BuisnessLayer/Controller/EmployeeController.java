@@ -191,4 +191,9 @@ public class EmployeeController {
         store.setBankAccountForEmployee(empId,newBankAccount);
     }
 
+    public void updateSalary(String emplId, int monthSalary) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateSalary'");
+    }
+
 }
