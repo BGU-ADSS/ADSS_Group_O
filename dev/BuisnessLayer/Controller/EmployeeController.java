@@ -56,8 +56,6 @@ public class EmployeeController {
         stores.get(employee.getStoreNum()).addEmployee(employee);
     }
 
-    //public void addBreakDay(){}
-
     public List<Shift[]> getShiftHistory(LocalDate fromDate, int StoreNum){
 
         if ( stores.get(StoreNum) == null ){
@@ -164,6 +162,9 @@ public class EmployeeController {
         return storeOfEmployee.getAvailableDaysForEmployee(empId);
     }
 
+    //
+    //addBreakDay()
+    //
 
 
 }
