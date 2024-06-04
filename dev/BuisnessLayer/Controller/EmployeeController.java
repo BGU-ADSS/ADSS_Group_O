@@ -30,11 +30,29 @@ public class EmployeeController {
         throw new UnsupportedOperationException("Unimplemented method 'setStoreForTest'");
     }
 
-    public boolean login(String password){
+    public boolean loginForHR(String password){
         return hrManager.login(password);
     }
 
+    public boolean loginForEmployee(String empId,String password){
 
+        if ( employeesStore.get(empId) == null ){
+            throw new IllegalArgumentException("Employee does not exist");
+        }
+        int storeNum = employeesStore.get(empId);
+        Store store = stores.get(storeNum);
+        return store.loginForEmployee(empId,password);
+    }
+    public void setPassword(String password, String empId){
+
+        if ( employeesStore.get(empId) == null ){
+            throw new IllegalArgumentException("Employee does not exist");
+        }
+
+        int storeNum = employeesStore.get(empId);
+        Store store = stores.get(storeNum);
+        store.setPassword(password,empId);
+    }
     public void addConstrains(String empId, LocalDate day, ShiftTime shift){
 
     if ( employeesStore.get(empId) == null ){
@@ -84,22 +102,24 @@ public class EmployeeController {
         return store.removeRoleFromEmployee(empId,role);
     }
 
-    public List<Shift[]> getCurrentWeekSchedule(String storeNum){
+    public String getCurrentWeekSchedule(String empId){
 
-        if ( stores.get(storeNum) == null ){
-            throw new IllegalArgumentException("Store does not exist");
+        if ( employeesStore.get(empId) == null ){
+            throw new IllegalArgumentException("Employee does not exist");
         }
 
+        int storeNum = employeesStore.get(empId);
         Store store = stores.get(storeNum);
         return store.getCurrentWeekSchedule();
     }
 
-    public List<Shift[]> getNextWeekSchedule(String storeNum){
+    public String getNextWeekSchedule(String empId){
 
-        if ( stores.get(storeNum) == null ){
-            throw new IllegalArgumentException("Store does not exist");
+        if ( employeesStore.get(empId) == null ){
+            throw new IllegalArgumentException("Employee does not exist");
         }
 
+        int storeNum = employeesStore.get(empId);
         Store store = stores.get(storeNum);
         return store.getNextWeekSchedule();
     }

@@ -98,7 +98,16 @@ public class HRservice {
     }
 
     public String login(String password) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'login'");
+
+        Response res;
+        try
+        {
+            empController.loginForHR(password);
+            res = new Response("Login Successful");
+        }
+        catch (Exception e){
+            res = new Response(e.getMessage());
+        }
+        return gson.tojson(res);
     }
 }

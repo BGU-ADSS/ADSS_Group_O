@@ -94,7 +94,7 @@ public class EmployeePres {
     }
     
     private void printAllShiftsWithEmployees(){
-        String res = employeeService.getWeekShiftForAll();
+        String res = employeeService.getWeekShiftForAll(empId);
         printValue(res);
     }
    

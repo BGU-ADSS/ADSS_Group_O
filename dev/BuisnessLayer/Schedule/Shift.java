@@ -6,7 +6,6 @@ import DTOs.Role;
 import DTOs.ShiftTime;
 
 import java.time.LocalDate;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -22,6 +21,9 @@ public class Shift {
 
     
 
+    public HashMap<Role, List<Employee>> getWorkersInShift() {
+        return workersInShift;
+    }
     public boolean empCanWork(String empId) {
         return getEmployeeFromAvailable(empId)!=null;
     }
@@ -103,5 +105,22 @@ public class Shift {
             removeEmployeeFromGivenDict(empId, workersAvailable);
             workersInShift.get(role).add(empl);
         }else throw new IllegalArgumentException(Errors.EmployeeHasNoGivenRole);
+    }
+
+    public String toStringForSchedule(){
+
+        String str = day.toString() +" "+ shiftTime.toString() +" : ";
+        for ( Role r : workersInShift.keySet() ){
+            List<Employee> employees = workersInShift.get(r);
+            for (int i = 0; i < employees.size() ; i++){
+                str += employees.get(i).getName() + " ,";
+            }
+
+        }
+        return str + "\n";
+    }
+
+    public String toString(){
+        return day.toString() +" "+ shiftTime.toString() + "\n";
     }
 }
