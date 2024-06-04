@@ -9,6 +9,9 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import BuisnessLayer.Controller.EmployeeController;
 import BuisnessLayer.Workers.Employee;
 import BuisnessLayer.Workers.HRManager;
@@ -25,6 +28,10 @@ public class employeeServiceTest {
     private String HRPassword;
     private List<Employee> employees;
     private employeeService emS;
+    private Gson gson=new GsonBuilder().setPrettyPrinting().create();
+    private Response R(String res){
+        return gson.fromJson(res, Response.class);
+    }
     // ==================================================== init funcs :
 
     private void initHRManager() {
@@ -101,11 +108,11 @@ public class employeeServiceTest {
 
 
     public void addRoleTest1_pos(){
-        Response res = emS.addRole("1", "12345678", Role.Storekeeper);
+        Response res = R(emS.addRole("1", "12345678", Role.Storekeeper));
         assertEquals(true, res.getReturnValue());
         assertArrayEquals(new Role[]{Role.Cashier,Role.Storekeeper},empC.getEmployeeRoles("1"));
 
-        Response res2 = emS.addRole("1", "12345678", Role.GroubManager);
+        Response res2 = R(emS.addRole("1", "12345678", Role.GroubManager));
         assertEquals(true, res2.getReturnValue());
         assertArrayEquals(new Role[]{Role.Cashier,Role.Storekeeper,Role.GroubManager},empC.getEmployeeRoles("1"));
 
@@ -113,7 +120,7 @@ public class employeeServiceTest {
     
 
     public void addRoleTest1_neg(){
-        Response resOfInvaildPassword = emS.addRole("3", "1234", Role.GroubManager);
+        Response resOfInvaildPassword =gson.fromJson(emS.addRole("3", "1234", Role.GroubManager),Response.class);
         assertEquals(true, resOfInvaildPassword.isErrorOccured());
         assertEquals(Errors.InvalidPassword,resOfInvaildPassword.getErrorMessage() );
         assertArrayEquals(new Role[]{Role.Storekeeper},empC.getEmployeeRoles("1"));
@@ -123,14 +130,14 @@ public class employeeServiceTest {
     //=================================== remove Role
     @Test
     public void removeRoleTest2_pos(){
-        Response resOfAdd = emS.addRole("1", "12345678", Role.Storekeeper);
-        Response res = emS.removeRole("1", "12345678", Role.Cashier);
+        Response resOfAdd =R( emS.addRole("1", "12345678", Role.Storekeeper));
+        Response res = R(emS.removeRole("1", "12345678", Role.Cashier));
         assertEquals(true,res.getReturnValue());
         assertArrayEquals(new Role[]{Role.Storekeeper}, empC.getEmployeeRoles("1"));
     }
 
     public void removeRoleTest2_neg(){
-        Response resOfLastRole = emS.removeRole("3", "12345678", Role.Storekeeper);
+        Response resOfLastRole = R(emS.removeRole("3", "12345678", Role.Storekeeper));
         assertEquals(true, resOfLastRole.isErrorOccured());
         assertEquals(Errors.cantRemoveTheLastRole,resOfLastRole.getErrorMessage());
         assertArrayEquals(new Role[] {Role.Storekeeper}, empC.getEmployeeRoles("3"));

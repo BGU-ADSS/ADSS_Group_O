@@ -9,6 +9,9 @@ import java.util.Dictionary;
 import java.util.List;
 import org.junit.Test;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import BuisnessLayer.Controller.*;
 import BuisnessLayer.Schedule.Shift;
 import BuisnessLayer.Workers.*;
@@ -28,6 +31,10 @@ public class HRserviceTest {
     private String HRPassword;
     private List<Employee> employees;
     private employeeService emS; 
+    private Gson gson=new GsonBuilder().setPrettyPrinting().create();
+    private Response R(String res){
+        return gson.fromJson(res, Response.class);
+    }
     // ==================================================== init funcs :
 
     private void initHRManager() {
@@ -120,7 +127,7 @@ public class HRserviceTest {
         
         beforeTest2_1();
         //String JSONresponse = ;
-        Response res = hrs.setShift(LocalDate.of(2024, 7, 15), ShiftTime.Day, "1");
+        Response res = R(hrs.setShift(LocalDate.of(2024, 7, 15), ShiftTime.Day, "1"));
         assertEquals(true, res.isErrorOccured());
         assertEquals(Errors.cantSetShiftDueConstrains, res.getErrorMessage());
 
@@ -130,7 +137,7 @@ public class HRserviceTest {
 
     @Test
     public void setShiftTest2_2(){
-        Response res = hrs.setShift(LocalDate.of(2024, 7, 15), ShiftTime.Day, "2");
+        Response res = R(hrs.setShift(LocalDate.of(2024, 7, 15), ShiftTime.Day, "2"));
         assertEquals(false, res.isErrorOccured());
         assertEquals(true,res.getReturnValue() );
     }
@@ -141,7 +148,7 @@ public class HRserviceTest {
     
     @Test
     public void addEmployeeTest2_1Posetive(){
-        Response res = hrs.addEmployee("6","abo elmori","777-5555",5000,new Role[]{Role.Cashier,Role.ShiftManager},LocalDate.now(),LocalDate.of(2025, 6, 1),1);
+        Response res = R(hrs.addEmployee("6","abo elmori","777-5555",5000,new Role[]{Role.Cashier,Role.ShiftManager},LocalDate.now(),LocalDate.of(2025, 6, 1),1));
         assertEquals(true, res.getReturnValue());
         checkIfContainsEmployee("6", "abo elmori",true,true );
     }
@@ -160,12 +167,12 @@ public class HRserviceTest {
 
     @Test
     public void addEmployeeTest2_2Negative(){
-        Response resOfGroubManagerError = hrs.addEmployee("7","omar" , "666-5555", 5000, new Role[]{Role.GroubManager}, LocalDate.now(), LocalDate.of(2025,6, 1),1);
+        Response resOfGroubManagerError =R( hrs.addEmployee("7","omar" , "666-5555", 5000, new Role[]{Role.GroubManager}, LocalDate.now(), LocalDate.of(2025,6, 1),1));
         assertEquals(true,resOfGroubManagerError.isErrorOccured());
         assertEquals(true,Errors.cantSetGroubManagerToNewEmployee);
         checkIfContainsEmployee("7", HRPassword, false,false);
 
-        Response resOfTheSameId = hrs.addEmployee("5","abo elmori","777-5555",5000,new Role[]{Role.Cashier,Role.ShiftManager},LocalDate.now(),LocalDate.of(2025, 6, 1), 1);
+        Response resOfTheSameId =R( hrs.addEmployee("5","abo elmori","777-5555",5000,new Role[]{Role.Cashier,Role.ShiftManager},LocalDate.now(),LocalDate.of(2025, 6, 1), 1));
         assertEquals(true,resOfTheSameId.isErrorOccured());
         assertEquals(true,Errors.cantSetGroubManagerToNewEmployee);
         checkIfContainsEmployee("7", HRPassword, false,true);
@@ -175,7 +182,7 @@ public class HRserviceTest {
 
     @Test
     public void updateSalaryTest3Positive(){
-        Response res= hrs.updateSalary("1", 7000);
+        Response res=R( hrs.updateSalary("1", 7000));
         Employee emp = empC.getEmployee("1");
         assertEquals(true, res.getReturnValue());
         assertEquals(7000, emp.getMounthSalary());
@@ -183,7 +190,7 @@ public class HRserviceTest {
 
     @Test
     public void updateSalaryTest3Neg(){
-        Response res= hrs.updateSalary("1", -7000);
+        Response res=R( hrs.updateSalary("1", -7000));
         Employee emp = empC.getEmployee("1");
         assertEquals(false, res.getReturnValue());
         assertEquals(7000, emp.getMounthSalary());
