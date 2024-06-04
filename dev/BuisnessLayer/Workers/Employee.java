@@ -3,7 +3,6 @@ package BuisnessLayer.Workers;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
-
 import DTOs.Errors;
 import DTOs.Role;
 
@@ -17,7 +16,8 @@ public class Employee {
     private List<Role> roles;
     private LocalDate startDate;
     private LocalDate endDate;
-    private int storeNum; // notify bahaa !!!!!!!!!!!!!!!!!!
+    private int storeNum;
+    private String password;// notify bahaa !!!!!!!!!!!!!!!!!!
 
    
 
@@ -78,5 +78,13 @@ public class Employee {
     public void setBankAccount(String newBankAccount) {
         if(newBankAccount==null) throw new IllegalArgumentException(Errors.bankAccountIsNull);
         bankAccount= newBankAccount;
+    }
+
+    public void setPassword(String newPassword) {
+
+        if( newPassword == null || newPassword.isEmpty() ){
+            throw new IllegalArgumentException("password is null or empty");
+        }
+        this.password = newPassword;
     }
 }

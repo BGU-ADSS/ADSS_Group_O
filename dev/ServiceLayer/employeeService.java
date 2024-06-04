@@ -2,7 +2,7 @@ package ServiceLayer;
 
 import BuisnessLayer.Controller.EmployeeController;
 import DTOs.*;
-
+import com.google.gson.Gson;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.Dictionary;
@@ -11,13 +11,11 @@ import java.util.HashMap;
 public class employeeService {
 
     private EmployeeController empController;
+    private Gson gson = new Gson();
+
 
     public employeeService(EmployeeController employeeController) {
         empController = employeeController;
-    }
-
-    public employeeService() {
-        //TODO Auto-generated constructor stub
     }
 
     public String setPassword(String empId,String password) {
@@ -26,7 +24,7 @@ public class employeeService {
     }
 
     public String addConstrains(String Id,String password, LocalDate localDate, ShiftTime shiftTime) {
-           throw new UnsupportedOperationException("This method is not yet implemented");
+        throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
     public String addRole(String Id, String password, Role role){

@@ -34,7 +34,6 @@ public class EmployeeController {
         return hrManager.login(password);
     }
 
-    //must add start constrains function that takes a date.
 
     public void addConstrains(String empId, LocalDate day, ShiftTime shift){
 
@@ -150,7 +149,7 @@ public class EmployeeController {
     }
 
 
-    public List<Shift> getAvaliableDaysForEmployee(String empId){
+    public List<Shift> getAvailableDaysForEmployee(String empId){
         int storeNumOfEmployee = employeesStore.get(empId);
         Store storeOfEmployee = stores.get(storeNumOfEmployee);
         return storeOfEmployee.getAvailableDaysForEmployee(empId);
@@ -165,10 +164,10 @@ public class EmployeeController {
 
 
     //to check if we have to add hour
-    public void addConstrainsDeadLine(LocalDate date){
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getEmployeeRoles'");
-    }
+//    public void addConstrainsDeadLine(LocalDate date){
+//        // TODO Auto-generated method stub
+//        throw new UnsupportedOperationException("Unimplemented method 'getEmployeeRoles'");
+//    }
 
     //
     //addBreakDay()
