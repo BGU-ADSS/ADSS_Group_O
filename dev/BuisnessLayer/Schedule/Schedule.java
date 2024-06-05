@@ -19,12 +19,8 @@ public class Schedule {
     private int deadline;
     private LocalDate currentWeek;
     private LocalDate nextWeek;
-<<<<<<< HEAD
     private List<LocalDate> breakDates = new ArrayList<>();
     private int minEmployees;
-=======
-    private List<LocalDate> breakDates;
->>>>>>> 7ba42efbc4cfad5e89f7629d00c3332f23fed3cd
 
     public Schedule(int deadline, List<Employee> employees, int minEmployees, List<LocalDate> breakDays) {
         dayShifts = new HashMap<>();
