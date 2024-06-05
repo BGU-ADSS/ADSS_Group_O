@@ -1,5 +1,10 @@
 package BuisnessLayer.Controller;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
@@ -13,6 +18,42 @@ public class EmployeeController {
     private Dictionary<Integer, Store> stores;
     private Dictionary<String, Integer> employeesStore;
     private HRManager hrManager;
+     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    public EmployeeController(File configFile, File dataFile) {
+        int deadLineConstrains;
+        int minEmployees;
+        List<LocalDate> breakDays = new ArrayList<>();
+        try {
+            List<String> configLines = Files.readAllLines(configFile.toPath());
+            for (String line : configLines) {
+                if (line.startsWith("#")) {
+                    int index = getSplitIndex(line);
+                    String key = line.substring(1, index);
+                    String value = line.substring(index + 1);
+                    switch (key) {
+                        case "deadLineConstrains":
+                            deadLineConstrains = Integer.parseInt(value);
+                            break;
+                        case "breakDayes":
+                            breakDays.add(LocalDate.parse(value, formatter));
+                            break;
+                        case "minEmployees":
+                            minEmployees = Integer.parseInt(value);
+                        default:
+                            break;
+                    }
+
+                }
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+
+    }
 
 
     public EmployeeController(HRManager hrManager) {
