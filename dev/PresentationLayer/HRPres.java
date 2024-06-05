@@ -2,6 +2,10 @@ package PresentationLayer;
 
 import java.time.LocalDate;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import DTOs.LocalDateAdapter;
 import DTOs.Role;
 import DTOs.ShiftTime;
 import ServiceLayer.HRservice;
@@ -129,7 +133,9 @@ public class HRPres {
     // this func must return the value of the response.
     private String getValueString(String res) {
         ResponseManager response = new ResponseManager(res);
-        return response.value;
+        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
+
+        return gson.toJson(response.value);
     }
 
     // return error message

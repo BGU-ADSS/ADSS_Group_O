@@ -5,6 +5,7 @@ import DTOs.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.Dictionary;
@@ -21,7 +22,7 @@ public class employeeService {
     }
 
     public employeeService() {
-        //TODO Auto-generated constructor stub
+        empController=new EmployeeController(new File("dev\\DTOs\\config.txt"), new File("dev\\DTOs\\Data.txt"));
     }
 
     public String setPassword(String empId,String password) {

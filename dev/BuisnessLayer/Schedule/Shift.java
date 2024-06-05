@@ -30,9 +30,14 @@ public class Shift {
         workersAvailable.put(Role.GroubManager, new ArrayList<>());
         workersAvailable.put(Role.Storekeeper, new ArrayList<>());
         workersAvailable.put(Role.StoreManager, new ArrayList<>());
+        workersInShift.put(Role.ShiftManager, new ArrayList<>());
+        workersInShift.put(Role.Cashier, new ArrayList<>());
+        workersInShift.put(Role.GroubManager, new ArrayList<>());
+        workersInShift.put(Role.Storekeeper, new ArrayList<>());
+        workersInShift.put(Role.StoreManager, new ArrayList<>());
         for (Employee employee : employees) {
             for (Role role : employee.getRoles()) {
-                workersInShift.get(role).add(employee);
+                workersAvailable.get(role).add(employee);
             }
         }
 

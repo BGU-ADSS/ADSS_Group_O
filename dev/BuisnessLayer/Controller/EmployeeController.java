@@ -22,7 +22,7 @@ import com.google.gson.GsonBuilder;
 public class EmployeeController {
 
     private HashMap<Integer,Store> stores;
-    private Dictionary<String, Integer> employeesStore;
+    private HashMap<String, Integer> employeesStore;
     private HRManager hrManager;
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
@@ -31,6 +31,7 @@ public class EmployeeController {
         int deadLineConstrains=0;
         int minEmployees=0;
         List<LocalDate> breakDays = new ArrayList<>();
+        this.employeesStore=new HashMap<>();
         try {
             List<String> configLines = Files.readAllLines(configFile.toPath());
             for (String line : configLines) {
@@ -68,6 +69,7 @@ public class EmployeeController {
                     Employee em = gson.fromJson(line.substring(10), Employee.class);
                     if(employeesToStores.get(em.getStoreNum())==null) employeesToStores.put(em.getStoreNum(),new ArrayList<>());
                     employeesToStores.get(em.getStoreNum()).add(em);
+                    employeesStore.put(em.getID(),em.getStoreNum());
                 }
             }
         } catch (IOException e) {
