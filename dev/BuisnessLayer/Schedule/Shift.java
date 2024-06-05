@@ -137,6 +137,6 @@ public class Shift {
     }
 
     public String toString(){
-        return day.toString() +" "+ shiftTime.toString() + "\n";
+        return day.toString() +" "+ shiftTime.toString() + '\n';
     }
 }
