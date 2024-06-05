@@ -21,7 +21,6 @@ import com.google.gson.GsonBuilder;
 
 public class EmployeeController {
 
-    private Gson gson = new Gson();
     private HashMap<Integer,Store> stores;
     private Dictionary<String, Integer> employeesStore;
     private HRManager hrManager;
@@ -29,8 +28,8 @@ public class EmployeeController {
     private Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
 
     public EmployeeController(File configFile, File dataFile) {
-        int deadLineConstrains;
-        int minEmployees;
+        int deadLineConstrains=0;
+        int minEmployees=0;
         List<LocalDate> breakDays = new ArrayList<>();
         try {
             List<String> configLines = Files.readAllLines(configFile.toPath());
@@ -213,7 +212,7 @@ public class EmployeeController {
         return store.getEmployee(empId);
     }
 
-    public Dictionary<Integer, Store> getStores() {
+    public HashMap<Integer, Store> getStores() {
         return stores;
     }
 
