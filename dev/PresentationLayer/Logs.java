@@ -192,5 +192,10 @@ public class Logs {
         return getInput();    
     }
 
+    public static int getStoreNumber() {
+        print("Enter store number");
+        return getIntInput();    
+    }
+
 
 }

@@ -127,7 +127,7 @@ public class HRserviceTest {
         
         beforeTest2_1();
         //String JSONresponse = ;
-        Response res = R(hrs.setShift(LocalDate.of(2024, 7, 15), ShiftTime.Day, "1"));
+        Response res = R(hrs.setShift(LocalDate.of(2024, 7, 15), ShiftTime.Day, "1", Role.Cashier));
         assertEquals(true, res.isErrorOccured());
         assertEquals(Errors.cantSetShiftDueConstrains, res.getErrorMessage());
 
@@ -137,7 +137,7 @@ public class HRserviceTest {
 
     @Test
     public void setShiftTest2_2(){
-        Response res = R(hrs.setShift(LocalDate.of(2024, 7, 15), ShiftTime.Day, "2"));
+        Response res = R(hrs.setShift(LocalDate.of(2024, 7, 15), ShiftTime.Day, "2",Role.GroubManager));
         assertEquals(false, res.isErrorOccured());
         assertEquals(true,res.getReturnValue() );
     }
