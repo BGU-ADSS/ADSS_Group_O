@@ -4,6 +4,7 @@ import BuisnessLayer.Controller.EmployeeController;
 import BuisnessLayer.Schedule.Shift;
 import BuisnessLayer.Workers.Employee;
 import DTOs.*;
+import com.google.gson.GsonBuilder;
 import jdk.jshell.spi.ExecutionControl;
 
 import java.time.LocalDate;
@@ -16,7 +17,7 @@ import com.google.gson.Gson;
 public class HRservice {
 
     private EmployeeController empController;
-    private Gson gson = new Gson();
+    private Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
 
     public HRservice(EmployeeController employeeController) {
         this.empController = employeeController;

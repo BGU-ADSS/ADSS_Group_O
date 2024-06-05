@@ -16,6 +16,8 @@ import BuisnessLayer.Schedule.Shift;
 import BuisnessLayer.Workers.Employee;
 import BuisnessLayer.Workers.HRManager;
 import DTOs.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class EmployeeController {
 
@@ -23,7 +25,8 @@ public class EmployeeController {
     private HashMap<Integer,Store> stores;
     private Dictionary<String, Integer> employeesStore;
     private HRManager hrManager;
-     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
 
     public EmployeeController(File configFile, File dataFile) {
         int deadLineConstrains;

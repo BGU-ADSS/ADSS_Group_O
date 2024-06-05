@@ -3,6 +3,8 @@ package ServiceLayer;
 import BuisnessLayer.Controller.EmployeeController;
 import DTOs.*;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.Dictionary;
@@ -11,7 +13,7 @@ import java.util.HashMap;
 public class employeeService {
 
     private EmployeeController empController;
-    private Gson gson = new Gson();
+    private Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
 
 
     public employeeService(EmployeeController employeeController) {
