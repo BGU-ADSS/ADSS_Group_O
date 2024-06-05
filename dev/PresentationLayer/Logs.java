@@ -32,6 +32,17 @@ public class Logs {
         print(EmployeePres.LOGOUT_INPUT_FORMAT+" :to logout from the employee user.");
     }
 
+    public static void logHRActionsInstructions() {
+        print("1. "+HRPres.GET_CONSTRAINS+" :to get the employees that can work in");
+        print("2. "+HRPres.ADD_EMPLOYEE+" :to add employee");
+        print("3. "+HRPres.REMOVE_EMPLOYEE+" :to remove employee");
+        print("4. "+HRPres.GET_SHIFT_HISTORY+" :to get the history of shifts from specific date");
+        print("5. "+HRPres.UPDATE_SALARY+" :to update salary for employee");
+        print("6. "+HRPres.SET_SHIFT+" :to set a shift for employee");
+        print("7. "+HRPres.START_ADDING_CONSTRAINS_FOR_NEXT_WEEK+" :to start a new week and make employees start add constrains");
+        print("8. logout");
+    }
+
     public static String getInput() {
         return scanner.nextLine();
     }

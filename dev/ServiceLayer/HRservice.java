@@ -24,7 +24,7 @@ public class HRservice {
     }
 
     public HRservice() {
-        empController = new EmployeeController(new File("dev\\DTOs\\config.txt"), new File("dev\\DTOs\\Data.txt"));
+        empController = new EmployeeController(new File("C:\\Users\\WINDOWS 10 PRO\\OneDrive\\Desktop\\ADSS\\ADSS_Group_O\\dev\\DTOs\\config.txt"), new File("C:\\Users\\WINDOWS 10 PRO\\OneDrive\\Desktop\\ADSS\\ADSS_Group_O\\dev\\DTOs\\Data.txt"));
     }
 
     public String getConstrains(String Id) {
