@@ -18,7 +18,7 @@ public class EmployeeController {
     private Dictionary<Integer, Store> stores;
     private Dictionary<String, Integer> employeesStore;
     private HRManager hrManager;
-     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public EmployeeController(File configFile, File dataFile) {
         int deadLineConstrains;
