@@ -1,42 +1,23 @@
 package PresentationLayer;
 
+import DTOs.LocalDateAdapter;
+import DTOs.Response;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.time.LocalDate;
+
 public class ResponseManager {
     public boolean hasErrorOccured;
     public String errorMessage;
-    public String value;
+    public Object value;
+    private Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
     
     public ResponseManager(String response){
-        StringBuilder builder = new StringBuilder();
-        String key=null;
-        for(int i =0;i<response.length();i++){
-            if(response.charAt(i)=='='){
-                key=builder.toString();
-                builder = new StringBuilder();
-                if(key.equals("value") && response.charAt(i+2)=='{'){
-                    int lastIndex = getLastIndexOfValue(response,i+3);
-                    value = response.substring(i, lastIndex+1);
-                    key=null;
-                }
-            }else if(response.charAt(i)==',' || response.charAt(i)=='}'){
-                switch (key) {
-                    case "errorOccured":
-                        hasErrorOccured = builder.toString()=="true";
-                        break;
-                    case "errorMessage":
-                        errorMessage= builder.toString();
-                        break;
-                    case "value":
-                        value= builder.toString();
-                        break;
-                    default:
-                        break;
-                }
-                builder = new StringBuilder();
-                key=null;
-                
-            }
-        }
-
+        Response res = gson.fromJson(response, Response.class);
+        hasErrorOccured = res.isErrorOccured();
+        errorMessage = res.getErrorMessage();
+        value = res.getReturnValue();
     }
 
     private int getLastIndexOfValue(String response, int i) {
