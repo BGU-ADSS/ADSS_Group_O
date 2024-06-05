@@ -1,9 +1,15 @@
 package BuisnessLayer.Controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.stream.Stream;
 
 import BuisnessLayer.Schedule.Shift;
 import BuisnessLayer.Workers.Employee;
@@ -12,10 +18,50 @@ import DTOs.*;
 
 public class EmployeeController {
 
+    
     private Dictionary<Integer, Store> stores;
     private Dictionary<String, Integer> employeesStore;
     private HRManager hrManager;
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
+    public EmployeeController(File configFile, File dataFile) {
+        int deadLineConstrains;
+        int minEmployees;
+        List<LocalDate> breakDays = new ArrayList<>();
+        try {
+            List<String> configLines = Files.readAllLines(configFile.toPath());
+            for (String line : configLines) {
+                if (line.startsWith("#")) {
+                    int index = getSplitIndex(line);
+                    String key = line.substring(1, index);
+                    String value = line.substring(index + 1);
+                    switch (key) {
+                        case "deadLineConstrains":
+                            deadLineConstrains = Integer.parseInt(value);
+                            break;
+                        case "breakDayes":
+                            breakDays.add(LocalDate.parse(value, formatter));
+                            break;
+                        case "minEmployees":
+                            minEmployees = Integer.parseInt(value);
+                        default:
+                            break;
+                    }
+
+                }
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private int getSplitIndex(String line) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getSplitIndex'");
+    }
 
     public EmployeeController(HRManager hrManager) {
 
@@ -25,86 +71,89 @@ public class EmployeeController {
 
     }
 
-    public void setStoreForTest(String storeName, String address, Employee manager, List<Employee> employees, int storeNum) {
+    public void setStoreForTest(String storeName, String address, Employee manager, List<Employee> employees,
+            int storeNum) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'setStoreForTest'");
     }
 
-    public boolean loginForHR(String password){
+    public boolean loginForHR(String password) {
         return hrManager.login(password);
     }
 
-    public boolean loginForEmployee(String empId,String password){
+    public boolean loginForEmployee(String empId, String password) {
 
-        if ( employeesStore.get(empId) == null ){
+        if (employeesStore.get(empId) == null) {
             throw new IllegalArgumentException("Employee does not exist");
         }
         int storeNum = employeesStore.get(empId);
         Store store = stores.get(storeNum);
-        return store.loginForEmployee(empId,password);
+        return store.loginForEmployee(empId, password);
     }
-    public void setPassword(String password, String empId){
 
-        if ( employeesStore.get(empId) == null ){
+    public void setPassword(String password, String empId) {
+
+        if (employeesStore.get(empId) == null) {
             throw new IllegalArgumentException("Employee does not exist");
         }
 
         int storeNum = employeesStore.get(empId);
         Store store = stores.get(storeNum);
-        store.setPassword(password,empId);
-    }
-    public void addConstrains(String empId, LocalDate day, ShiftTime shift){
-
-    if ( employeesStore.get(empId) == null ){
-        throw new IllegalArgumentException("Employee does not exist");
+        store.setPassword(password, empId);
     }
 
-    int storeNum = employeesStore.get(empId);
-    Store store = stores.get(storeNum);
-    store.addConstrains(empId,day,shift);
+    public void addConstrains(String empId, LocalDate day, ShiftTime shift) {
+
+        if (employeesStore.get(empId) == null) {
+            throw new IllegalArgumentException("Employee does not exist");
+        }
+
+        int storeNum = employeesStore.get(empId);
+        Store store = stores.get(storeNum);
+        store.addConstrains(empId, day, shift);
     }
 
-    public void addEmployee(Employee employee){
+    public void addEmployee(Employee employee) {
 
-        if( employeesStore.get(employee.getID()) != null ){
+        if (employeesStore.get(employee.getID()) != null) {
             throw new IllegalArgumentException("Employee already exists");
         }
         employeesStore.put(employee.getID(), employee.getStoreNum());
         stores.get(employee.getStoreNum()).addEmployee(employee);
     }
 
-    public List<Shift[]> getShiftHistory(LocalDate fromDate, int StoreNum){
+    public List<Shift[]> getShiftHistory(LocalDate fromDate, int StoreNum) {
 
-        if ( stores.get(StoreNum) == null ){
+        if (stores.get(StoreNum) == null) {
             throw new IllegalArgumentException("Store does not exist");
         }
         Store store = stores.get(StoreNum);
         return store.getShiftsHistory(fromDate);
     }
 
-    public boolean terminateJobReq(String empId, LocalDate finishDate){
+    public boolean terminateJobReq(String empId, LocalDate finishDate) {
 
-        if ( employeesStore.get(empId) == null ){
+        if (employeesStore.get(empId) == null) {
             throw new IllegalArgumentException("Employee does not exist");
         }
         Store store = stores.get(employeesStore.get(empId));
-        return store.terminateJobReq(empId,finishDate);
+        return store.terminateJobReq(empId, finishDate);
 
     }
 
-    public boolean removeRoleFromEmployee(String empId, Role role){
+    public boolean removeRoleFromEmployee(String empId, Role role) {
 
-        if ( employeesStore.get(empId) == null ){
+        if (employeesStore.get(empId) == null) {
             throw new IllegalArgumentException("Employee does not exist");
         }
 
         Store store = stores.get(employeesStore.get(empId));
-        return store.removeRoleFromEmployee(empId,role);
+        return store.removeRoleFromEmployee(empId, role);
     }
 
-    public String getCurrentWeekSchedule(String empId){
+    public String getCurrentWeekSchedule(String empId) {
 
-        if ( employeesStore.get(empId) == null ){
+        if (employeesStore.get(empId) == null) {
             throw new IllegalArgumentException("Employee does not exist");
         }
 
@@ -113,9 +162,9 @@ public class EmployeeController {
         return store.getCurrentWeekSchedule();
     }
 
-    public String getNextWeekSchedule(String empId){
+    public String getNextWeekSchedule(String empId) {
 
-        if ( employeesStore.get(empId) == null ){
+        if (employeesStore.get(empId) == null) {
             throw new IllegalArgumentException("Employee does not exist");
         }
 
@@ -124,9 +173,9 @@ public class EmployeeController {
         return store.getNextWeekSchedule();
     }
 
-    public void startAddingConstrainsForNextWeek(int storeNum){
+    public void startAddingConstrainsForNextWeek(int storeNum) {
 
-        if ( stores.get(storeNum) == null ){
+        if (stores.get(storeNum) == null) {
             throw new IllegalArgumentException("Store does not exist");
         }
         Store store = stores.get(storeNum);
@@ -134,7 +183,7 @@ public class EmployeeController {
 
     }
 
-    //--------------------------------------------------------------------------------------------------//
+    // --------------------------------------------------------------------------------------------------//
     public Employee getEmployee(String empId) {
         Store store = getStoreForEmployee(empId);
         return store.getEmployee(empId);
@@ -154,61 +203,59 @@ public class EmployeeController {
 
     }
 
-    private Store getStoreForEmployee(String empId){
-        if(!containsEmp(empId)) throw new IllegalArgumentException(Errors.EmployeeNotFound);
+    private Store getStoreForEmployee(String empId) {
+        if (!containsEmp(empId))
+            throw new IllegalArgumentException(Errors.EmployeeNotFound);
         int storeNumber = employeesStore.get(empId);
         return stores.get(storeNumber);
     }
 
-    public Boolean containsEmp(String empId){
-        Boolean containsInEmpDict =  employeesStore.get(empId)!=null;
+    public Boolean containsEmp(String empId) {
+        Boolean containsInEmpDict = employeesStore.get(empId) != null;
         int storeNum = employeesStore.get(empId);
         Store store = stores.get(storeNum);
         Boolean contatinsInStore = store.containsEmp(empId);
         return containsInEmpDict && contatinsInStore;
     }
 
-
-    public List<Shift> getAvailableDaysForEmployee(String empId){
+    public List<Shift> getAvailableDaysForEmployee(String empId) {
         int storeNumOfEmployee = employeesStore.get(empId);
         Store storeOfEmployee = stores.get(storeNumOfEmployee);
         return storeOfEmployee.getAvailableDaysForEmployee(empId);
     }
 
-    public boolean removeEmployee(String empId){
+    public boolean removeEmployee(String empId) {
         Store store = getStoreForEmployee(empId);
         store.removeEmployee(empId);
         employeesStore.remove(empId);
         return true;
     }
 
-
-    //to check if we have to add hour
-//    public void addConstrainsDeadLine(LocalDate date){
-//        // TODO Auto-generated method stub
-//        throw new UnsupportedOperationException("Unimplemented method 'getEmployeeRoles'");
-//    }
+    // to check if we have to add hour
+    // public void addConstrainsDeadLine(LocalDate date){
+    // // TODO Auto-generated method stub
+    // throw new UnsupportedOperationException("Unimplemented method
+    // 'getEmployeeRoles'");
+    // }
 
     //
-    //addBreakDay()
+    // addBreakDay()
     //
 
-    public void setEmployeeInShift(LocalDate date,ShiftTime shiftTime , String empId,Role role){
+    public void setEmployeeInShift(LocalDate date, ShiftTime shiftTime, String empId, Role role) {
         Store store = getStoreForEmployee(empId);
-        store.setEmployeeInShift(date,shiftTime,empId,role);
+        store.setEmployeeInShift(date, shiftTime, empId, role);
     }
 
-
-    public boolean addRoleForEmployee(String empId,Role role){
+    public boolean addRoleForEmployee(String empId, Role role) {
         Store store = getStoreForEmployee(empId);
-        store.addRoleForEmployee(empId,role);
+        store.addRoleForEmployee(empId, role);
         return true;
     }
 
-
-    public void setBankAccountForEmployee(String empId,String newBankAccount){
+    public void setBankAccountForEmployee(String empId, String newBankAccount) {
         Store store = getStoreForEmployee(empId);
-        store.setBankAccountForEmployee(empId,newBankAccount);
+        store.setBankAccountForEmployee(empId, newBankAccount);
     }
 
     public void updateSalary(String emplId, int monthSalary) {

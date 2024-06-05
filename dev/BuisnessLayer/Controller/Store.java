@@ -10,6 +10,7 @@ import DTOs.ShiftTime;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.List;
 
 public class Store {
@@ -18,8 +19,19 @@ public class Store {
     private String address;
     private Employee storeManager;
     private Schedule schedule;
-    private Dictionary<String, Employee> employees;
+    private HashMap<String, Employee> employees;
     private int storeNumber;
+
+    public Store(String name,String address,int StoreNum,List<Employee> employees,int deadLine,int minEmps, List<LocalDate> breakDayes){
+        schedule = new Schedule(deadLine,employees,minEmps,breakDayes);
+        this.address=address;
+        this.name = name;
+        this.storeNumber= StoreNum;
+        this.employees = new HashMap<>(); 
+        for(Employee employeeToAdd:employees){
+            this.employees.put(employeeToAdd.getID(),employeeToAdd);
+        }
+    }
 
     public void addConstrains(String empId, LocalDate day, ShiftTime shiftTime) {
         isEmployeeExist(empId);
@@ -112,7 +124,7 @@ public class Store {
     }
 
     public void startAddingConstrainsForNextWeek() {
-        schedule.startAddingConstrainsForNextWeek();
+        schedule.startAddingConstrainsForNextWeek(employees);
     }
 
     public String getCurrentWeekSchedule() {
