@@ -43,7 +43,8 @@ public class Store {
     }
 
     public Boolean containsEmp(String empId) {
-        return null;
+        isEmployeeExist(empId);
+        return true;
     }
 
     public void setPassword(String password, String empId){
@@ -103,7 +104,7 @@ public class Store {
 
     public void addRoleForEmployee(String empId, Role role) {
         isEmployeeExist(empId);
-        Employee employee = employees.get(role);
+        Employee employee = employees.get(empId);
         employee.addRole(role);
         schedule.addRoleForEmployee(empId,role);
     }

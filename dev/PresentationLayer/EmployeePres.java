@@ -24,6 +24,7 @@ public class EmployeePres {
     public static final String TERMINATE_JOB_INPUT_FORMAT = "terminate-job";
     public static final String SET_NEW_BANK_ACCOUNT_INPUT_FORMAT = "set-new-bank-account";
     public static final String LOGOUT_INPUT_FORMAT = "logout";
+    public static final String PROFIE_INPUT_FORMAT = "profile";
     
 
     public EmployeePres(){
@@ -33,13 +34,15 @@ public class EmployeePres {
     
 
 
-    public boolean login(String id,String password){
-        String res = employeeService.logIn(id, password);
+    public boolean login(String input){
+        String[] params = extractIdAndPassword(input);
+
+        String res = employeeService.logIn(params[0], params[1]);
         if(hasFailed(res)){
             System.out.println("Failed :"+getError(res));
             return false;
         }else{
-            setIdPassword(res);
+            setIdPassword(input);
             System.out.println("Login successed!!");
             dealWithActions();
             return true;
@@ -51,8 +54,8 @@ public class EmployeePres {
 
     //this is the main loop , while employee is logged in , the loop will continue to ask for more actions.
     private void dealWithActions() {
+        Logs.logEmployeeActionsInstructions();
         while(hasLoggedIn){
-            Logs.logEmployeeActionsInstructions();
             String input = Logs.getInput();
             dealWithInput(input);
         }
@@ -76,15 +79,25 @@ public class EmployeePres {
             terminateJobReq();
         }else if( isEqualWithoutSpaces(input, LOGOUT_INPUT_FORMAT)){
             hasLoggedIn=false;
+        }else if(isEqualWithoutSpaces(input, PROFIE_INPUT_FORMAT)){
+            printProfile();
         }
     }
     
     
-    private boolean isEqualWithoutSpaces(String gET_WEAK_SHIFT_FOR_ALL_INPUT_FORMAT2, String input) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isEqual'");
+    
+    
+    
+    
+    private boolean isEqualWithoutSpaces(String format, String input) {
+        return format.equals(input);
     }
     //============================================= Actions ==================================================
+    private void printProfile() {
+        printValue(employeeService.getProfile(empId));
+    }
+
+
     private void terminateJobReq() {
         String res = employeeService.terminateJobReq(empId, empPassword, Logs.getInputDate());
         printValue(res);
@@ -136,8 +149,23 @@ public class EmployeePres {
     //recieve the response that contain Id and password , we have to set them and declare them 
     private void setIdPassword(String res) {
         hasLoggedIn=true;
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setIdPassword'");
+        String[] params = extractIdAndPassword(res);
+        this.empId=params[0];
+        this.empPassword=params[1];
+    }
+
+    public static String[] extractIdAndPassword(String input) {
+        if (input == null || !input.startsWith("login-")) {
+            return null;
+        }
+        String[] parts = input.split("-", 3);
+        Logs.debug(parts.length+"");
+        if (parts.length != 3) {
+            return null;
+        }
+        String id = parts[1];
+        String password = parts[2];
+        return new String[]{id, password};
     }
 
     // this func must return the value of the response.

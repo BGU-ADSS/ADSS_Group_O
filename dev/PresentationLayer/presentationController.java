@@ -17,9 +17,7 @@ public class presentationController {
             if(input.startsWith("hr")){
                 hrPres.loginAndStart(input.substring(3));
             }else if(input.startsWith("login")){
-                System.out.println("enter password:");
-                String password = Logs.getInput();
-                emPres.login(input.substring(6), password);
+                emPres.login(input);
             }else if(input.equals("finish")){
                 finish=true;
             }else{

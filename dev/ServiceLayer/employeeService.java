@@ -1,6 +1,7 @@
 package ServiceLayer;
 
 import BuisnessLayer.Controller.EmployeeController;
+import BuisnessLayer.Workers.Employee;
 import DTOs.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -135,6 +136,17 @@ public class employeeService {
         }
         catch (Exception e){
             res = new Response(e.getMessage());
+        }
+        return gson.toJson(res);
+    }
+
+    public String getProfile(String id){
+        Response res;
+        try{
+            Employee toRet = empController.getEmployee(id);
+            res = new Response(toRet);
+        }catch(Exception e ){
+            res = new Response(e.getMessage(), null);
         }
         return gson.toJson(res);
     }

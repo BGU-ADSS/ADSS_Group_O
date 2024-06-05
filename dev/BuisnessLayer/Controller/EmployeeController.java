@@ -5,9 +5,7 @@ import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -16,7 +14,8 @@ import BuisnessLayer.Schedule.Shift;
 import BuisnessLayer.Workers.Employee;
 import BuisnessLayer.Workers.HRManager;
 import DTOs.*;
-import com.google.gson.Gson;
+import PresentationLayer.Logs;
+
 import com.google.gson.GsonBuilder;
 
 public class EmployeeController {
@@ -69,6 +68,7 @@ public class EmployeeController {
                     Employee em = gson.fromJson(line.substring(10), Employee.class);
                     if(employeesToStores.get(em.getStoreNum())==null) employeesToStores.put(em.getStoreNum(),new ArrayList<>());
                     employeesToStores.get(em.getStoreNum()).add(em);
+                    Logs.debug("size of store "+em.getStoreNum()+" , is "+employeesToStores.get(em.getStoreNum()).size());
                     employeesStore.put(em.getID(),em.getStoreNum());
                 }
             }
@@ -275,6 +275,7 @@ public class EmployeeController {
 
     public boolean addRoleForEmployee(String empId,Role role){
         Store store = getStoreForEmployee(empId);
+        Logs.debug(empId+" employee id to add in");
         store.addRoleForEmployee(empId,role);
         return true;
     }
@@ -289,5 +290,8 @@ public class EmployeeController {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'updateSalary'");
     }
+
+
+   
 
 }

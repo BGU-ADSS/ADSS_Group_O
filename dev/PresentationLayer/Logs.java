@@ -30,12 +30,15 @@ public class Logs {
         print(EmployeePres.GET_WEAK_SHIFT_FOR_ALL_INPUT_FORMAT+" :to get the shifts of the weak with the employees that work in.");
         print(EmployeePres.TERMINATE_JOB_INPUT_FORMAT+" to terminate from job.");
         print(EmployeePres.LOGOUT_INPUT_FORMAT+" :to logout from the employee user.");
+        print(EmployeePres.PROFIE_INPUT_FORMAT+" :to print profile info");
     }
 
     public static String getInput() {
         return scanner.nextLine();
     }
 
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
     public static void logRolesInShift() {
         print("0-StoreManager,\n1-Cashier,\n2-Storekeeper,\n3-ShiftManager,\n4-GroubManager");
     }
@@ -195,6 +198,10 @@ public class Logs {
     public static int getStoreNumber() {
         print("Enter store number");
         return getIntInput();    
+    }
+
+    public static void debug(String string) {
+        print(ANSI_RED+string+ANSI_RESET);
     }
 
 
