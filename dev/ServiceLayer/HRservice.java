@@ -8,6 +8,7 @@ import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,8 +31,12 @@ public class HRservice {
         Response res = new Response();
         try {
             List<Shift> value = empController.getAvailableDaysForEmployee(Id);
+            String str = "";
+            for(Shift shift:value){
+                str += shift.toString();
+            }
+            res.setReturnValue(str);
             
-            res.setReturnValue(value);
         } catch (Exception ex) {
             res = new Response(ex.getMessage(), null);
         }

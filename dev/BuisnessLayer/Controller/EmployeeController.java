@@ -95,7 +95,7 @@ public class EmployeeController {
 
         this.hrManager = hrManager;
         stores = new HashMap<Integer, Store>();
-        employeesStore = new Hashtable<String, Integer>();
+        employeesStore = new HashMap<String, Integer>();
 
     }
 
