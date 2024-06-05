@@ -110,4 +110,18 @@ public class HRservice {
         }
         return gson.toJson(res);
     }
+
+    public String startAddingConstrainsForNextWeek(int storeNum){
+
+        Response res;
+        try
+        {
+            empController.startAddingConstrainsForNextWeek(storeNum);
+            res = new Response(true);
+        }
+        catch (Exception e){
+            res = new Response(e.getMessage());
+        }
+        return gson.toJson(res);
+    }
 }

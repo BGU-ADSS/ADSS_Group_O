@@ -1,0 +1,5 @@
+the format is #key-value
+#deadLineConstrains-5
+#breakDays-22/5
+#breakDays-18/6
+#minEmployees-1

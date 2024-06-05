@@ -6,6 +6,7 @@ import DTOs.Role;
 import DTOs.ShiftTime;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -16,13 +17,35 @@ public class Shift {
     private ShiftTime shiftTime;
     private HashMap<Role, List<Employee>> workersInShift;
     private HashMap<Role, List<Employee>> workersAvailable;
-    private HashMap<Role, Integer> constrainsForRole;
-
-
-    
+    private int minEmployeeNumberInShift;
 
     public Shift(List<Employee> employees, LocalDate dateForDayToAdd, ShiftTime day2, int minEmployees) {
-        //TODO Auto-generated constructor stub
+        this.day = dateForDayToAdd;
+        this.shiftTime = day2;
+        this.minEmployeeNumberInShift = minEmployees;
+        this.workersInShift = new HashMap<>();
+        this.workersAvailable = new HashMap<>();
+        workersAvailable.put(Role.ShiftManager, new ArrayList<>());
+        workersAvailable.put(Role.Cashier, new ArrayList<>());
+        workersAvailable.put(Role.GroubManager, new ArrayList<>());
+        workersAvailable.put(Role.Storekeeper, new ArrayList<>());
+        workersAvailable.put(Role.StoreManager, new ArrayList<>());
+        for (Employee employee : employees) {
+            for (Role role : employee.getRoles()) {
+                workersInShift.get(role).add(employee);
+            }
+        }
+
+    }
+    public void submit(){
+        int sum = 0;
+        Iterator<Role> iterator = workersInShift.keySet().iterator();
+        while(iterator.hasNext()){
+            sum += workersInShift.get(iterator.next()).size();
+        }
+        if(sum < minEmployeeNumberInShift){
+            throw new IllegalArgumentException("cannot submit shift with fewer than minimum employees");
+        }
     }
     public HashMap<Role, List<Employee>> getWorkersInShift() {
         return workersInShift;
@@ -37,35 +60,18 @@ public class Shift {
         if ( employee == null ){
             throw new IllegalArgumentException("constrains already added!");
         }
-
-        if (checkIfCanAddConstrain(employee)){
-            for ( Role r : employee.getRoles()){
-                constrainsForRole.put( r ,constrainsForRole.get(r) - 1 );
-            }
-        }else {
-            throw new IllegalArgumentException("cannot add constrain!, minimum number of Role has reach!");
-        }
+        removeEmployeeFromGivenDict(empId,workersAvailable);
     }
 
     public Employee getEmployeeFromAvailable(String empId){
         return getEmployeeFromgivenDict(empId, workersAvailable);
     }
 
-    public boolean checkIfCanAddConstrain(Employee employee) {
-
-        for ( Role r : employee.getRoles() ){
-            if ( constrainsForRole.get(r) <= 1 ){
-                return false;
-            }
-        }
-        return true;
-    }
 
     public void addEmployee(Employee employee) {
 
         for( Role r : employee.getRoles() ){
             workersAvailable.get(r).add(employee);
-            constrainsForRole.put(r,constrainsForRole.get(r) + 1);
         }
     }
 
@@ -102,6 +108,8 @@ public class Shift {
         return shiftTime;
     }
 
+
+    //
     public void setEmployeeToShift(String empId, Role role) {
         Employee empl = getEmployeeFromAvailable(empId);
         if(empl.containsRole(role) && workersAvailable.get(role).contains(empl)){

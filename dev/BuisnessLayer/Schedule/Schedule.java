@@ -19,8 +19,12 @@ public class Schedule {
     private int deadline;
     private LocalDate currentWeek;
     private LocalDate nextWeek;
+<<<<<<< HEAD
     private List<LocalDate> breakDates = new ArrayList<>();
     private int minEmployees;
+=======
+    private List<LocalDate> breakDates;
+>>>>>>> 7ba42efbc4cfad5e89f7629d00c3332f23fed3cd
 
     public Schedule(int deadline, List<Employee> employees, int minEmployees, List<LocalDate> breakDays) {
         dayShifts = new HashMap<>();
@@ -43,6 +47,7 @@ public class Schedule {
 
     public void addConstrains(String empId, LocalDate day, ShiftTime shiftTime) {
 
+        checkRelatedDateShift(day);
         boolean valid = LocalDate.now().isBefore(currentWeek.plusDays(deadline));
         if (dayShifts.get(day) == null || !valid) {
             throw new IllegalArgumentException("not suitable date!");
@@ -180,8 +185,9 @@ public class Schedule {
 
     // this function must check if there are shift in the given date
     private void checkRelatedDateShift(LocalDate date) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'checkRelatedDateShift'");
+        if( breakDates.contains(date) ){
+            throw new IllegalArgumentException("cannot set shift in break dates!");
+        }
     }
 
     // we have to employee to the avaliable , but we have to know when can employee
