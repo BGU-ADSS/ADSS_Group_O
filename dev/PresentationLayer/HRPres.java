@@ -1,5 +1,6 @@
 package PresentationLayer;
 
+import java.security.PublicKey;
 import java.time.LocalDate;
 
 import com.google.gson.Gson;
@@ -13,6 +14,16 @@ import ServiceLayer.HRservice;
 public class HRPres {
     private HRservice hrService;
     private boolean loggedIn;
+
+
+    public static final String GET_CONSTRAINS = "get-constraints";
+    public static final String SET_SHIFT = "set-shift";
+    public static final String ADD_EMPLOYEE = "add-employee";
+    public static final String REMOVE_EMPLOYEE = "remove-employee";
+    public static final String GET_SHIFT_HISTORY = "get-shift-history";
+    public static final String UPDATE_SALARY = "update-salary";
+    public static final String LOGIN = "login";
+    public static final String START_ADDING_CONSTRAINS_FOR_NEXT_WEEK = "start-adding-constraints-for-next-week";
 
     public HRPres() {
         hrService = new HRservice();
@@ -33,6 +44,7 @@ public class HRPres {
 
     private void dealWithActions() {
         while (loggedIn) {
+            Logs.logHRActionsInstructions();
             dealWithInput(Logs.getInput());
         }
     }
@@ -56,6 +68,9 @@ public class HRPres {
                 break;
             case "6":
                 setShifts();
+                break;
+            case "7":
+                startAddingConstrainsForNextWeek();
                 break;
             case "8":
                 logout();
@@ -120,6 +135,12 @@ public class HRPres {
         printValue(res);
     }
 
+    private void startAddingConstrainsForNextWeek(){
+        int input = Logs.getStoreNumber();
+        String res = hrService.startAddingConstrainsForNextWeek(input);
+        printValue(res);
+
+    }
     // ============================================= Deal with response
     // ==================================================
     private void printValue(String res) {
