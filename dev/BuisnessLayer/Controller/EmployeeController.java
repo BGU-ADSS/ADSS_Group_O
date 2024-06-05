@@ -56,6 +56,12 @@ public class EmployeeController {
     }
 
 
+    private int getSplitIndex(String line) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getSplitIndex'");
+    }
+
+
     public EmployeeController(HRManager hrManager) {
 
         this.hrManager = hrManager;
