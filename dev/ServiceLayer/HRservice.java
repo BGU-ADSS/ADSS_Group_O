@@ -5,10 +5,8 @@ import BuisnessLayer.Schedule.Shift;
 import BuisnessLayer.Workers.Employee;
 import DTOs.*;
 import com.google.gson.GsonBuilder;
-import jdk.jshell.spi.ExecutionControl;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -75,10 +73,10 @@ public class HRservice {
         return gson.toJson(res);
     }
 
-    public String getShiftHistory(LocalDate day,int shiftNumber) {
+    public String getShiftHistory(LocalDate day,int storeNumber) {
         Response res;
         try {
-            List<Shift[]> value =  empController.getShiftHistory(day, shiftNumber);
+            List<Shift[]> value =  empController.getShiftHistory(day, storeNumber);
 
             res = new Response(value.toArray());
         } catch (Exception ex) {
