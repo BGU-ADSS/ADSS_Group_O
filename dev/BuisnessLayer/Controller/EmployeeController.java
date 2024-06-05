@@ -6,8 +6,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+
+import com.google.gson.Gson;
+
 import BuisnessLayer.Schedule.Shift;
 import BuisnessLayer.Workers.Employee;
 import BuisnessLayer.Workers.HRManager;
@@ -15,7 +19,8 @@ import DTOs.*;
 
 public class EmployeeController {
 
-    private Dictionary<Integer, Store> stores;
+    private Gson gson = new Gson();
+    private HashMap<Integer,Store> stores;
     private Dictionary<String, Integer> employeesStore;
     private HRManager hrManager;
      private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -46,6 +51,23 @@ public class EmployeeController {
 
                 }
             }
+            stores = new HashMap();
+            List<String> dataLines = Files.readAllLines(dataFile.toPath());
+            HashMap<Integer,List<Employee>> employeesToStores = new HashMap<>();
+            for(String line:dataLines){
+                if(line.startsWith("#store")){
+                    String storeJson = line.substring(7);
+                    StoreToSend toSend = gson.fromJson(storeJson, StoreToSend.class);
+                    Store toAdd = new Store(toSend.name, toSend.address, toSend.storeNumber,employeesToStores.get(toSend.storeNumber) , deadLineConstrains, minEmployees, breakDays);
+                    stores.put(toSend.storeNumber,toAdd);
+                }else if(line.startsWith("#hr")){
+                    this.hrManager = gson.fromJson(line.substring(4), HRManager.class);
+                }else if(line.startsWith("#Employee")){
+                    Employee em = gson.fromJson(line.substring(10), Employee.class);
+                    if(employeesToStores.get(em.getStoreNum())==null) employeesToStores.put(em.getStoreNum(),new ArrayList<>());
+                    employeesToStores.get(em.getStoreNum()).add(em);
+                }
+            }
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -57,15 +79,18 @@ public class EmployeeController {
 
 
     private int getSplitIndex(String line) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getSplitIndex'");
+        int index = 0;
+        while(line.charAt(index)!='-'){
+            index++;
+        }    
+        return index;
     }
 
 
     public EmployeeController(HRManager hrManager) {
 
         this.hrManager = hrManager;
-        stores = new Hashtable<Integer, Store>();
+        stores = new HashMap<Integer, Store>();
         employeesStore = new Hashtable<String, Integer>();
 
     }
