@@ -6,6 +6,7 @@ import DTOs.Role;
 import DTOs.ShiftTime;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +19,24 @@ public class Shift {
     private HashMap<Role, List<Employee>> workersAvailable;
     private int minEmployeeNumberInShift;
 
+    public Shift(List<Employee> employees, LocalDate dateForDayToAdd, ShiftTime day2, int minEmployees) {
+        this.day = dateForDayToAdd;
+        this.shiftTime = day2;
+        this.minEmployeeNumberInShift = minEmployees;
+        this.workersInShift = new HashMap<>();
+        this.workersAvailable = new HashMap<>();
+        workersAvailable.put(Role.ShiftManager, new ArrayList<>());
+        workersAvailable.put(Role.Cashier, new ArrayList<>());
+        workersAvailable.put(Role.GroubManager, new ArrayList<>());
+        workersAvailable.put(Role.Storekeeper, new ArrayList<>());
+        workersAvailable.put(Role.StoreManager, new ArrayList<>());
+        for (Employee employee : employees) {
+            for (Role role : employee.getRoles()) {
+                workersInShift.get(role).add(employee);
+            }
+        }
+
+    }
     public void submit(){
         int sum = 0;
         Iterator<Role> iterator = workersInShift.keySet().iterator();
@@ -27,10 +46,6 @@ public class Shift {
         if(sum < minEmployeeNumberInShift){
             throw new IllegalArgumentException("cannot submit shift with fewer than minimum employees");
         }
-    }
-
-    public Shift(List<Employee> employees, LocalDate dateForDayToAdd, ShiftTime day2, int minEmployees) {
-        //TODO Auto-generated constructor stub
     }
     public HashMap<Role, List<Employee>> getWorkersInShift() {
         return workersInShift;
