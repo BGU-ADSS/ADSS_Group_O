@@ -72,7 +72,8 @@ public class HRPres {
         LocalDate shiftDate = Logs.chooseShift();
         ShiftTime shiftTime = Logs.chooseShiftTime();
         String id = Logs.getEmployeeIdToWorkIn();
-        String res = hrService.setShift(shiftDate, shiftTime, id);
+        Role role = Logs.getRoleToAdd();
+        String res = hrService.setShift(shiftDate, shiftTime, id,role);
         printValue(res);
 
     }
@@ -85,7 +86,8 @@ public class HRPres {
 
     private void getShiftHistory() {
         LocalDate date = Logs.getDateTogetShiftHistory();
-        String res = hrService.getShiftHistory(date);
+        int storeNum = Logs.getStoreNumber();
+        String res = hrService.getShiftHistory(date,storeNum);
         printValue(res);
     }
 
