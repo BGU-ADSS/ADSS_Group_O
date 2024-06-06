@@ -18,6 +18,7 @@ import BuisnessLayer.Workers.HRManager;
 import DTOs.Errors;
 import DTOs.Response;
 import DTOs.Role;
+import DTOs.ShiftTime;
 import ServiceLayer.HRservice;
 import ServiceLayer.employeeService;
 
@@ -138,7 +139,8 @@ public class employeeServiceTest {
 
     @Test
     public void setConstrainsAfterDeadlineTest(){
-        emS.addConstrains("1", "12345678", , null)
+        Response res= R(emS.addConstrains("1", "12345678", LocalDate.of(2024, 6, 9), ShiftTime.Day));
+        assertEquals(true, res.isErrorOccured());
     }
 
 
