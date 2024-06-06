@@ -44,6 +44,9 @@ public class Shift {
     }
     public void submit(){
         int sum = 0;
+        if( workersInShift.get(Role.ShiftManager).isEmpty() ){
+            throw new IllegalArgumentException("there is no shift manager in shift " + day + ", " + shiftTime );
+        }
         Iterator<Role> iterator = workersInShift.keySet().iterator();
         while(iterator.hasNext()){
             sum += workersInShift.get(iterator.next()).size();
@@ -96,10 +99,13 @@ public class Shift {
 
     private void removeEmployeeFromGivenDict(String empId ,HashMap<Role,List<Employee>> toRemoveFrom ){
         Iterator<Role> iter = toRemoveFrom.keySet().iterator();
+        Employee emp = getEmployeeFromAvailable(empId);
         while (iter.hasNext()){
             Role r = iter.next();
             for(int i =0;i<toRemoveFrom.get(r).size();i++){
-                if(toRemoveFrom.get(r).get(i).getID().equals(empId)) toRemoveFrom.get(i).remove(i);
+                if(toRemoveFrom.get(r).get(i).getID().equals(empId)) {
+                    toRemoveFrom.get(r).remove(emp);
+                }
             }
         }
     }

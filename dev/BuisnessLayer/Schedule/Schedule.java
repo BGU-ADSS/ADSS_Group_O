@@ -21,14 +21,16 @@ public class Schedule {
     private LocalDate nextWeek;
     private List<LocalDate> breakDates = new ArrayList<>();
     private int minEmployees;
+    private boolean isReadyToPublish;
 
     public Schedule(int deadline, List<Employee> employees, int minEmployees, List<LocalDate> breakDays) {
+        this.isReadyToPublish = false;
         dayShifts = new HashMap<>();
         this.deadline = deadline;
         breakDates=breakDays;
         this.currentWeek = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
         this.nextWeek = currentWeek.plusDays(7);
-        for (int day = 0; day < 7; day++) {
+        for (int day = 0; day < 14; day++) {
             LocalDate dateForDayToAdd = currentWeek.plusDays(day);
             if (!breakDates.contains(dateForDayToAdd)) {
                 Shift[] shiftsInDayToAdd = new Shift[2];
@@ -95,10 +97,11 @@ public class Schedule {
         while (d.isBefore(nextWeek.plusWeeks(1))) {
             Shift[] shift = new Shift[2];
             shift[0] = new Shift(getEmployees(employees),d,ShiftTime.Day,minEmployees);
-            shift[0] = new Shift(getEmployees(employees),d,ShiftTime.Day,minEmployees);
-            dayShifts.put(d, new Shift[2]);
+            shift[1] = new Shift(getEmployees(employees),d,ShiftTime.Nigth,minEmployees);
+            dayShifts.put(d, shift);
             d = d.plusDays(1);
         }
+        isReadyToPublish = false;
     }
 
     private List<Employee> getEmployees(HashMap<String, Employee> employees) {
@@ -125,6 +128,9 @@ public class Schedule {
 
     public String getNextWeekSchedule() {
 
+        if( !isReadyToPublish ) {
+            throw new IllegalArgumentException("schedule not ready to publish!");
+        }
         if (LocalDate.now().isBefore(currentWeek.plusDays(deadline))) {
             throw new IllegalArgumentException("next week schedule is not ready yet!");
         }
@@ -192,10 +198,17 @@ public class Schedule {
         }
     }
 
-    // we have to employee to the avaliable , but we have to know when can employee
-    // start
-    public void addRoleForEmployee(String empId, Role role) {
+    public void scheduleReadyToPublish(){
 
+        Iterator<LocalDate> iter = dayShifts.keySet().iterator();
+        while ( iter.hasNext() ) {
+            LocalDate nextDay = iter.next();
+            if ( nextDay.isEqual(nextWeek) || nextDay.isBefore(nextWeek)) {
+                dayShifts.get(nextDay)[0].submit();
+                dayShifts.get(nextDay)[1].submit();
+            }
+        }
+        this.isReadyToPublish = true;
     }
 
     public String weekShiftsToString(List<Shift[]> weekShifts) {
@@ -221,7 +234,25 @@ public class Schedule {
         return history + "\n";
     }
 
+    public String getCurrentSchedule(){
+
+        String schedule = "~CURRENT SCHEDULE~\n";
+        List<Shift[]> nextWeekShifts = new ArrayList<>();
+        LocalDate curr = nextWeek;
+        while (curr.isBefore(nextWeek.plusWeeks(1))) {
+            nextWeekShifts.add(dayShifts.get(curr));
+            curr = curr.plusDays(1);
+        }
+
+        schedule += weekShiftsToString(nextWeekShifts);
+        return schedule;
+
+    }
     public Shift getShift(LocalDate nextWeek2, int index) {
         return dayShifts.get(nextWeek2)[index];
+    }
+
+    public void addRoleForEmployee(String empId, Role role) {
+
     }
 }

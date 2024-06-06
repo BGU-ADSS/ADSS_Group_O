@@ -41,7 +41,10 @@ public class Logs {
         print("5. "+HRPres.UPDATE_SALARY+" :to update salary for employee");
         print("6. "+HRPres.SET_SHIFT+" :to set a shift for employee");
         print("7. "+HRPres.START_ADDING_CONSTRAINS_FOR_NEXT_WEEK+" :to start a new week and make employees start add constrains");
-        print("8. logout");
+        print("8. "+HRPres.GET_EMPLOYEE_PROFILE+" :to get employee profile");
+        print("9. "+HRPres.GET_CURRENT_WEEK_SCHEDULE+" : to get the current week schedule");
+        print("10. "+HRPres.PUBLISH_SCHEDULE+" : to publish the schedule");
+        print("11. logout");
     }
 
     public static String getInput() {

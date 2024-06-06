@@ -216,6 +216,23 @@ public class EmployeeController {
 
     }
 
+    public String getEmployeeProf(String empId){
+        if ( employeesStore.get(empId) == null ){
+            throw new IllegalArgumentException("Employee does not exist");
+        }
+        int storeNum = employeesStore.get(empId);
+        Store store = stores.get(storeNum);
+        return store.getEmployeeProf(empId);
+    }
+
+    public String getCurrentSchedule(int storeNumber){
+
+        Store store = stores.get(storeNumber);
+        if( store == null ){
+            throw new IllegalArgumentException("Store does not exist");
+        }
+        return store.getCurrentSchedule();
+    }
     //--------------------------------------------------------------------------------------------------//
     public Employee getEmployee(String empId) {
         Store store = getStoreForEmployee(empId);
@@ -301,6 +318,14 @@ public class EmployeeController {
         }
         Store store = stores.get(employeesStore.get(emplId));
         store.updateSalary(emplId,monthSalary);
+    }
+
+    public void scheduleReadyToPublish(int StoreNumber){
+        Store store = stores.get(StoreNumber);
+        if (store==null){
+            throw new IllegalArgumentException("Store does not exist");
+        }
+        store.scheduleReadyToPublish();
     }
 
 

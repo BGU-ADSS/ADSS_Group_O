@@ -47,6 +47,9 @@ public class Store {
         return true;
     }
 
+    public void scheduleReadyToPublish(){
+        schedule.scheduleReadyToPublish();
+    }
     public void setPassword(String password, String empId){
         isEmployeeExist(empId);
         employees.get(empId).setPassword(password);
@@ -97,6 +100,14 @@ public class Store {
         }
     }
 
+    public String getEmployeeProf(String empId) {
+        isEmployeeExist(empId);
+        return employees.get(empId).getProf();
+    }
+
+    public String getCurrentSchedule(){
+        return schedule.getCurrentSchedule();
+    }
     public void setEmployeeInShift(LocalDate date, ShiftTime shiftTime, String empId,Role role) {
         isEmployeeExist(empId);
         schedule.setEmployeeInShift(date,shiftTime,empId,role);

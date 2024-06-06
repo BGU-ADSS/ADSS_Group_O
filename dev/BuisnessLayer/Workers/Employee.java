@@ -94,11 +94,23 @@ public class Employee {
         if( !this.password.equals(password) ){
             throw new IllegalArgumentException(Errors.InvalidPassword);
         }
-        Logs.debug("logiin successs");
+        Logs.debug("login successs");
         return true;
     }
 
     public void updateSalary(int monthSalary) {
+        if(monthSalary<0) {
+            throw new IllegalArgumentException("salary cannot be negative");
+        }
         this.monthSalary = monthSalary;
+    }
+
+    public String getProf(){
+
+        String str = "Employee name:" + getName() +"\n";
+        str += "Employee ID:" + getID() +"\n";
+        str += "Employee Roles:" + roles + "\n";
+        str += "Employee Salary:" + monthSalary + "\n";
+        return str;
     }
 }
