@@ -27,7 +27,7 @@ public class Schedule {
         breakDates=breakDays;
         this.currentWeek = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
         this.nextWeek = currentWeek.plusDays(7);
-        for (int day = 0; day < 14; day++) {
+        for (int day = 0; day < 7; day++) {
             LocalDate dateForDayToAdd = currentWeek.plusDays(day);
             if (!breakDates.contains(dateForDayToAdd)) {
                 Shift[] shiftsInDayToAdd = new Shift[2];
@@ -43,7 +43,7 @@ public class Schedule {
     public void addConstrains(String empId, LocalDate day, ShiftTime shiftTime) {
 
         checkRelatedDateShift(day);
-        boolean valid = LocalDate.now().isBefore(currentWeek.plusDays(deadline));
+        boolean valid = LocalDate.now().isBefore(currentWeek.plusDays(deadline))&&dayShifts.get(day)!=null;
         if (dayShifts.get(day) == null || !valid) {
             throw new IllegalArgumentException("not suitable date!");
         }

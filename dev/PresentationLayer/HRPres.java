@@ -10,6 +10,7 @@ import DTOs.LocalDateAdapter;
 import DTOs.Role;
 import DTOs.ShiftTime;
 import ServiceLayer.HRservice;
+import ServiceLayer.ServiceManager;
 
 public class HRPres {
     private HRservice hrService;
@@ -25,8 +26,8 @@ public class HRPres {
     public static final String LOGIN = "login";
     public static final String START_ADDING_CONSTRAINS_FOR_NEXT_WEEK = "start-adding-constraints-for-next-week";
 
-    public HRPres() {
-        hrService = new HRservice();
+    public HRPres(ServiceManager sm) {
+        hrService = sm.hrService;
     }
 
     public boolean loginAndStart(String password) {
