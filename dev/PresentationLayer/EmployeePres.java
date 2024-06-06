@@ -9,7 +9,6 @@ import com.google.gson.GsonBuilder;
 import DTOs.LocalDateAdapter;
 import DTOs.Role;
 import DTOs.ShiftTime;
-import ServiceLayer.ServiceManager;
 import ServiceLayer.employeeService;
 
 public class EmployeePres {
@@ -36,10 +35,7 @@ public class EmployeePres {
     
 
 
-    public EmployeePres(ServiceManager sm) {
-        employeeService = sm.employeeService;
-    }
-
+    
 
 
 

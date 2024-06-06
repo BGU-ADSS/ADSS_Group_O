@@ -1,6 +1,7 @@
 package BuisnessLayer.Schedule;
 
 import BuisnessLayer.Workers.Employee;
+import DTOs.Errors;
 import DTOs.Role;
 import DTOs.ShiftTime;
 import java.time.DayOfWeek;
@@ -56,7 +57,9 @@ public class Schedule {
     }
 
     public void addEmployee(Employee employee) {
-
+        if(employee.getRoles().contains(Role.GroubManager)) {
+            throw new IllegalArgumentException(Errors.cantSetGroubManagerToNewEmployee);
+        }
         Iterator<LocalDate> iter = dayShifts.keySet().iterator();
         while (iter.hasNext()) {
             LocalDate day = iter.next();
@@ -216,5 +219,9 @@ public class Schedule {
             history += shifts.get(i)[1].toStringForSchedule();
         }
         return history + "\n";
+    }
+
+    public Shift getShift(LocalDate nextWeek2, int index) {
+        return dayShifts.get(nextWeek2)[index];
     }
 }

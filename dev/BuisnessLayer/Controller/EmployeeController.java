@@ -101,9 +101,12 @@ public class EmployeeController {
 
     }
 
-    public void setStoreForTest(String storeName, String address, Employee manager, List<Employee> employees, int storeNum) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setStoreForTest'");
+    public void setStoreForTest(String storeName, String address, Employee manager, List<Employee> employees, int storeNum,int minEmps,int deadLine) {
+        Store store = new Store(storeName, address, storeNum, employees,deadLine,minEmps  ,new ArrayList<>() );
+        stores.put(storeNum,store);
+        for(Employee employee:employees ){
+            if(storeNum==employee.getStoreNum()) employeesStore.put(employee.getID(), storeNum);
+        }
     }
 
     public boolean loginForHR(String password){
@@ -111,7 +114,7 @@ public class EmployeeController {
     }
 
     public boolean loginForEmployee(String empId,String password){
-
+        
         if ( employeesStore.get(empId) == null ){
             throw new IllegalArgumentException("Employee does not exist");
         }
@@ -141,12 +144,14 @@ public class EmployeeController {
     }
 
     public void addEmployee(Employee employee){
-
+        Logs.debug( employeesStore.get(employee.getID())+" the store returned for this employee "+employeesStore.size());
         if( employeesStore.get(employee.getID()) != null ){
             throw new IllegalArgumentException("Employee ID already exists");
         }
-        employeesStore.put(employee.getID(), employee.getStoreNum());
         stores.get(employee.getStoreNum()).addEmployee(employee);
+        employeesStore.put(employee.getID(), employee.getStoreNum());
+        Logs.debug( employeesStore.get(employee.getID())+" the store returned for this employee "+employeesStore.size());
+
     }
 
     public String getShiftHistory(LocalDate fromDate, int StoreNum){
@@ -213,7 +218,7 @@ public class EmployeeController {
     //--------------------------------------------------------------------------------------------------//
     public Employee getEmployee(String empId) {
         Store store = getStoreForEmployee(empId);
-        return store.getEmployee(empId);
+        return store!=null?store.getEmployee(empId):null;
     }
 
     public HashMap<Integer, Store> getStores() {
@@ -289,7 +294,7 @@ public class EmployeeController {
     }
 
     public void updateSalary(String emplId, int monthSalary) {
-
+        if(monthSalary<0) throw new IllegalArgumentException(Errors.cantUpdateNegativeSalary);
         if ( employeesStore.get(emplId) == null ){
             throw new IllegalArgumentException("Employee does not exist");
         }

@@ -90,6 +90,7 @@ public class Shift {
                 }
             }
         }
+        if(employee == null) throw new IllegalArgumentException(Errors.cantSetShiftDueConstrains);
         return employee;
     }
 
@@ -121,7 +122,7 @@ public class Shift {
             removeEmployeeFromGivenDict(empId, workersAvailable);
             workersInShift.get(role).add(empl);
         }else {
-            throw new IllegalArgumentException("cannot set this employee to shift");
+            throw new IllegalArgumentException(Errors.cantSetShiftDueConstrains);
         }
     }
 

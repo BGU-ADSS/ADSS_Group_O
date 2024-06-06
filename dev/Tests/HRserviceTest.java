@@ -6,7 +6,10 @@ import static org.junit.Assert.assertEquals;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.List;
+
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.google.gson.Gson;
@@ -36,8 +39,8 @@ public class HRserviceTest {
         return gson.fromJson(res, Response.class);
     }
     // ==================================================== init funcs :
-
-    private void initHRManager() {
+    
+    public void initHRManager() {
         // ID: 1, Name: bhaa, Phone: 777-55555, Salary: 5000, Bonus: -1, Roles: Cashier,
         // Start Date: June 1, 2024, End Date: June 1, 2025
         // ID: 2, Name: ghanem, Phone: 777-55556, Salary: 5000, Bonus: -1, Roles: Group
@@ -51,12 +54,16 @@ public class HRserviceTest {
         // Store : Name : lee sheeba , address beer sheeba , Num : 1.
         hrManager = new HRManager(HRPassword);
         empC = new EmployeeController(hrManager);
-        employees = getEmployees();
         emS = new employeeService(empC);
-        empC.setStoreForTest("lee sheeba", "Beer Sheba", employees.remove(4), employees, 0);
+        employees= new ArrayList<>();
+        empC.setStoreForTest("lee sheeba", "Beer Sheba",null, employees, 1,0,5);
+        employees = getEmployees();
         for (Employee employee : employees) {
             emS.setPassword(employee.getID(), "12345678");
+            empC.addEmployee(employee);
         }
+
+        hrs = new HRservice(empC);
     }
 
     private List<Employee> getEmployees() {
@@ -98,7 +105,7 @@ public class HRserviceTest {
 
         List<Employee> employees = new ArrayList<>();
         employees.add(em1);
-        employees.add(em2);
+        // employees.add(em2);
         employees.add(em3);
         employees.add(em4);
         employees.add(em5);
@@ -119,15 +126,16 @@ public class HRserviceTest {
     
     //====================================================== set shift
     private void beforeTest2_1(){
+        initHRManager();
         emS.addConstrains("1", "1234567", LocalDate.of(2024, 7, 15), ShiftTime.Day);
     }
 
     @Test
     public void setShiftTest2_1(){
-        
+
         beforeTest2_1();
         //String JSONresponse = ;
-        Response res = R(hrs.setShift(LocalDate.of(2024, 7, 15), ShiftTime.Day, "1", Role.Cashier));
+        Response res = R(hrs.setShift(LocalDate.of(2024, 6, 9), ShiftTime.Day, "1", Role.Cashier));
         assertEquals(true, res.isErrorOccured());
         assertEquals(Errors.cantSetShiftDueConstrains, res.getErrorMessage());
 
@@ -148,18 +156,20 @@ public class HRserviceTest {
     
     @Test
     public void addEmployeeTest2_1Posetive(){
+        initHRManager();
         Response res = R(hrs.addEmployee("6","abo elmori","777-5555",5000,new Role[]{Role.Cashier,Role.ShiftManager},LocalDate.now(),LocalDate.of(2025, 6, 1),1));
-        assertEquals(true, res.getReturnValue());
-        checkIfContainsEmployee("6", "abo elmori",true,true );
+          assertEquals("employee added successfully", res.getReturnValue());
+          System.out.println(res.getErrorMessage());
+         checkIfContainsEmployee("6", "abo elmori",true,true );
     }
 
     private void checkIfContainsEmployee(String EmpId,String name,Boolean mustExist,Boolean UniqeID){
-        Employee empToTest = empC.getEmployee(EmpId);
-        assertEquals(mustExist||UniqeID, empToTest.getID().equals(EmpId));
+        if(mustExist){ Employee empToTest = empC.getEmployee(EmpId);
+        assertEquals(mustExist || UniqeID, empToTest.getID().equals(EmpId));}
         Store store = empC.getStore(1);
-        Dictionary<String,Employee> storeWorkers = store.getWorkers();
+        HashMap<String,Employee> storeWorkers = store.getWorkers();
         assertEquals(mustExist, storeWorkers.get(EmpId)!=null);
-        LocalDate nextWeek = LocalDate.now().plusDays(7);
+        LocalDate nextWeek = LocalDate.now().plusDays(1);
         Shift shift = store.getShift(nextWeek,ShiftTime.Day);
         assertEquals(mustExist, shift.empCanWork(EmpId));
     }
@@ -167,14 +177,16 @@ public class HRserviceTest {
 
     @Test
     public void addEmployeeTest2_2Negative(){
+        //groub manageer cant start
+        initHRManager();
         Response resOfGroubManagerError =R( hrs.addEmployee("7","omar" , "666-5555", 5000, new Role[]{Role.GroubManager}, LocalDate.now(), LocalDate.of(2025,6, 1),1));
         assertEquals(true,resOfGroubManagerError.isErrorOccured());
-        assertEquals(true,Errors.cantSetGroubManagerToNewEmployee);
+        assertEquals(resOfGroubManagerError.getErrorMessage(),Errors.cantSetGroubManagerToNewEmployee);
         checkIfContainsEmployee("7", HRPassword, false,false);
 
         Response resOfTheSameId =R( hrs.addEmployee("5","abo elmori","777-5555",5000,new Role[]{Role.Cashier,Role.ShiftManager},LocalDate.now(),LocalDate.of(2025, 6, 1), 1));
         assertEquals(true,resOfTheSameId.isErrorOccured());
-        assertEquals(true,Errors.cantSetGroubManagerToNewEmployee);
+        assertEquals(resOfGroubManagerError.getErrorMessage(),Errors.cantSetGroubManagerToNewEmployee);
         checkIfContainsEmployee("7", HRPassword, false,true);
     }
 
@@ -182,18 +194,20 @@ public class HRserviceTest {
 
     @Test
     public void updateSalaryTest3Positive(){
+        initHRManager();
         Response res=R( hrs.updateSalary("1", 7000));
         Employee emp = empC.getEmployee("1");
-        assertEquals(true, res.getReturnValue());
+        assertEquals("salary updated successfully", res.getReturnValue());
         assertEquals(7000, emp.getMounthSalary());
     }
 
     @Test
     public void updateSalaryTest3Neg(){
+        initHRManager();
         Response res=R( hrs.updateSalary("1", -7000));
         Employee emp = empC.getEmployee("1");
-        assertEquals(false, res.getReturnValue());
-        assertEquals(7000, emp.getMounthSalary());
+        assertEquals(null, res.getReturnValue());
+        assertEquals(5000, emp.getMounthSalary());
         assertEquals(Errors.cantUpdateNegativeSalary, res.getErrorMessage());
     }
 

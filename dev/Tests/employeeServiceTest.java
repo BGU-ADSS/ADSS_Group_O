@@ -50,7 +50,7 @@ public class employeeServiceTest {
         empC = new EmployeeController(hrManager);
         employees = getEmployees();
         emS = new employeeService(empC);
-        empC.setStoreForTest("lee sheeba", "Beer Sheba", employees.remove(4), employees, 0);
+        empC.setStoreForTest("lee sheeba", "Beer Sheba", employees.remove(4), employees, 0,0,5);
         for (Employee employee : employees) {
             emS.setPassword(employee.getID(), "12345678");
         }

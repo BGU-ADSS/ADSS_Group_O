@@ -57,16 +57,17 @@ public class Store {
         if (employees.get(employee.getID()) != null) {
             throw new IllegalArgumentException(Errors.EmployeeAlreadyExistInStore);
         }
-        employees.put(employee.getID(), employee);
         schedule.addEmployee(employee);
+        employees.put(employee.getID(), employee);
     }
 
     public Shift getShift(LocalDate nextWeek, ShiftTime shiftTime) {
-        return null;
+        int index= shiftTime==ShiftTime.Day?0:1;
+        return schedule.getShift(nextWeek,index) ;
     }
 
-    public Dictionary<String, Employee> getWorkers() {
-        return null;
+    public HashMap<String, Employee> getWorkers() {
+        return employees;
     }
 
     public String getShiftsHistory(LocalDate fromDate) {

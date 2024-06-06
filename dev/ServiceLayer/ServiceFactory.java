@@ -14,8 +14,8 @@ public class ServiceFactory {
     private EmployeeController employeeController;
 
     public ServiceFactory(){
-        employeeController = new EmployeeController(new File("C:\\Users\\WINDOWS 10 PRO\\OneDrive\\Desktop\\ADSS\\ADSS_Group_O\\dev\\DTOs\\config.txt"),
-                new File("C:\\Users\\WINDOWS 10 PRO\\OneDrive\\Desktop\\ADSS\\ADSS_Group_O\\dev\\DTOs\\Data.txt"));
+        employeeController = new EmployeeController(new File("dev\\DTOs\\config.txt"),
+                new File("dev\\DTOs\\Data.txt"));
         employeeService = new employeeService(employeeController);
         hrService = new HRservice(employeeController);
     }
