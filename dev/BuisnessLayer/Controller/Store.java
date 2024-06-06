@@ -116,7 +116,10 @@ public class Store {
 
     public Role[] getEmployeeRoles(String empId) {
         isEmployeeExist(empId);
-        return (Role[]) employees.get(empId).getRoles().toArray();
+        List<Role> rolesForEmployee = employees.get(empId).getRoles();
+        Role [] rolesToRet = new Role[rolesForEmployee.size()];
+        for(int index=0;index<rolesForEmployee.size();index++) rolesToRet[index]= rolesForEmployee.get(index);
+        return rolesToRet;
     }
 
     public void setBankAccountForEmployee(String empId, String newBankAccount) {

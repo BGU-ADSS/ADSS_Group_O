@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 import DTOs.Errors;
 import DTOs.Role;
+import PresentationLayer.Logs;
 
 public class Employee {
 
@@ -63,6 +64,7 @@ public class Employee {
         if ( !roles.contains(role) ) {
             throw new IllegalArgumentException("employee does not have role " + role);
         }
+        if(roles.size()==1) throw new IllegalArgumentException(Errors.cantRemoveTheLastRole);
         roles.remove(role);
         return true;
     }
@@ -90,8 +92,9 @@ public class Employee {
 
     public boolean login(String password) {
         if( !this.password.equals(password) ){
-            throw new IllegalArgumentException("wrong password");
+            throw new IllegalArgumentException(Errors.InvalidPassword);
         }
+        Logs.debug("logiin successs");
         return true;
     }
 

@@ -3,6 +3,8 @@ package ServiceLayer;
 import BuisnessLayer.Controller.EmployeeController;
 import BuisnessLayer.Workers.Employee;
 import DTOs.*;
+import PresentationLayer.Logs;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -32,6 +34,7 @@ public class employeeService {
             res = new Response(null,"Successfully set password");
         }
         catch (Exception e){
+            Logs.debug("set pass ex: "+e.getMessage());
             res = new Response(e.getMessage());
         }
 
@@ -130,8 +133,10 @@ public class employeeService {
         {
             empController.loginForEmployee(Id,password);
             res = new Response(null,"Successfully logged in");
+            Logs.debug("loginnnnn");
         }
         catch (Exception e){
+            Logs.debug(e.getMessage());
             res = new Response(e.getMessage());
         }
         return gson.toJson(res);

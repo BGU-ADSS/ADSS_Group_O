@@ -178,6 +178,7 @@ public class EmployeeController {
         if ( employeesStore.get(empId) == null ){
             throw new IllegalArgumentException("Employee does not exist");
         }
+        
 
         Store store = stores.get(employeesStore.get(empId));
         return store.removeRoleFromEmployee(empId,role);
