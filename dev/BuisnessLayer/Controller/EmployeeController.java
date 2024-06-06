@@ -66,7 +66,9 @@ public class EmployeeController {
                     this.hrManager = gson.fromJson(line.substring(4), HRManager.class);
                 }else if(line.startsWith("#Employee")){
                     Employee em = gson.fromJson(line.substring(10), Employee.class);
-                    if(employeesToStores.get(em.getStoreNum())==null) employeesToStores.put(em.getStoreNum(),new ArrayList<>());
+                    if(employeesToStores.get(em.getStoreNum())==null) {
+                        employeesToStores.put(em.getStoreNum(), new ArrayList<>());
+                    }
                     employeesToStores.get(em.getStoreNum()).add(em);
                     Logs.debug("size of store "+em.getStoreNum()+" , is "+employeesToStores.get(em.getStoreNum()).size());
                     employeesStore.put(em.getID(),em.getStoreNum());
@@ -141,13 +143,13 @@ public class EmployeeController {
     public void addEmployee(Employee employee){
 
         if( employeesStore.get(employee.getID()) != null ){
-            throw new IllegalArgumentException("Employee already exists");
+            throw new IllegalArgumentException("Employee ID already exists");
         }
         employeesStore.put(employee.getID(), employee.getStoreNum());
         stores.get(employee.getStoreNum()).addEmployee(employee);
     }
 
-    public List<Shift[]> getShiftHistory(LocalDate fromDate, int StoreNum){
+    public String getShiftHistory(LocalDate fromDate, int StoreNum){
 
         if ( stores.get(StoreNum) == null ){
             throw new IllegalArgumentException("Store does not exist");
@@ -287,8 +289,12 @@ public class EmployeeController {
     }
 
     public void updateSalary(String emplId, int monthSalary) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateSalary'");
+
+        if ( employeesStore.get(emplId) == null ){
+            throw new IllegalArgumentException("Employee does not exist");
+        }
+        Store store = stores.get(employeesStore.get(emplId));
+        store.updateSalary(emplId,monthSalary);
     }
 
 

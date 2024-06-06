@@ -69,8 +69,7 @@ public class Store {
         return null;
     }
 
-    public List<Shift[]> getShiftsHistory(LocalDate fromDate) {
-
+    public String getShiftsHistory(LocalDate fromDate) {
         return schedule.getShiftsHistory(fromDate);
     }
 
@@ -140,5 +139,9 @@ public class Store {
 
     public boolean loginForEmployee(String empId, String password) {
         return employees.get(empId).login(password);
+    }
+
+    public void updateSalary(String emplId, int monthSalary) {
+        employees.get(emplId).updateSalary(monthSalary);
     }
 }

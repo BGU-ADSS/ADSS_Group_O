@@ -6,11 +6,7 @@ import DTOs.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.File;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.Dictionary;
-import java.util.HashMap;
 
 public class employeeService {
 
@@ -20,10 +16,6 @@ public class employeeService {
 
     public employeeService(EmployeeController employeeController) {
         empController = employeeController;
-    }
-
-    public employeeService() {
-        empController=new EmployeeController(new File("C:\\Users\\WINDOWS 10 PRO\\OneDrive\\Desktop\\ADSS\\ADSS_Group_O\\dev\\DTOs\\config.txt"), new File("C:\\Users\\WINDOWS 10 PRO\\OneDrive\\Desktop\\ADSS\\ADSS_Group_O\\dev\\DTOs\\Data.txt"));
     }
 
     public String setPassword(String empId,String password) {
@@ -126,7 +118,7 @@ public class employeeService {
         return gson.toJson(res);
     }
 
-    public String logIn(String Id,String password){
+    public String loginForEmployee(String Id, String password){
 
         Response res;
         try

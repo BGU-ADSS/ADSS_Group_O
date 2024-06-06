@@ -96,9 +96,9 @@ public class Shift {
     private void removeEmployeeFromGivenDict(String empId ,HashMap<Role,List<Employee>> toRemoveFrom ){
         Iterator<Role> iter = toRemoveFrom.keySet().iterator();
         while (iter.hasNext()){
-            List<Employee> employees = toRemoveFrom.get(iter.next());
-            for(int i =0;i<employees.size();i++){
-                if(employees.get(i).getID().equals(empId)) employees.remove(i);
+            Role r = iter.next();
+            for(int i =0;i<toRemoveFrom.get(r).size();i++){
+                if(toRemoveFrom.get(r).get(i).getID().equals(empId)) toRemoveFrom.get(i).remove(i);
             }
         }
     }
@@ -120,7 +120,9 @@ public class Shift {
         if(empl.containsRole(role) && workersAvailable.get(role).contains(empl)){
             removeEmployeeFromGivenDict(empId, workersAvailable);
             workersInShift.get(role).add(empl);
-        }else throw new IllegalArgumentException(Errors.EmployeeHasNoGivenRole);
+        }else {
+            throw new IllegalArgumentException("cannot set this employee to shift");
+        }
     }
 
     public String toStringForSchedule(){

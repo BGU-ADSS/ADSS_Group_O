@@ -94,4 +94,8 @@ public class Employee {
         }
         return true;
     }
+
+    public void updateSalary(int monthSalary) {
+        this.monthSalary = monthSalary;
+    }
 }

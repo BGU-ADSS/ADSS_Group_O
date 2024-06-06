@@ -2,18 +2,18 @@ package PresentationLayer;
 
 import java.time.LocalDate;
 
+import ServiceLayer.ServiceFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import DTOs.LocalDateAdapter;
 import DTOs.Role;
 import DTOs.ShiftTime;
-import ServiceLayer.employeeService;
 
 public class EmployeePres {
     private String empId ;
     private String empPassword;
-    private employeeService employeeService;
+    private ServiceFactory serviceFactory;
     private boolean hasLoggedIn;
     
     
@@ -27,8 +27,8 @@ public class EmployeePres {
     public static final String PROFIE_INPUT_FORMAT = "profile";
     
 
-    public EmployeePres(){
-        employeeService = new employeeService();
+    public EmployeePres(ServiceFactory serviceFactory){
+        this.serviceFactory = serviceFactory;
     }
 
     
@@ -37,7 +37,7 @@ public class EmployeePres {
     public boolean login(String input){
         String[] params = extractIdAndPassword(input);
 
-        String res = employeeService.logIn(params[0], params[1]);
+        String res = serviceFactory.loginForEmployee(params[0], params[1]);
         if(hasFailed(res)){
             System.out.println("Failed :"+getError(res));
             return false;
@@ -94,24 +94,24 @@ public class EmployeePres {
     }
     //============================================= Actions ==================================================
     private void printProfile() {
-        printValue(employeeService.getProfile(empId));
+        printValue(serviceFactory.getProfile(empId));
     }
 
 
     private void terminateJobReq() {
-        String res = employeeService.terminateJobReq(empId, empPassword, Logs.getInputDate());
+        String res = serviceFactory.terminateJobReq(empId, empPassword, Logs.getInputDate());
         printValue(res);
     }
 
     private void setNewBankAccount() {
         Logs.logSetNewBankAccount();
         String input = Logs.getInput();
-        String res = employeeService.setBankAccount(empId, empPassword, input);
+        String res = serviceFactory.setBankAccount(empId, empPassword, input);
         printValue(res);
     }
     
     private void printAllShiftsWithEmployees(){
-        String res = employeeService.getWeekShiftForAll(empId);
+        String res = serviceFactory.getWeekShiftForAll(empId);
         printValue(res);
     }
    
@@ -119,7 +119,7 @@ public class EmployeePres {
     private void addRole() {
         Logs.logRolesInShift();
         Role roleToAdd = Logs.getRoleToAdd();
-        String res =employeeService.addRole(empId, empPassword, roleToAdd);
+        String res = serviceFactory.addRole(empId, empPassword, roleToAdd);
         printValue(res);
     }
     
@@ -127,14 +127,14 @@ public class EmployeePres {
         Logs.logGetConstrainsDateToAdd();
         LocalDate date = Logs.getInputDate();
         ShiftTime shiftTime = Logs.logGetShiftInGivenDate();
-        String res = employeeService.addConstrains(empId, empPassword, date, shiftTime);
+        String res = serviceFactory.addConstrains(empId, empPassword, date, shiftTime);
         printValue(res);
     }
 
     private void removeRole(){
         Logs.logGetRoleToRemove();
         Role roleToRemove = Logs.getRoleToRemove();
-        String res = employeeService.removeRole(empId, empPassword, roleToRemove);
+        String res = serviceFactory.removeRole(empId, empPassword, roleToRemove);
         printValue(res);
     }
     //============================================= Deal with response ==================================================
