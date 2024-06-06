@@ -1,5 +1,5 @@
 #hr-{"password":"12345678"}
-#Employee-{"empID":"2","empName":"ghanem","bankAccount":"777-55556","hourSalary":-1,"monthSalary":5000,"roles":["GroubManager"],"startDate":"2024-06-01","endDate":"2025-01-01","storeNum":0}
-#Employee-{"empID":"4","empName":"dahleh","bankAccount":"777-55558","hourSalary":-1,"monthSalary":5000,"roles":["ShiftManager"],"startDate":"2024-06-01","endDate":"2024-07-01","storeNum":1}
+#Employee-{"empID":"2","empName":"ghanem","bankAccount":"777-55556","hourSalary":-1,"monthSalary":5000,"roles":["GroubManager"],"startDate":"2024-06-01","endDate":"2025-01-01","storeNum":0,"password":"123"}
+#Employee-{"empID":"4","empName":"dahleh","bankAccount":"777-55558","hourSalary":-1,"monthSalary":5000,"roles":["ShiftManager"],"startDate":"2024-06-01","endDate":"2024-07-01","storeNum":1,"password":"123"}
 #store-{"name":"ms3d","address":"qalanswa","storeNumber":0}
 #store-{"name":"hillou","address":"arraba","storeNumber":1}

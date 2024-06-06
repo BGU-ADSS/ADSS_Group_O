@@ -64,11 +64,15 @@ public class Logs {
         }
     }
     public static Role getRoleToAdd() {
-        print("enter the number of the role you want to add");
+        print("choose a role to work as:");
+        logRolesInShift();
         String input = getInput();
         int roleNum=-1;
         try{ roleNum = Integer.parseInt(input);}
-        catch(Exception e){ print("this is not a number!!");return getRoleToAdd();}
+        catch(Exception e){
+            print("this is not a number!!");
+            return getRoleToAdd();
+        }
         return fromInt(roleNum);
 
     }
@@ -107,7 +111,7 @@ public class Logs {
     public static Role getRoleToRemove() {
         String input = getInput();
         try{
-            return Role.valueOf(input);
+            return fromInt(Integer.parseInt(input));
         }catch(Exception e ){
             print("please enter one of the roles below");
             print(" StoreManager,Cashier,Storekeeper,ShiftManager,GroubManager");
@@ -149,20 +153,19 @@ public class Logs {
     }
 
     public static Role[] getRoleForNewEmpl() {
-        print ("enter an role number : ");
+        print("enter a role number : ");
         logRolesInShift();
-        String input = getInput();
         Role role =  getRoleToRemove();
         return new Role[]{role};
     }
 
     public static LocalDate getStartDateForNewEmpl() {
-        print("enter start date of contract : ");
+        print("enter start date of contract : (yyyy-MM-dd)");
         return getInputDate();
     }
 
     public static LocalDate getEndDateForNewEmpl() {
-        print("enter end date of contract : ");
+        print("enter end date of contract : (yyyy-MM-dd)");
         return getInputDate();
     }
 
@@ -187,7 +190,7 @@ public class Logs {
     }
 
     public static int getNewMounthSalary() {
-        print("enter the new mounth salary");
+        print("enter the new mounth salary:");
         return getIntInput();    
     }
 
@@ -202,7 +205,7 @@ public class Logs {
     }
 
     public static String getEmployeeIdToWorkIn() {
-        print("enter the id of the employee");
+        print("enter the id of the employee:");
         return getInput();    
     }
 

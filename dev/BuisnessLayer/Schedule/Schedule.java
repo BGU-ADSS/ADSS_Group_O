@@ -67,17 +67,20 @@ public class Schedule {
         }
     }
 
-    public List<Shift[]> getShiftsHistory(LocalDate fromDate) {
+    public String getShiftsHistory(LocalDate fromDate) {
 
+        if( LocalDate.now().isBefore(fromDate) ) {
+            throw new IllegalArgumentException("not suitable date!");
+        }
         List<Shift[]> shifts = new ArrayList<Shift[]>();
         Iterator<LocalDate> iter = dayShifts.keySet().iterator();
         while (iter.hasNext()) {
             LocalDate day = iter.next();
-            if (fromDate.isBefore(day) || fromDate.isEqual(day)) {
+            if ((fromDate.isBefore(day) || fromDate.isEqual(day)) && day.isBefore(LocalDate.now())) {
                 shifts.add(dayShifts.get(day));
             }
         }
-        return shifts;
+        return shiftsHistoryToString(shifts);
     }
 
     public void startAddingConstrainsForNextWeek(HashMap<String,Employee> employees) {
@@ -170,12 +173,13 @@ public class Schedule {
 
     public void setEmployeeInShift(LocalDate date, ShiftTime shiftTime, String empId, Role role) {
         checkRelatedDateShift(date);
-        Shift[] shiftsInDate = dayShifts.get(empId);
-        for (Shift shift : shiftsInDate) {
-            if (shift.getShiftTime() == shiftTime) {
-                shift.setEmployeeToShift(empId, role);
-            }
+        if ( shiftTime == ShiftTime.Day) {
+            dayShifts.get(date)[0].setEmployeeToShift(empId,role);
         }
+        else {
+            dayShifts.get(date)[1].setEmployeeToShift(empId,role);
+        }
+
     }
 
     // this function must check if there are shift in the given date
@@ -202,5 +206,15 @@ public class Schedule {
 
         }
         return schedule + "\n";
+    }
+
+    public String shiftsHistoryToString(List<Shift[]> shifts) {
+
+        String history = "~SHIFTS HISTORY~\n";
+        for (int i = 0; i < shifts.size(); i++) {
+            history += shifts.get(i)[0].toStringForSchedule();
+            history += shifts.get(i)[1].toStringForSchedule();
+        }
+        return history + "\n";
     }
 }

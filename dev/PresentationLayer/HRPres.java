@@ -1,8 +1,8 @@
 package PresentationLayer;
 
-import java.security.PublicKey;
 import java.time.LocalDate;
 
+import ServiceLayer.ServiceFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -13,7 +13,7 @@ import ServiceLayer.HRservice;
 import ServiceLayer.ServiceManager;
 
 public class HRPres {
-    private HRservice hrService;
+    private ServiceFactory serviceFactory;
     private boolean loggedIn;
 
 
@@ -26,12 +26,12 @@ public class HRPres {
     public static final String LOGIN = "login";
     public static final String START_ADDING_CONSTRAINS_FOR_NEXT_WEEK = "start-adding-constraints-for-next-week";
 
-    public HRPres(ServiceManager sm) {
-        hrService = sm.hrService;
+    public HRPres(ServiceFactory serviceFactory) {
+        this.serviceFactory = serviceFactory;
     }
 
     public boolean loginAndStart(String password) {
-        String res = hrService.login(password);
+        String res = serviceFactory.loginForHR(password);
         if (hasFailed(res)) {
             System.out.println("Failed :" + getError(res));
             return false;
@@ -46,6 +46,7 @@ public class HRPres {
     private void dealWithActions() {
         while (loggedIn) {
             Logs.logHRActionsInstructions();
+            Logs.print("Please choose an option :-");
             dealWithInput(Logs.getInput());
         }
     }
@@ -93,27 +94,31 @@ public class HRPres {
         ShiftTime shiftTime = Logs.chooseShiftTime();
         String id = Logs.getEmployeeIdToWorkIn();
         Role role = Logs.getRoleToAdd();
-        String res = hrService.setShift(shiftDate, shiftTime, id,role);
+        System.out.println("hoon");
+        String res = serviceFactory.setShift(shiftDate, shiftTime, id,role);
         printValue(res);
 
     }
 
     private void updateSalaryForEmployee() {
+        String employeeId = Logs.getEmployeeIdToWorkIn();
         int newSalary = Logs.getNewMounthSalary();
-        String res = hrService.updateSalary(null, newSalary);
+        String res = serviceFactory.updateSalary(employeeId, newSalary);
         printValue(res);
     }
 
     private void getShiftHistory() {
         LocalDate date = Logs.getDateTogetShiftHistory();
         int storeNum = Logs.getStoreNumber();
-        String res = hrService.getShiftHistory(date,storeNum);
-        printValue(res);
+        ResponseManager res = new ResponseManager(serviceFactory.getShiftHistory(date,storeNum));
+        if(res.hasErrorOccured) System.out.println(res.errorMessage);
+        else System.out.println(res.value);
+
     }
 
     private void removeEmployee() {
         String input = Logs.logRemoveEmplAndGetId();
-        String res = hrService.removeEmployee(input);
+        String res = serviceFactory.removeEmployee(input);
         printValue(res);
     }
 
@@ -126,19 +131,19 @@ public class HRPres {
         LocalDate startDate = Logs.getStartDateForNewEmpl();
         LocalDate endDate = Logs.getEndDateForNewEmpl();
         int StoreNumber = Logs.getStoreNumForNewEmpl();
-        String res = hrService.addEmployee(Id, emplName, bankAccount, salary, role, startDate, endDate, StoreNumber);
+        String res = serviceFactory.addEmployee(Id, emplName, bankAccount, salary, role, startDate, endDate, StoreNumber);
         printValue(res);
     }
 
     private void getConstrains() {
         String input = Logs.getIdToGetConstrains();
-        String res = hrService.getConstrains(input);
+        String res = serviceFactory.getConstrains(input);
         printValue(res);
     }
 
     private void startAddingConstrainsForNextWeek(){
         int input = Logs.getStoreNumber();
-        String res = hrService.startAddingConstrainsForNextWeek(input);
+        String res = serviceFactory.startAddingConstrainsForNextWeek(input);
         printValue(res);
 
     }

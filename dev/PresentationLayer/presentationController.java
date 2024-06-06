@@ -1,16 +1,17 @@
 package PresentationLayer;
 
-import ServiceLayer.ServiceManager;
+import ServiceLayer.ServiceFactory;
 
 public class presentationController {
     private EmployeePres emPres;
     private HRPres hrPres;
+    private ServiceFactory serviceFactory;
     private boolean finish;
 
     public presentationController(){
-        ServiceManager sm = new ServiceManager();
-        emPres = new EmployeePres(sm);
-        hrPres = new HRPres(sm);
+        serviceFactory = new ServiceFactory();
+        emPres = new EmployeePres(serviceFactory);
+        hrPres = new HRPres(serviceFactory);
     }
 
     public void runPresentation(){

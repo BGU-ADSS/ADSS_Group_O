@@ -6,9 +6,7 @@ import BuisnessLayer.Workers.Employee;
 import DTOs.*;
 import com.google.gson.GsonBuilder;
 
-import java.io.File;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -47,7 +45,7 @@ public class HRservice {
         Response res;
         try {
             empController.setEmployeeInShift(localDate, shiftTime, emplId, role);
-            res = new Response(true);
+            res = new Response(null,"shift successfully added to the list");
         } catch (Exception ex) {
             res = new Response(ex.getMessage(), null);
         }
@@ -59,11 +57,10 @@ public class HRservice {
         Response res;
         try {
             LinkedList<Role> rolesToSend = new LinkedList<>();
-            for (Role role : roles)
-                rolesToSend.add(role);
+            for (Role role : roles) rolesToSend.add(role);
             empController.addEmployee(new Employee(emplId, emplName, bankAccount, mounthSalary, mounthSalary,
                     rolesToSend, startDate, endDate, storeNum));
-            res = new Response(true);
+            res = new Response(null,"employee added successfully");
         } catch (Exception ex) {
             res = new Response(ex.getMessage(), null);
         }
@@ -73,8 +70,8 @@ public class HRservice {
     public String removeEmployee(String emplId) {
         Response res;
         try {
-
-            res = new Response(empController.removeEmployee(emplId));
+            empController.removeEmployee(emplId);
+            res = new Response(null,"employee removed successfully");
         } catch (Exception ex) {
             res = new Response(ex.getMessage(), null);
         }
@@ -84,9 +81,8 @@ public class HRservice {
     public String getShiftHistory(LocalDate day, int storeNumber) {
         Response res;
         try {
-            List<Shift[]> value = empController.getShiftHistory(day, storeNumber);
-
-            res = new Response(value.toArray());
+            String value = empController.getShiftHistory(day, storeNumber);
+            res = new Response(null,value);
         } catch (Exception ex) {
             res = new Response(ex.getMessage(), null);
         }
@@ -97,14 +93,14 @@ public class HRservice {
         Response res;
         try {
             empController.updateSalary(emplId, monthSalary);
-            res = new Response(true);
+            res = new Response(null,"salary updated successfully");
         } catch (Exception ex) {
             res = new Response(ex.getMessage(), null);
         }
         return gson.toJson(res);
     }
 
-    public String login(String password) {
+    public String loginForHR(String password) {
 
         Response res;
         try {
@@ -121,7 +117,7 @@ public class HRservice {
         Response res;
         try {
             empController.startAddingConstrainsForNextWeek(storeNum);
-            res = new Response(true);
+            res = new Response(null,"next week starts successfully");
         } catch (Exception e) {
             res = new Response(e.getMessage());
         }
