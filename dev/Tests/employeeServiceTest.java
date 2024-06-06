@@ -28,8 +28,9 @@ public class employeeServiceTest {
     private String HRPassword;
     private List<Employee> employees;
     private employeeService emS;
-    private Gson gson=new GsonBuilder().setPrettyPrinting().create();
-    private Response R(String res){
+    private Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+    private Response R(String res) {
         return gson.fromJson(res, Response.class);
     }
     // ==================================================== init funcs :
@@ -49,8 +50,8 @@ public class employeeServiceTest {
         hrManager = new HRManager(HRPassword);
         empC = new EmployeeController(hrManager);
         emS = new employeeService(empC);
-        employees= new ArrayList<>();
-        empC.setStoreForTest("lee sheeba", "Beer Sheba",null, employees, 1,0,5);
+        employees = new ArrayList<>();
+        empC.setStoreForTest("lee sheeba", "Beer Sheba", null, employees, 1, 0, 1);
         employees = getEmployees();
         for (Employee employee : employees) {
             empC.addEmployee(employee);
@@ -107,62 +108,72 @@ public class employeeServiceTest {
         return employees;
     }
 
-
-        //=================================login
-        @Test
-        public void loginTestPos(){
-            initHRManager();
-            Response res= R(emS.loginForEmployee("1", "12345678"));
-            assertEquals("Successfully logged in", res.getReturnValue());
-        }
-
-        @Test
-        public void loginTestNeg(){
-            initHRManager();
-            Response res= R(emS.loginForEmployee("1", "1234567"));
-            assertEquals(Errors.InvalidPassword, res.getErrorMessage());
-        }
-    
-    
-    //=================================== add Role :
+    // =================================login
+    @Test
+    public void loginTestPos() {
+        initHRManager();
+        Response res = R(emS.loginForEmployee("1", "12345678"));
+        assertEquals("Successfully logged in", res.getReturnValue());
+    }
 
     @Test
-    public void addRoleTest1_pos(){
+    public void loginTestNeg() {
+        initHRManager();
+        Response res = R(emS.loginForEmployee("1", "1234567"));
+        assertEquals(Errors.InvalidPassword, res.getErrorMessage());
+    }
+
+    // ===================add connstrains test:
+
+    private void beforeConstrainsTest(int deadLine){
+        initHRManager();
+        List<Employee> emps= new ArrayList<>();
+        LocalDate start5 = LocalDate.of(2024, 6, 1);
+        LocalDate end5 = LocalDate.of(2025, 6, 1);
+        List<Role> roles5 = new ArrayList<>();
+        roles5.add(Role.StoreManager);
+        empC.setStoreForTest("hi", "saa", null, employees, 2, 1, deadLine);
+        empC.addEmployee(new Employee("1","alaoi", "777-55559", 5000, -1, roles5, start5, end5, 2));
+    }
+
+    @Test
+    public void setConstrainsAfterDeadlineTest(){
+        emS.addConstrains("1", "12345678", , null)
+    }
+
+
+    // =================================== add Role :
+
+    @Test
+    public void addRoleTest1_pos() {
         initHRManager();
         Response res = R(emS.addRole("1", "12345678", Role.Storekeeper));
         assertEquals("Successfully add role", res.getReturnValue());
-        assertArrayEquals(new Role[]{Role.Cashier,Role.Storekeeper},empC.getEmployeeRoles("1"));
+        assertArrayEquals(new Role[] { Role.Cashier, Role.Storekeeper }, empC.getEmployeeRoles("1"));
 
         Response res2 = R(emS.addRole("1", "12345678", Role.GroubManager));
         assertEquals("Successfully add role", res2.getReturnValue());
-        assertArrayEquals(new Role[]{Role.Cashier,Role.Storekeeper,Role.GroubManager},empC.getEmployeeRoles("1"));
+        assertArrayEquals(new Role[] { Role.Cashier, Role.Storekeeper, Role.GroubManager }, empC.getEmployeeRoles("1"));
 
     }
-    
-    @Test
-    public void addRoleTest1_neg(){
-        initHRManager();
-        
-    }
 
-    //=================================== remove Role
+    // =================================== remove Role
     @Test
-    public void removeRoleTest2_pos(){
+    public void removeRoleTest2_pos() {
         initHRManager();
-        Response resOfAdd =R( emS.addRole("1", "12345678", Role.Storekeeper));
+        Response resOfAdd = R(emS.addRole("1", "12345678", Role.Storekeeper));
         Response res = R(emS.removeRole("1", "12345678", Role.Cashier));
-        assertEquals("Successfully remove role",res.getReturnValue());
-        assertArrayEquals(new Role[]{Role.Storekeeper}, empC.getEmployeeRoles("1"));
+        assertEquals("Successfully remove role", res.getReturnValue());
+        assertArrayEquals(new Role[] { Role.Storekeeper }, empC.getEmployeeRoles("1"));
     }
 
     @Test
-    public void removeRoleTest2_neg(){
+    public void removeRoleTest2_neg() {
         initHRManager();
         Response resOfLastRole = R(emS.removeRole("3", "12345678", Role.Storekeeper));
         assertEquals(true, resOfLastRole.isErrorOccured());
-        assertEquals(Errors.cantRemoveTheLastRole,resOfLastRole.getErrorMessage());
-        assertArrayEquals(new Role[] {Role.Storekeeper}, empC.getEmployeeRoles("3"));
+        assertEquals(Errors.cantRemoveTheLastRole, resOfLastRole.getErrorMessage());
+        assertArrayEquals(new Role[] { Role.Storekeeper }, empC.getEmployeeRoles("3"));
     }
 
- 
 }
