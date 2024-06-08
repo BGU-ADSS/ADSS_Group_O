@@ -142,7 +142,6 @@ public class EmployeePres {
    
     
     private void addRole() {
-        Logs.logRolesInShift();
         Role roleToAdd = Logs.getRoleToAdd();
         String res = serviceFactory.addRole(empId, empPassword, roleToAdd);
         printValue(res);

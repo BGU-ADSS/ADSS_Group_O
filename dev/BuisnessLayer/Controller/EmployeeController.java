@@ -146,7 +146,7 @@ public class EmployeeController {
     public void addEmployee(Employee employee){
         Logs.debug( employeesStore.get(employee.getID())+" the store returned for this employee "+employeesStore.size());
         if( employeesStore.get(employee.getID()) != null ){
-            throw new IllegalArgumentException("Employee ID already exists");
+            throw new IllegalArgumentException(Errors.EmployeeAlreadyExistInStore);
         }
         stores.get(employee.getStoreNum()).addEmployee(employee);
         employeesStore.put(employee.getID(), employee.getStoreNum());

@@ -155,6 +155,9 @@ public class Schedule {
     }
 
     private List<Shift> getShiftsInWeak(LocalDate sunday) {
+        if( dayShifts.get(sunday) == null ) {
+            throw new IllegalArgumentException("you must permit adding constrains for next week first! by opt 7");
+        }
         List<Shift> toRet = new ArrayList<>();
 
         for (int day = 0; day < 7; day++) {
@@ -192,6 +195,9 @@ public class Schedule {
 
     // this function must check if there are shift in the given date
     private void checkRelatedDateShift(LocalDate date) {
+        if( dayShifts.get(date) == null ){
+            throw new IllegalArgumentException("you must start the week shift first!");
+        }
         if( breakDates.contains(date) ){
             throw new IllegalArgumentException("cannot set shift in break dates!");
         }

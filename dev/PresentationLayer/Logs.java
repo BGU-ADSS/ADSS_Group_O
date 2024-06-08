@@ -70,6 +70,7 @@ public class Logs {
     }
     public static Role getRoleToAdd() {
         print("choose a role to add/work as:");
+        logRolesInShift();
         String input = getInput();
         int roleNum=-1;
         try{ roleNum = Integer.parseInt(input);}
@@ -90,7 +91,14 @@ public class Logs {
     }
     public static LocalDate getInputDate() {
         String input = getInput();
-        LocalDate date = LocalDate.parse(input, formatter);
+        LocalDate date=null;
+        try {
+            date = LocalDate.parse(input, formatter);
+        }
+        catch(Exception e){
+            print("not valid input! try again");
+            return getInputDate();
+        }
         return date;
     }
 

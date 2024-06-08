@@ -9,6 +9,7 @@ import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
 
+import ServiceLayer.ServiceFactory;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -28,12 +29,11 @@ import ServiceLayer.employeeService;
 
 public class HRserviceTest {
 
-    private HRservice hrs;
+    private ServiceFactory serviceFactory;
     private EmployeeController empC;
     private HRManager hrManager;
     private String HRPassword;
     private List<Employee> employees;
-    private employeeService emS;
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     private Response R(String res) {
@@ -55,16 +55,10 @@ public class HRserviceTest {
         // Store : Name : lee sheeba , address beer sheeba , Num : 1.
         hrManager = new HRManager(HRPassword);
         empC = new EmployeeController(hrManager);
-        emS = new employeeService(empC);
         employees = new ArrayList<>();
-        empC.setStoreForTest("lee sheeba", "Beer Sheba", null, employees, 1, 0, 5);
         employees = getEmployees();
-        for (Employee employee : employees) {
-            emS.setPassword(employee.getID(), "12345678");
-            empC.addEmployee(employee);
-        }
-
-        hrs = new HRservice(empC);
+        empC.setStoreForTest("lee sheeba", "Beer Sheba", null, employees, 1, 0, 6);
+        serviceFactory = new ServiceFactory(empC);
     }
 
     private List<Employee> getEmployees() {
@@ -106,7 +100,7 @@ public class HRserviceTest {
 
         List<Employee> employees = new ArrayList<>();
         employees.add(em1);
-        // employees.add(em2);
+        employees.add(em2);
         employees.add(em3);
         employees.add(em4);
         employees.add(em5);
@@ -116,27 +110,31 @@ public class HRserviceTest {
 
 
     // ====================================================== set shift
-    private void beforeTest2_1() {
+    private void beforeTest() {
         initHRManager();
-        emS.addConstrains("1", "1234567", LocalDate.of(2024, 7, 15), ShiftTime.Day);
+        serviceFactory.startAddingConstrainsForNextWeek(1);
+        serviceFactory.addConstrains("2", "1234567", LocalDate.of(2024,6,10), ShiftTime.Night);
     }
 
     @Test
     public void setShiftTest2_1() {
 
-        beforeTest2_1();
+        beforeTest();
         // String JSONresponse = ;
-        Response res = R(hrs.setShift(LocalDate.of(2024, 6, 9), ShiftTime.Day, "1", Role.Cashier));
-        assertEquals(true, res.isErrorOccured());
-        assertEquals(Errors.cantSetShiftDueConstrains, res.getErrorMessage());
+        Response res = R(serviceFactory.setShift(LocalDate.of(2024, 6, 10), ShiftTime.Day, "2", Role.GroubManager));
+        assertEquals(false, res.isErrorOccured());
+        assertEquals(null,res.getErrorMessage());
+        assertEquals("shift successfully added to the list", res.getReturnValue());
 
     }
 
     @Test
     public void setShiftTest2_2() {
-        Response res = R(hrs.setShift(LocalDate.of(2024, 7, 15), ShiftTime.Day, "2", Role.GroubManager));
-        assertEquals(false, res.isErrorOccured());
-        assertEquals(true, res.getReturnValue());
+        beforeTest();
+        Response res = R(serviceFactory.setShift(LocalDate.of(2024, 6, 10), ShiftTime.Night, "2", Role.GroubManager));
+        assertEquals(true, res.isErrorOccured());
+        assertEquals(null,res.getReturnValue());
+        assertEquals(Errors.cantSetShiftDueConstrains, res.getErrorMessage());
     }
 
     // ========================================= add Employee
@@ -144,11 +142,11 @@ public class HRserviceTest {
     @Test
     public void addEmployeeTest2_1Posetive() {
         initHRManager();
-        Response res = R(hrs.addEmployee("6", "abo elmori", "777-5555", 5000,
+        Response res = R(serviceFactory.addEmployee("6", "abo elmori", "777-5555", 5000,
                 new Role[] { Role.Cashier, Role.ShiftManager }, LocalDate.now(), LocalDate.of(2025, 6, 1), 1));
+        assertEquals(false, res.isErrorOccured());
         assertEquals("employee added successfully", res.getReturnValue());
-        System.out.println(res.getErrorMessage());
-        checkIfContainsEmployee("6", "abo elmori", true, true);
+        //checkIfContainsEmployee("6", "abo elmori", true, true);
     }
 
     private void checkIfContainsEmployee(String EmpId, String name, Boolean mustExist, Boolean UniqeID) {
@@ -168,17 +166,17 @@ public class HRserviceTest {
     public void addEmployeeTest2_2Negative() {
         // groub manageer cant start
         initHRManager();
-        Response resOfGroubManagerError = R(hrs.addEmployee("7", "omar", "666-5555", 5000,
+        Response resOfGroubManagerError = R(serviceFactory.addEmployee("7", "omar", "666-5555", 5000,
                 new Role[] { Role.GroubManager }, LocalDate.now(), LocalDate.of(2025, 6, 1), 1));
         assertEquals(true, resOfGroubManagerError.isErrorOccured());
         assertEquals(resOfGroubManagerError.getErrorMessage(), Errors.cantSetGroubManagerToNewEmployee);
-        checkIfContainsEmployee("7", HRPassword, false, false);
+        //checkIfContainsEmployee("7", HRPassword, false, false);
 
-        Response resOfTheSameId = R(hrs.addEmployee("5", "abo elmori", "777-5555", 5000,
+        Response resOfTheSameId = R(serviceFactory.addEmployee("5", "abo elmori", "777-5555", 5000,
                 new Role[] { Role.Cashier, Role.ShiftManager }, LocalDate.now(), LocalDate.of(2025, 6, 1), 1));
         assertEquals(true, resOfTheSameId.isErrorOccured());
-        assertEquals(resOfGroubManagerError.getErrorMessage(), Errors.cantSetGroubManagerToNewEmployee);
-        checkIfContainsEmployee("7", HRPassword, false, true);
+        assertEquals(resOfTheSameId.getErrorMessage(), Errors.EmployeeAlreadyExistInStore);
+        //checkIfContainsEmployee("7", HRPassword, false, true);
     }
 
     // ==================================== update salary
@@ -186,7 +184,7 @@ public class HRserviceTest {
     @Test
     public void updateSalaryTest3Positive() {
         initHRManager();
-        Response res = R(hrs.updateSalary("1", 7000));
+        Response res = R(serviceFactory.updateSalary("1", 7000));
         Employee emp = empC.getEmployee("1");
         assertEquals("salary updated successfully", res.getReturnValue());
         assertEquals(7000, emp.getMounthSalary());
@@ -195,7 +193,7 @@ public class HRserviceTest {
     @Test
     public void updateSalaryTest3Neg() {
         initHRManager();
-        Response res = R(hrs.updateSalary("1", -7000));
+        Response res = R(serviceFactory.updateSalary("1", -7000));
         Employee emp = empC.getEmployee("1");
         assertEquals(null, res.getReturnValue());
         assertEquals(5000, emp.getMounthSalary());

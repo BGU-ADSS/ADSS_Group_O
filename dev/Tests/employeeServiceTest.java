@@ -139,6 +139,7 @@ public class employeeServiceTest {
 
     @Test
     public void setConstrainsAfterDeadlineTest(){
+        initHRManager();
         Response res= R(emS.addConstrains("1", "12345678", LocalDate.of(2024, 6, 9), ShiftTime.Day));
         assertEquals(true, res.isErrorOccured());
     }
@@ -152,7 +153,6 @@ public class employeeServiceTest {
         Response res = R(emS.addRole("1", "12345678", Role.Storekeeper));
         assertEquals("Successfully add role", res.getReturnValue());
         assertArrayEquals(new Role[] { Role.Cashier, Role.Storekeeper }, empC.getEmployeeRoles("1"));
-
         Response res2 = R(emS.addRole("1", "12345678", Role.GroubManager));
         assertEquals("Successfully add role", res2.getReturnValue());
         assertArrayEquals(new Role[] { Role.Cashier, Role.Storekeeper, Role.GroubManager }, empC.getEmployeeRoles("1"));

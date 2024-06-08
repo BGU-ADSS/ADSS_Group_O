@@ -21,6 +21,11 @@ public class ServiceFactory {
         hrService = new HRservice(employeeController);
     }
 
+    public ServiceFactory(EmployeeController controller){
+        employeeService = new employeeService(controller);
+        hrService = new HRservice(controller);
+    }
+
     public String loginForHR(String password) {
         return hrService.loginForHR(password);
     }
