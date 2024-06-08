@@ -120,6 +120,9 @@ public class Shift {
         return shiftTime;
     }
 
+    public void addRoleForEmployee(Employee employee, Role role){
+        workersAvailable.get(role).add(employee);
+    }
 
     //
     public void setEmployeeToShift(String empId, Role role) {

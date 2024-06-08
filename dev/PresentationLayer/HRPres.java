@@ -147,8 +147,9 @@ public class HRPres {
 
     private void getConstrains() {
         String input = Logs.getIdToGetConstrains();
-        String res = serviceFactory.getConstrains(input);
-        printValue(res);
+        ResponseManager res = new ResponseManager(serviceFactory.getConstrains(input));
+        if(res.hasErrorOccured) System.out.println(res.errorMessage);
+        else System.out.println(res.value);
     }
 
     private void startAddingConstrainsForNextWeek(){

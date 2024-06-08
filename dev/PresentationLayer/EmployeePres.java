@@ -9,7 +9,6 @@ import com.google.gson.GsonBuilder;
 import DTOs.LocalDateAdapter;
 import DTOs.Role;
 import DTOs.ShiftTime;
-import ServiceLayer.employeeService;
 
 public class EmployeePres {
     private String empId ;
@@ -17,31 +16,24 @@ public class EmployeePres {
     private ServiceFactory serviceFactory;
     private boolean hasLoggedIn;
     
-    
-    public static final String GET_WEAK_SHIFT_FOR_ALL_INPUT_FORMAT = "get-weak-shift-for-all";
-    public static final String ADD_CONSTRAINS_INPUT_FORMAT = "add-constrains";
-    public static final String ADD_ROLE_INPUT_FORMAT = "add-role";
-    public static final String REMOVE_ROLE_INPUT_FORMAT = "remove-role";
-    public static final String TERMINATE_JOB_INPUT_FORMAT = "terminate-job";
-    public static final String SET_NEW_BANK_ACCOUNT_INPUT_FORMAT = "set-new-bank-account";
-    public static final String LOGOUT_INPUT_FORMAT = "logout";
-    public static final String PROFIE_INPUT_FORMAT = "profile";
-    
+    public static final String SET_PASSWORD = "set-Password";
+    public static final String ADD_CONSTRAINS = "add-constrains";
+    public static final String ADD_ROLE = "add-role";
+    public static final String REMOVE_ROLE = "remove-role";
+    public static final String TERMINATE_JOB = "terminate-job";
+    public static final String GET_WEAK_SHIFT_FOR_ALL = "get-weak-shift-for-all";
+    public static final String SET_NEW_BANK_ACCOUNT = "set-new-bank-account";
+    public static final String PROFIE = "profile";
+    public static final String LOGOUT = "logout";
 
     public EmployeePres(ServiceFactory serviceFactory){
         this.serviceFactory = serviceFactory;
     }
 
-    
-
-
-    
-
 
 
     public boolean login(String input){
         String[] params = extractIdAndPassword(input);
-
         String res = serviceFactory.loginForEmployee(params[0], params[1]);
         if(hasFailed(res)){
             System.out.println("Failed :"+getError(res));
@@ -59,10 +51,11 @@ public class EmployeePres {
 
     //this is the main loop , while employee is logged in , the loop will continue to ask for more actions.
     private void dealWithActions() {
-        Logs.logEmployeeActionsInstructions();
+
         while(hasLoggedIn){
-            String input = Logs.getInput();
-            dealWithInput(input);
+            Logs.logEmployeeActionsInstructions();
+            Logs.print("Please choose an option :-");
+            dealWithInput(Logs.getInput());
         }
     }
 
@@ -70,41 +63,67 @@ public class EmployeePres {
     
     
     private void dealWithInput(String input) {
-        if(isEqualWithoutSpaces(GET_WEAK_SHIFT_FOR_ALL_INPUT_FORMAT,input)){
-            printAllShiftsWithEmployees();
-        }else  if( isEqualWithoutSpaces(input, ADD_ROLE_INPUT_FORMAT)){
-            addRole();
-        }else if(isEqualWithoutSpaces(input, ADD_CONSTRAINS_INPUT_FORMAT)){
-            addConstrains();
-        }else if(isEqualWithoutSpaces(input, REMOVE_ROLE_INPUT_FORMAT)){
-            removeRole();
-        }else if(isEqualWithoutSpaces(input, SET_NEW_BANK_ACCOUNT_INPUT_FORMAT)){
-            setNewBankAccount();
-        }else if(isEqualWithoutSpaces(input, TERMINATE_JOB_INPUT_FORMAT)){
-            terminateJobReq();
-        }else if( isEqualWithoutSpaces(input, LOGOUT_INPUT_FORMAT)){
-            hasLoggedIn=false;
-        }else if(isEqualWithoutSpaces(input, PROFIE_INPUT_FORMAT)){
-            printProfile();
+
+        switch(input){
+            case "1":
+                setEmpPassword();
+                break;
+            case "2":
+                addConstrains();
+                break;
+            case "3":
+                addRole();
+                break;
+            case "4":
+                removeRole();
+                break;
+            case "5":
+                terminateJobReq();
+                break;
+            case "6":
+                printAllShiftsWithEmployees();
+                break;
+            case "7":
+                setNewBankAccount();
+                break;
+            case "8":
+                printProfile();
+                break;
+            case "9":
+                logout();
+                break;
+            default:
+                Logs.print("invalid input");
         }
     }
-    
-    
-    
-    
-    
-    
-    private boolean isEqualWithoutSpaces(String format, String input) {
-        return format.equals(input);
-    }
+
     //============================================= Actions ==================================================
-    private void printProfile() {
-        printValue(serviceFactory.getProfile(empId));
+
+    private void logout(){
+        hasLoggedIn = false;
     }
 
+    private void printProfile() {
+        ResponseManager res = new ResponseManager(serviceFactory.getProfile(empId));
+        Logs.print((String) res.value);
+    }
+
+
+    private void setEmpPassword() {
+        String input = Logs.getNewPassword();
+        String res = serviceFactory.setPassword(empId, input);
+        if(hasFailed(res)) Logs.print("Failed :"+getError(res));
+        else {
+            empPassword = input;
+            Logs.print(getValueString(res));
+        }
+
+    }
 
     private void terminateJobReq() {
-        String res = serviceFactory.terminateJobReq(empId, empPassword, Logs.getInputDate());
+        Logs.logGetTerminateDate();
+        LocalDate date = Logs.getInputDate();
+        String res = serviceFactory.terminateJobReq(empId, empPassword, date);
         printValue(res);
     }
 
@@ -116,8 +135,9 @@ public class EmployeePres {
     }
     
     private void printAllShiftsWithEmployees(){
-        String res = serviceFactory.getWeekShiftForAll(empId);
-        printValue(res);
+        ResponseManager res = new ResponseManager(serviceFactory.getWeekShiftForAll(empId));
+        if(res.hasErrorOccured) System.out.println(res.errorMessage);
+        else System.out.println(res.value);
     }
    
     
@@ -138,6 +158,7 @@ public class EmployeePres {
 
     private void removeRole(){
         Logs.logGetRoleToRemove();
+        Logs.logRolesInShift();
         Role roleToRemove = Logs.getRoleToRemove();
         String res = serviceFactory.removeRole(empId, empPassword, roleToRemove);
         printValue(res);
@@ -156,7 +177,7 @@ public class EmployeePres {
         hasLoggedIn=true;
         String[] params = extractIdAndPassword(res);
         this.empId=params[0];
-        this.empPassword=params[1];
+        this.empPassword = params[1];
     }
 
     public static String[] extractIdAndPassword(String input) {

@@ -79,8 +79,11 @@ public class Store {
 
     public boolean terminateJobReq(String empId, LocalDate finishDate) {
         isEmployeeExist(empId);
-        return LocalDate.now().isBefore(finishDate.minusMonths(1)) ||
-                LocalDate.now().isEqual(finishDate.minusMonths(1));
+        if( finishDate.isAfter(LocalDate.now().plusMonths(1)) ||
+        finishDate.isEqual(LocalDate.now().plusMonths(1))) {
+            return true;
+        }
+        throw new IllegalArgumentException("finish date must be after one month or more!");
     }
 
     public boolean removeRoleFromEmployee(String empId, Role role) {
@@ -117,7 +120,7 @@ public class Store {
         isEmployeeExist(empId);
         Employee employee = employees.get(empId);
         employee.addRole(role);
-        schedule.addRoleForEmployee(empId,role);
+        schedule.addRoleForEmployee(employee,role);
     }
 
     public Employee getEmployee(String empId) {
@@ -149,7 +152,7 @@ public class Store {
 
     public String getNextWeekSchedule() {
 
-        return schedule.getNextWeekSchedule();
+        return schedule.getNextWeekSchedule() ;
     }
 
     public boolean loginForEmployee(String empId, String password) {

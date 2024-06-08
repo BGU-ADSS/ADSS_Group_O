@@ -1,7 +1,6 @@
 package ServiceLayer;
 
 import BuisnessLayer.Controller.EmployeeController;
-import BuisnessLayer.Workers.Employee;
 import DTOs.*;
 import PresentationLayer.Logs;
 
@@ -104,7 +103,7 @@ public class employeeService {
         try
         {
             String str = empController.getCurrentWeekSchedule(Id) + empController.getNextWeekSchedule(Id);
-            res = new Response(str);
+            res = new Response(null,str);
         }
         catch (Exception e){
             res = new Response(e.getMessage());
@@ -145,8 +144,7 @@ public class employeeService {
     public String getProfile(String id){
         Response res;
         try{
-            Employee toRet = empController.getEmployee(id);
-            res = new Response(toRet);
+            res = new Response(null,empController.getEmployee(id).getProf());
         }catch(Exception e ){
             res = new Response(e.getMessage(), null);
         }

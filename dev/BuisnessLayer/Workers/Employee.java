@@ -111,6 +111,8 @@ public class Employee {
         str += "Employee ID:" + getID() +"\n";
         str += "Employee Roles:" + roles + "\n";
         str += "Employee Salary:" + monthSalary + "\n";
+        str += "Store Number:" + storeNum + "\n";
+        str += "Bank Account:" + bankAccount + "\n";
         return str;
     }
 }
