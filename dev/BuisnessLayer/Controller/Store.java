@@ -155,6 +155,10 @@ public class Store {
         return schedule.getNextWeekSchedule() ;
     }
 
+    public LocalDate getNextWeek(){
+        return schedule.getNextWeek();
+    }
+
     public boolean loginForEmployee(String empId, String password) {
         return employees.get(empId).login(password);
     }

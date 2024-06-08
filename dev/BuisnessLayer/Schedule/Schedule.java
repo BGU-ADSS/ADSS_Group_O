@@ -195,11 +195,12 @@ public class Schedule {
 
     // this function must check if there are shift in the given date
     private void checkRelatedDateShift(LocalDate date) {
+
         if( dayShifts.get(date) == null ){
-            throw new IllegalArgumentException("you must start the week shift first!");
+            throw new IllegalArgumentException("the hr must start the week shift first!");
         }
         if( breakDates.contains(date) ){
-            throw new IllegalArgumentException("cannot set shift in break dates!");
+            throw new IllegalArgumentException("cannot set shift/add constrain in break dates!");
         }
     }
 
@@ -275,5 +276,9 @@ public class Schedule {
 
     public boolean doesItReadyToPublish(){
         return isReadyToPublish;
+    }
+
+    public LocalDate getNextWeek() {
+        return nextWeek;
     }
 }

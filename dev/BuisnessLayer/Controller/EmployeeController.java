@@ -109,6 +109,10 @@ public class EmployeeController {
         }
     }
 
+    public Store getStoreForTest(int storeName) {
+        return stores.get(storeName);
+    }
+
     public boolean loginForHR(String password){
         return hrManager.login(password);
     }

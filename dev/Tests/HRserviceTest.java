@@ -200,6 +200,21 @@ public class HRserviceTest {
         assertEquals(Errors.cantUpdateNegativeSalary, res.getErrorMessage());
     }
 
-    // ===================================
+    // =================================== get constrains
+
+    @Test
+    public void getConstrainsTest_pos(){
+        initHRManager();
+        serviceFactory.startAddingConstrainsForNextWeek(1);
+        Response res = R(serviceFactory.getConstrains("1"));
+        assertEquals(false, res.isErrorOccured());
+    }
+
+    @Test
+    public void getConstrainsTest_neg(){
+        initHRManager();
+        Response res = R(serviceFactory.getConstrains("1"));
+        assertEquals(true, res.isErrorOccured());
+    }
 
 }

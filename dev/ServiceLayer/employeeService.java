@@ -49,7 +49,7 @@ public class employeeService {
             res = new Response(null,"Successfully add constrains");
         }
         catch (Exception e){
-            res = new Response(e.getMessage());
+            res = new Response(e.getMessage(),null);
         }
         return gson.toJson(res);
     }

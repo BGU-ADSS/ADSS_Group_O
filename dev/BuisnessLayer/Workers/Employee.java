@@ -75,10 +75,11 @@ public class Employee {
 
     public void addRole(Role role) {
         if(!containsRole(role)) roles.add(role);
+        else throw new IllegalArgumentException("employee already has role " + role);
     }
 
     public void setBankAccount(String newBankAccount) {
-        if(newBankAccount==null) throw new IllegalArgumentException(Errors.bankAccountIsNull);
+        if(newBankAccount.isEmpty() || newBankAccount == null) throw new IllegalArgumentException(Errors.bankAccountIsNull);
         bankAccount= newBankAccount;
     }
 
