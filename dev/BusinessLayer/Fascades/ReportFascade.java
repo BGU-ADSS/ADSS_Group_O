@@ -31,6 +31,9 @@ public class ReportFascade {
         {
             try {
                 List<Product> products= productFacade.getProductsByCategory(category.getCategoryName());
+                if(products.size() == 0){
+                    return "No report of given categories";
+                }
                 for (Product product : products)
                 {
                     if(!productFacade.checkMinimumStock(product.getMKT()))
@@ -87,6 +90,9 @@ public class ReportFascade {
         }
             try {
                 List<Product> products= productFacade.getProductsByCategory(category.getCategoryName());
+                if(products.size() == 0){
+                    return "No report of category";
+                }
                 for (Product product:products)
                 {
                     if(!productFacade.checkMinimumStock(product.getMKT()))

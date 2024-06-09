@@ -27,8 +27,13 @@ public class MainController {
         itemCounter = 0;
     }
     public void start() throws Exception {
+
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         int input = -1;
+        if(LocalDate.now().getDayOfWeek().equals(0)){
+
+            System.out.println(reportService.buildReport(productService.getCategories()));
+        }
         while(true){
             System.out.println("Enter number for action:\n0 for Exit\n1 for adding category\n2 for adding product\n3 for adding item\n4 for adding to store,\n5 for adding to storage\n" +
                     "6 for searching for products by category\n7 fot updating stock\n8 for building product discount\n9 for building category discount\n10 for applying discount on a product\n" +

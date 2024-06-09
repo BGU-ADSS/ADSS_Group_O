@@ -9,6 +9,7 @@ import BusinessLayer.Objects.Purchase;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +27,7 @@ public class PurchaseFacade {
         this.discountFacade=discountFacade;
         purchases=new HashMap<>();
     }
-    public void calculateTotal(int purchaseId) throws Exception{
+    public double calculateTotal(int purchaseId) throws Exception{
         Purchase purchase=purchases.get(purchaseId);
         if(purchase==null)
         {
@@ -34,7 +35,8 @@ public class PurchaseFacade {
         }
         for (HashMap.Entry<Product,List<Item>> entry : purchase.getProducts().entrySet()) {
             Product product=entry.getKey();
-            purchase.setTotal(purchase.getTotal() + entry.getValue().size() * entry.getKey().getPriceAfterDiscount());
+//            purchase.setTotal(purchase.getTotal() + entry.getValue().size() * entry.getKey().getPriceAfterDiscount());
+
             if(product.getOnsale())
             {
                 if(!product.getDiscount().getEndDate().isAfter(LocalDate.now()))
@@ -52,6 +54,9 @@ public class PurchaseFacade {
                 purchase.setTotal(purchase.getTotal() + entry.getValue().size() * product.getPriceBeforeDiscount());
             }
         }
+
+        return purchase.getTotal();
+
     }
     public void addItem(int purchaseId, int prodID) throws Exception{
         Purchase purchase=purchases.get(purchaseId);
@@ -59,11 +64,8 @@ public class PurchaseFacade {
         {
             throw new Exception("no purchase with this id");
         }
-//        if(item == null){
-//            throw new Exception("Item is null");
-//        }
-        for (HashMap.Entry<Product,List<Item>> entry : purchases.get(purchaseId).getProducts().entrySet()) {
-            if(entry.getKey().getMKT() == prodID){
+        for (Product p : productFacade.getProducts().values()) {
+            if(p.getMKT() == prodID){
                 int itemID = productFacade.getFirstItemByProductID(prodID);
                 Item t = null;
                 for (Item i : productFacade.getItems().values()){
@@ -71,19 +73,26 @@ public class PurchaseFacade {
                         t = i;
                     }
                 }
-                productFacade.removeItem(itemID,true);
+//                productFacade.removeItem(itemID,true);
                 if(t == null){
                     throw new Exception("Error occurred");
                 }
-                entry.getValue().add(t);
+                if(!purchases.get(purchaseId).getProducts().containsKey(p)){
+                    List<Item> l = new LinkedList<>();
+                    l.add(t);
+                    purchases.get(purchaseId).getProducts().put(p,l);
+                }
+                else{
+                    purchases.get(purchaseId).getProducts().get(p).add(t);
+                }
             }
         }
-        try {
-            calculateTotal(purchaseId);
-        }
-        catch (Exception e) {
-
-        }
+//        try {
+//            calculateTotal(purchaseId);
+//        }
+//        catch (Exception e) {
+//
+//        }
     }
     public void buildPurchase(LocalDate purchaseDate, int customerID, String customerName) throws Exception{
         if(customerName == null){

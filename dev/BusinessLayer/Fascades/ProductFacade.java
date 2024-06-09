@@ -14,18 +14,23 @@ public class ProductFacade {
     private HashMap<Integer, Item> itemsInStore;
     private HashMap<Integer, Item> itemsInStorage;
     private DiscountFacade discountFacade;
+    private int firstItemID;
     public ProductFacade(HashMap<Integer, Product> products ,DiscountFacade discountFacade)
     {
+        this.items=new HashMap<>();
         this.itemsInStorage = new HashMap<>();
         this.itemsInStore = new HashMap<>();
         this.products=products;
         this.discountFacade=discountFacade;
+        firstItemID = -1;
     }
     public ProductFacade()
     {
+        this.items=new HashMap<>();
         this.products=new HashMap<>();
         this.itemsInStore = new HashMap<>();
         this.itemsInStorage = new HashMap<>();
+        firstItemID = -1;
     }
 
     public static ProductFacade getInstance() {
@@ -46,8 +51,13 @@ public class ProductFacade {
         } else if (storeQuantity <0 || storageQuantity <0) {
             throw new Exception("Quantity invalid");
         } else {
-            product.setStoreQuantity(storeQuantity);
-            product.setStorageQuantity(storageQuantity);
+            for (int i = 0; i < storageQuantity; i++){
+               addToStorage(getFirstItemByProductID(productId));
+            }
+            for (int i = 0; i < storeQuantity; i++){
+                addToStore(getFirstItemByProductID(productId));
+            }
+            firstItemID = -1;
         }
     }
 
@@ -148,6 +158,10 @@ public class ProductFacade {
 
     public void addToStorage(int itemID) throws Exception{
         Item i = items.get(itemID);
+        if(i==null)
+        {
+            throw new Exception("item doesnt exist");
+        }
         if(itemsInStorage.values().contains(i)){
             throw new Exception("The item is already exist in the storage");
         }
@@ -159,15 +173,20 @@ public class ProductFacade {
     }
     public void addToStore(int itemID) throws Exception{
         Item i = items.get(itemID);
+        if(i==null)
+        {
+            throw new Exception("item doesnt exist");
+        }
         if(itemsInStore.values().contains(i)){
             throw new Exception("The item is already exist in the store");
         }
         for(Product p1: products.values()){
             if(i.getProduct().equals(p1)){
-                if(p1.getStorageQuantity()==0) {
+                if(p1.getStorageQuantity() > 0) {
                     p1.setStorageQuantity(p1.getStorageQuantity() - 1);
                     p1.setStoreQuantity(p1.getStorageQuantity() + 1);
                 }
+
                 else throw new Exception("There's no more products of this type");
             }
         }
@@ -187,6 +206,10 @@ public class ProductFacade {
     }
     public void removeItem(int itemID, boolean inStore) throws Exception{
         Item item = items.get(itemID);
+        if(item==null)
+        {
+            throw new Exception("item doesnt exist");
+        }
         Product p = item.getProduct();
         if(!inStore) {
             if(p.getStorageQuantity() == 0){
@@ -230,12 +253,6 @@ public class ProductFacade {
         if(productName == null || companyManufacturer == null){
             throw new Exception("one of the names that been provided is invalid");
         }
-        if(price <= 0){
-            throw new Exception("The price is invalid");
-        }
-        if(size <= 0){
-            throw new Exception("The size is invalid");
-        }
         Product p = new Product(products.size() + 1, productName, companyManufacturer, price, size, minimumQuantity, 0, 0, c, l, null);
         products.put(p.getMKT(), p);
     }
@@ -260,10 +277,11 @@ public class ProductFacade {
 
     public int getFirstItemByProductID(int prodID) throws Exception{
         for (Item i: items.values()){
-            if(i.getProduct().getMKT() == prodID){
+            if(i.getProduct().getMKT() == prodID && i.getItemID() > firstItemID){
+                firstItemID = i.getItemID();
                 return i.getItemID();
             }
         }
-        throw new Exception("chickichiki");
+        throw new Exception("Provided product doesn't have items yet");
     }
 }

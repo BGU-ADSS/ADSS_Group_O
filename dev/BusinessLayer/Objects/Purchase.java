@@ -20,7 +20,7 @@ public class Purchase {
         this.purchaseDate = purchaseDate;
         this.customerID = customerID;
         this.products = new HashMap<>();
-        this.total = total;
+        this.total = 0;
         this.customerName = customerName;
     }
     public HashMap<Product, List<Item>> getProducts()

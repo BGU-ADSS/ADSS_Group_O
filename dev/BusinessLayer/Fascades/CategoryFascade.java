@@ -5,10 +5,7 @@ import BusinessLayer.Objects.Discount;
 import BusinessLayer.Objects.Product;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CategoryFascade {
     private ProductFacade productFascade;
@@ -27,6 +24,9 @@ public class CategoryFascade {
 //        this.productFascade = new ProductFacade();
 //        this.discountFacade = new DiscountFacade();
 //    }
+    public List<Category> getCategories(){
+        return (List<Category>) categories.values();
+    }
     public void applyCategoryDiscount(Category category, double percent, LocalDate startDate, LocalDate endDate){
         try{
             Discount d = discountFacade.builedCategoryDiscount(percent, startDate, endDate);

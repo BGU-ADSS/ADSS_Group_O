@@ -7,6 +7,7 @@ import BusinessLayer.Objects.Item;
 import BusinessLayer.Objects.Product;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 public class ProductService {
@@ -21,6 +22,9 @@ public class ProductService {
     }
     public ProductFacade getProductFascade(){
         return productFascade;
+    }
+    public List<Category> getCategories(){
+        return categoryFascade.getCategories();
     }
 
     public String removeItem(int itemID, boolean inStore) throws Exception {
