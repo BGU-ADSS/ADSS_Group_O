@@ -44,6 +44,9 @@ public class Shift {
     }
     public void submit(){
         int sum = 0;
+        if( workersInShift.get(Role.ShiftManager).isEmpty() ){
+            throw new IllegalArgumentException("there is no shift manager in shift " + day + ", " + shiftTime );
+        }
         Iterator<Role> iterator = workersInShift.keySet().iterator();
         while(iterator.hasNext()){
             sum += workersInShift.get(iterator.next()).size();
@@ -56,21 +59,18 @@ public class Shift {
         return workersInShift;
     }
     public boolean empCanWork(String empId) {
-        return getEmployeeFromAvailable(empId)!=null;
+        return getEmployeeFromgivenDict(empId, workersAvailable)!=null;
     }
 
     public void removeFromAvailableWorkers(String empId) {
 
-        Employee employee = getEmployeeFromAvailable(empId);
+        Employee employee = getEmployeeFromgivenDict(empId, workersAvailable);
         if ( employee == null ){
             throw new IllegalArgumentException("constrains already added!");
         }
         removeEmployeeFromGivenDict(empId,workersAvailable);
     }
 
-    public Employee getEmployeeFromAvailable(String empId){
-        return getEmployeeFromgivenDict(empId, workersAvailable);
-    }
 
 
     public void addEmployee(Employee employee) {
@@ -90,16 +90,18 @@ public class Shift {
                 }
             }
         }
-        if(employee == null) throw new IllegalArgumentException(Errors.cantSetShiftDueConstrains);
         return employee;
     }
 
     private void removeEmployeeFromGivenDict(String empId ,HashMap<Role,List<Employee>> toRemoveFrom ){
         Iterator<Role> iter = toRemoveFrom.keySet().iterator();
+        Employee emp = getEmployeeFromgivenDict(empId, workersAvailable);
         while (iter.hasNext()){
             Role r = iter.next();
             for(int i =0;i<toRemoveFrom.get(r).size();i++){
-                if(toRemoveFrom.get(r).get(i).getID().equals(empId)) toRemoveFrom.get(i).remove(i);
+                if(toRemoveFrom.get(r).get(i).getID().equals(empId)) {
+                    toRemoveFrom.get(r).remove(emp);
+                }
             }
         }
     }
@@ -114,11 +116,16 @@ public class Shift {
         return shiftTime;
     }
 
+    public void addRoleForEmployee(Employee employee, Role role){
+        workersAvailable.get(role).add(employee);
+    }
 
     //
     public void setEmployeeToShift(String empId, Role role) {
-        Employee empl = getEmployeeFromAvailable(empId);
-        if(empl.containsRole(role) && workersAvailable.get(role).contains(empl)){
+        Employee empl = getEmployeeFromgivenDict(empId, workersAvailable);
+        if(empl == null) throw new IllegalArgumentException(Errors.cantSetShiftDueConstrains);
+        if(!empl.containsRole(role)) throw new IllegalArgumentException("employee doesn't have role " + role);
+        if(workersAvailable.get(role).contains(empl)){
             removeEmployeeFromGivenDict(empId, workersAvailable);
             workersInShift.get(role).add(empl);
         }else {
@@ -132,7 +139,7 @@ public class Shift {
         for ( Role r : workersInShift.keySet() ){
             List<Employee> employees = workersInShift.get(r);
             for (int i = 0; i < employees.size() ; i++){
-                str += employees.get(i).getName() + " ,";
+                str += employees.get(i).getName() + " as " + employees.get(i).getRoles().toString() + ",";
             }
 
         }

@@ -109,6 +109,10 @@ public class EmployeeController {
         }
     }
 
+    public Store getStoreForTest(int storeName) {
+        return stores.get(storeName);
+    }
+
     public boolean loginForHR(String password){
         return hrManager.login(password);
     }
@@ -146,7 +150,7 @@ public class EmployeeController {
     public void addEmployee(Employee employee){
         Logs.debug( employeesStore.get(employee.getID())+" the store returned for this employee "+employeesStore.size());
         if( employeesStore.get(employee.getID()) != null ){
-            throw new IllegalArgumentException("Employee ID already exists");
+            throw new IllegalArgumentException(Errors.EmployeeAlreadyExistInStore);
         }
         stores.get(employee.getStoreNum()).addEmployee(employee);
         employeesStore.put(employee.getID(), employee.getStoreNum());
@@ -216,6 +220,23 @@ public class EmployeeController {
 
     }
 
+    public String getEmployeeProf(String empId){
+        if ( employeesStore.get(empId) == null ){
+            throw new IllegalArgumentException("Employee does not exist");
+        }
+        int storeNum = employeesStore.get(empId);
+        Store store = stores.get(storeNum);
+        return store.getEmployeeProf(empId);
+    }
+
+    public String getCurrentSchedule(int storeNumber){
+
+        Store store = stores.get(storeNumber);
+        if( store == null ){
+            throw new IllegalArgumentException("Store does not exist");
+        }
+        return store.getCurrentSchedule();
+    }
     //--------------------------------------------------------------------------------------------------//
     public Employee getEmployee(String empId) {
         Store store = getStoreForEmployee(empId);
@@ -301,6 +322,14 @@ public class EmployeeController {
         }
         Store store = stores.get(employeesStore.get(emplId));
         store.updateSalary(emplId,monthSalary);
+    }
+
+    public void scheduleReadyToPublish(int StoreNumber){
+        Store store = stores.get(StoreNumber);
+        if (store==null){
+            throw new IllegalArgumentException("Store does not exist");
+        }
+        store.scheduleReadyToPublish();
     }
 
 

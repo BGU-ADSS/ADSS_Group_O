@@ -24,6 +24,9 @@ public class HRPres {
     public static final String UPDATE_SALARY = "update-salary";
     public static final String LOGIN = "login";
     public static final String START_ADDING_CONSTRAINS_FOR_NEXT_WEEK = "start-adding-constraints-for-next-week";
+    public static final String GET_EMPLOYEE_PROFILE = "get-employee-profile";
+    public static final String GET_CURRENT_WEEK_SCHEDULE = "get-current-week-schedule";
+    public static final String PUBLISH_SCHEDULE = "publish-schedule";
 
     public HRPres(ServiceFactory serviceFactory) {
         this.serviceFactory = serviceFactory;
@@ -74,6 +77,15 @@ public class HRPres {
                 startAddingConstrainsForNextWeek();
                 break;
             case "8":
+                getEmployeeProfile();
+                break;
+            case "9":
+                getCurrentWeekSchedule();
+                break;
+            case "10":
+                publishSchedule();
+                break;
+            case "11":
                 logout();
                 break;
             default:
@@ -93,7 +105,6 @@ public class HRPres {
         ShiftTime shiftTime = Logs.chooseShiftTime();
         String id = Logs.getEmployeeIdToWorkIn();
         Role role = Logs.getRoleToAdd();
-        System.out.println("hoon");
         String res = serviceFactory.setShift(shiftDate, shiftTime, id,role);
         printValue(res);
 
@@ -136,8 +147,9 @@ public class HRPres {
 
     private void getConstrains() {
         String input = Logs.getIdToGetConstrains();
-        String res = serviceFactory.getConstrains(input);
-        printValue(res);
+        ResponseManager res = new ResponseManager(serviceFactory.getConstrains(input));
+        if(res.hasErrorOccured) System.out.println(res.errorMessage);
+        else System.out.println(res.value);
     }
 
     private void startAddingConstrainsForNextWeek(){
@@ -145,6 +157,26 @@ public class HRPres {
         String res = serviceFactory.startAddingConstrainsForNextWeek(input);
         printValue(res);
 
+    }
+
+    private void getEmployeeProfile() {
+        String input = Logs.getEmployeeIdToWorkIn();
+        ResponseManager res = new ResponseManager(serviceFactory.getEmployeeProf(input));
+        if(res.hasErrorOccured) System.out.println(res.errorMessage);
+        else System.out.println(res.value);
+    }
+
+    private void getCurrentWeekSchedule() {
+        int input = Logs.getStoreNumber();
+        ResponseManager res = new ResponseManager(serviceFactory.getCurrentSchedule(input));
+        if(res.hasErrorOccured) System.out.println(res.errorMessage);
+        else System.out.println(res.value);
+    }
+
+    private void publishSchedule() {
+        int input = Logs.getStoreNumber();
+        String res = serviceFactory.scheduleReadyToPublish(input);
+        printValue(res);
     }
     // ============================================= Deal with response
     // ==================================================

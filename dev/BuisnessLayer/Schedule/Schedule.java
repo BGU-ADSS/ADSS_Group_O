@@ -8,7 +8,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -21,19 +20,21 @@ public class Schedule {
     private LocalDate nextWeek;
     private List<LocalDate> breakDates = new ArrayList<>();
     private int minEmployees;
+    private boolean isReadyToPublish;
 
     public Schedule(int deadline, List<Employee> employees, int minEmployees, List<LocalDate> breakDays) {
+        this.isReadyToPublish = false;
         dayShifts = new HashMap<>();
         this.deadline = deadline;
         breakDates=breakDays;
         this.currentWeek = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
-        this.nextWeek = currentWeek.plusDays(7);
+        this.nextWeek = currentWeek.plusWeeks(1);
         for (int day = 0; day < 7; day++) {
             LocalDate dateForDayToAdd = currentWeek.plusDays(day);
             if (!breakDates.contains(dateForDayToAdd)) {
                 Shift[] shiftsInDayToAdd = new Shift[2];
                 shiftsInDayToAdd[0] = new Shift(employees, dateForDayToAdd, ShiftTime.Day, minEmployees);
-                shiftsInDayToAdd[1] = new Shift(employees, dateForDayToAdd, ShiftTime.Nigth, minEmployees);
+                shiftsInDayToAdd[1] = new Shift(employees, dateForDayToAdd, ShiftTime.Night, minEmployees);
                 dayShifts.put(dateForDayToAdd, shiftsInDayToAdd);
             }
         }
@@ -44,10 +45,13 @@ public class Schedule {
     public void addConstrains(String empId, LocalDate day, ShiftTime shiftTime) {
 
         checkRelatedDateShift(day);
-        boolean valid = LocalDate.now().isBefore(currentWeek.plusDays(deadline))&&dayShifts.get(day)!=null;
-        if (dayShifts.get(day) == null || !valid) {
-            throw new IllegalArgumentException("not suitable date!");
+        if (dayShifts.get(day) == null) {
+            throw new IllegalArgumentException("the HR manager does not permit to add constrain yet!");
         }
+        if( LocalDate.now().isAfter(currentWeek.plusDays(deadline)) ) {
+            throw new IllegalArgumentException("deadline have been reached! cannot add constrain");
+        }
+
         Shift[] shifts = dayShifts.get(day);
         if (shiftTime == ShiftTime.Day) {
             shifts[0].removeFromAvailableWorkers(empId);
@@ -88,17 +92,15 @@ public class Schedule {
 
     public void startAddingConstrainsForNextWeek(HashMap<String,Employee> employees) {
 
-        this.currentWeek = this.nextWeek;
-        this.nextWeek = nextWeek.plusWeeks(1);
-        deadline += 7;
         LocalDate d = nextWeek;
         while (d.isBefore(nextWeek.plusWeeks(1))) {
             Shift[] shift = new Shift[2];
             shift[0] = new Shift(getEmployees(employees),d,ShiftTime.Day,minEmployees);
-            shift[0] = new Shift(getEmployees(employees),d,ShiftTime.Day,minEmployees);
-            dayShifts.put(d, new Shift[2]);
+            shift[1] = new Shift(getEmployees(employees),d,ShiftTime.Night,minEmployees);
+            dayShifts.put(d, shift);
             d = d.plusDays(1);
         }
+        isReadyToPublish = false;
     }
 
     private List<Employee> getEmployees(HashMap<String, Employee> employees) {
@@ -115,16 +117,17 @@ public class Schedule {
         List<Shift[]> currentWeekShifts = new ArrayList<>();
         LocalDate curr = currentWeek;
         while (curr.isBefore(nextWeek)) {
-
             currentWeekShifts.add(dayShifts.get(curr));
             curr = curr.plusDays(1);
-
         }
         return weekShiftsToString(currentWeekShifts);
     }
 
     public String getNextWeekSchedule() {
 
+        if( !isReadyToPublish ) {
+            return "next week schedule is not ready to publish!";
+        }
         if (LocalDate.now().isBefore(currentWeek.plusDays(deadline))) {
             throw new IllegalArgumentException("next week schedule is not ready yet!");
         }
@@ -132,15 +135,17 @@ public class Schedule {
         LocalDate curr = nextWeek;
 
         while (curr.isBefore(nextWeek.plusWeeks(1))) {
-            nextWeekShifts.add(dayShifts.get(curr));
-            curr = curr.plusDays(1);
+            if (dayShifts.get(curr) != null) {
+                nextWeekShifts.add(dayShifts.get(curr));
+                curr = curr.plusDays(1);
+            }
         }
 
         return weekShiftsToString(nextWeekShifts);
     }
 
     public List<Shift> getAvaliableDaysForEmployee(String empId) {
-        List<Shift> shiftsInCurrentWeak = getShiftsInWeak(currentWeek);
+        List<Shift> shiftsInCurrentWeak = getShiftsInWeak(nextWeek);
         List<Shift> shiftsWithAvaliableEmployee = new ArrayList<>();
         for (Shift shift : shiftsInCurrentWeak) {
             if (shift.empCanWork(empId))
@@ -150,6 +155,9 @@ public class Schedule {
     }
 
     private List<Shift> getShiftsInWeak(LocalDate sunday) {
+        if( dayShifts.get(sunday) == null ) {
+            throw new IllegalArgumentException("you must permit adding constrains for next week first! by opt 7");
+        }
         List<Shift> toRet = new ArrayList<>();
 
         for (int day = 0; day < 7; day++) {
@@ -187,15 +195,26 @@ public class Schedule {
 
     // this function must check if there are shift in the given date
     private void checkRelatedDateShift(LocalDate date) {
+
+        if( dayShifts.get(date) == null ){
+            throw new IllegalArgumentException("the hr must start the week shift first!");
+        }
         if( breakDates.contains(date) ){
-            throw new IllegalArgumentException("cannot set shift in break dates!");
+            throw new IllegalArgumentException("cannot set shift/add constrain in break dates!");
         }
     }
 
-    // we have to employee to the avaliable , but we have to know when can employee
-    // start
-    public void addRoleForEmployee(String empId, Role role) {
+    public void scheduleReadyToPublish(){
 
+        Iterator<LocalDate> iter = dayShifts.keySet().iterator();
+        while ( iter.hasNext() ) {
+            LocalDate nextDay = iter.next();
+            if ( nextDay.isEqual(nextWeek) || nextDay.isBefore(nextWeek)) {
+                dayShifts.get(nextDay)[0].submit();
+                dayShifts.get(nextDay)[1].submit();
+            }
+        }
+        this.isReadyToPublish = true;
     }
 
     public String weekShiftsToString(List<Shift[]> weekShifts) {
@@ -221,7 +240,45 @@ public class Schedule {
         return history + "\n";
     }
 
+    public String getCurrentSchedule(){
+
+        if( dayShifts.get(nextWeek) == null ){
+            throw new IllegalArgumentException("you must start the week shift first!");
+        }
+        String schedule = "~CURRENT SCHEDULE~\n";
+        List<Shift[]> nextWeekShifts = new ArrayList<>();
+        LocalDate curr = nextWeek;
+        while (curr.isBefore(nextWeek.plusWeeks(1))) {
+            nextWeekShifts.add(dayShifts.get(curr));
+            curr = curr.plusDays(1);
+        }
+
+        schedule += weekShiftsToString(nextWeekShifts);
+        return schedule;
+
+    }
     public Shift getShift(LocalDate nextWeek2, int index) {
         return dayShifts.get(nextWeek2)[index];
+    }
+
+    public void addRoleForEmployee(Employee emp, Role role) {
+
+        Iterator<LocalDate> iter = dayShifts.keySet().iterator();
+        while ( iter.hasNext() ) {
+
+            LocalDate nextDay = iter.next();
+            if (nextDay.isEqual(nextWeek) || nextDay.isAfter(nextWeek)) {
+                dayShifts.get(nextDay)[0].addRoleForEmployee(emp,role);
+                dayShifts.get(nextDay)[1].addRoleForEmployee(emp,role);
+            }
+        }
+    }
+
+    public boolean doesItReadyToPublish(){
+        return isReadyToPublish;
+    }
+
+    public LocalDate getNextWeek() {
+        return nextWeek;
     }
 }

@@ -23,15 +23,17 @@ public class Logs {
     }
 
     public static void logEmployeeActionsInstructions() {
-        print(EmployeePres.SET_NEW_BANK_ACCOUNT_INPUT_FORMAT+" :to set new bank account");
-        print(EmployeePres.ADD_CONSTRAINS_INPUT_FORMAT+" : to add constrains.");
-        print(EmployeePres.ADD_ROLE_INPUT_FORMAT+" :to add role.");
-        print(EmployeePres.REMOVE_ROLE_INPUT_FORMAT+" :to remove role.");
-        print(EmployeePres.GET_WEAK_SHIFT_FOR_ALL_INPUT_FORMAT+" :to get the shifts of the weak with the employees that work in.");
-        print(EmployeePres.TERMINATE_JOB_INPUT_FORMAT+" to terminate from job.");
-        print(EmployeePres.LOGOUT_INPUT_FORMAT+" :to logout from the employee user.");
-        print(EmployeePres.PROFIE_INPUT_FORMAT+" :to print profile info");
+        print("1. " + EmployeePres.SET_PASSWORD + " :to set a new Password");
+        print("2. " + EmployeePres.ADD_CONSTRAINS + " : to add constrains.");
+        print("3. " + EmployeePres.ADD_ROLE + " :to add role.");
+        print("4. " + EmployeePres.REMOVE_ROLE + " :to remove role.");
+        print("5. " + EmployeePres.TERMINATE_JOB + " to terminate from job.");
+        print("6. " + EmployeePres.GET_WEAK_SHIFT_FOR_ALL + " :to get the shifts of the weak with the employees that work in.");
+        print("7. " + EmployeePres.SET_NEW_BANK_ACCOUNT + " :to set new bank account");
+        print("8. " + EmployeePres.PROFIE + " :to print profile info");
+        print("9. " + EmployeePres.LOGOUT + " :to logout from the employee user.");
     }
+
 
     public static void logHRActionsInstructions() {
         print("1. "+HRPres.GET_CONSTRAINS+" :to get the employees that can work in");
@@ -41,7 +43,10 @@ public class Logs {
         print("5. "+HRPres.UPDATE_SALARY+" :to update salary for employee");
         print("6. "+HRPres.SET_SHIFT+" :to set a shift for employee");
         print("7. "+HRPres.START_ADDING_CONSTRAINS_FOR_NEXT_WEEK+" :to start a new week and make employees start add constrains");
-        print("8. logout");
+        print("8. "+HRPres.GET_EMPLOYEE_PROFILE+" :to get employee profile");
+        print("9. "+HRPres.GET_CURRENT_WEEK_SCHEDULE+" : to get the current week schedule");
+        print("10. "+HRPres.PUBLISH_SCHEDULE+" : to publish the schedule");
+        print("11. logout");
     }
 
     public static String getInput() {
@@ -64,13 +69,13 @@ public class Logs {
         }
     }
     public static Role getRoleToAdd() {
-        print("choose a role to work as:");
+        print("choose a role to add/work as:");
         logRolesInShift();
         String input = getInput();
         int roleNum=-1;
         try{ roleNum = Integer.parseInt(input);}
         catch(Exception e){
-            print("this is not a number!!");
+            print("not valid input! try again");
             return getRoleToAdd();
         }
         return fromInt(roleNum);
@@ -81,9 +86,19 @@ public class Logs {
         print("please enter a date of constrain (Format:\"yyyy-MM-dd\"):");
     }
 
+    public static void logGetTerminateDate(){
+        print("enter finish job date :");
+    }
     public static LocalDate getInputDate() {
         String input = getInput();
-        LocalDate date = LocalDate.parse(input, formatter);
+        LocalDate date=null;
+        try {
+            date = LocalDate.parse(input, formatter);
+        }
+        catch(Exception e){
+            print("not valid input! try again");
+            return getInputDate();
+        }
         return date;
     }
 
@@ -105,7 +120,7 @@ public class Logs {
     }
 
     public static void logGetRoleToRemove() {
-        print("enter the role that you want to remove ( StoreManager,Cashier,Storekeeper,ShiftManager,GroubManager):");
+        print("enter the role that you want to remove :");
     }
 
     public static Role getRoleToRemove() {
@@ -113,33 +128,32 @@ public class Logs {
         try{
             return fromInt(Integer.parseInt(input));
         }catch(Exception e ){
-            print("please enter one of the roles below");
-            print(" StoreManager,Cashier,Storekeeper,ShiftManager,GroubManager");
+            print("invalid input! try again");
             return getRoleToRemove();
         }
     }
 
     public static void logSetNewBankAccount() {
-        print ("enter the bank account number");
+        print ("enter the bank account number :");
     }
 
     public static String getIdForNewEmpl() {
-        print("enter the id of the new employee : ");
+        print("enter the id of the new employee :");
         return getInput();
     }
 
     public static String getNameForNewEmpl() {
-        print("enter the name of the employee:");
+        print("enter the name of the employee :");
         return getInput();
     }
 
     public static String getBankForNEwEmpl() {
-        print("set Bank Account for employee");
+        print("set Bank Account for employee :");
         return getInput();
     }
 
     public static int getSalaryForEmployee() {
-        print("enter salary number ")    ;
+        print("enter salary number :")    ;
         return getIntInput();
     }
 
@@ -153,7 +167,7 @@ public class Logs {
     }
 
     public static Role[] getRoleForNewEmpl() {
-        print("enter a role number : ");
+        print("enter a role number :");
         logRolesInShift();
         Role role =  getRoleToRemove();
         return new Role[]{role};
@@ -170,50 +184,54 @@ public class Logs {
     }
 
     public static int getStoreNumForNewEmpl() {
-        print("enter the number of the store:");
+        print("enter the number of the store :");
         return getIntInput();    
     }
 
     public static String logRemoveEmplAndGetId() {
-        print("enter the id of the employee to remove:");
+        print("enter the id of the employee to remove :");
         return getInput();    
     }
 
     public static String getIdToGetConstrains() {
-        print("enter the id of the employee you want to check:");
+        print("enter the id of the employee you want to check :");
         return getInput();
     }
 
     public static LocalDate getDateTogetShiftHistory() {
-        print("enter the date of the shift history:");
+        print("enter the date of the shift history :");
         return getInputDate();    
     }
 
     public static int getNewMounthSalary() {
-        print("enter the new mounth salary:");
+        print("enter the new mounth salary :");
         return getIntInput();    
     }
 
     public static LocalDate chooseShift() {
-        print("enter the date:");
+        print("enter the date :");
         return getInputDate();
     }
 
     public static ShiftTime chooseShiftTime() {
-        print("enter the shift time (Day/Night):");
+        print("enter the shift time (Day/Night) :");
         return getInputShiftTime();
     }
 
     public static String getEmployeeIdToWorkIn() {
-        print("enter the id of the employee:");
+        print("enter the id of the employee :");
         return getInput();    
     }
 
     public static int getStoreNumber() {
-        print("Enter store number");
+        print("Enter store number :");
         return getIntInput();    
     }
 
+    public static String getNewPassword(){
+        print("enter new password (cannot be empty!) :");
+        return getInput();
+    }
     public static void debug(String string) {
         print(ANSI_RED+string+ANSI_RESET);
     }

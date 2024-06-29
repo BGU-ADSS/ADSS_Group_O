@@ -1,6 +1,7 @@
 package ServiceLayer;
 
 import BuisnessLayer.Controller.EmployeeController;
+import DTOs.Response;
 import DTOs.Role;
 import DTOs.ShiftTime;
 
@@ -14,10 +15,15 @@ public class ServiceFactory {
     private EmployeeController employeeController;
 
     public ServiceFactory(){
-        employeeController = new EmployeeController(new File("dev\\DTOs\\config.txt"),
-                new File("dev\\DTOs\\Data.txt"));
+        employeeController = new EmployeeController(new File("C:\\Users\\WINDOWS 10 PRO\\OneDrive\\Desktop\\ADSS\\ADSS_Group_O\\dev\\DTOs\\config.txt"),
+                new File("C:\\Users\\WINDOWS 10 PRO\\OneDrive\\Desktop\\ADSS\\ADSS_Group_O\\dev\\DTOs\\Data.txt"));
         employeeService = new employeeService(employeeController);
         hrService = new HRservice(employeeController);
+    }
+
+    public ServiceFactory(EmployeeController controller){
+        employeeService = new employeeService(controller);
+        hrService = new HRservice(controller);
     }
 
     public String loginForHR(String password) {
@@ -52,6 +58,17 @@ public class ServiceFactory {
         return hrService.startAddingConstrainsForNextWeek(storeNum);
     }
 
+    public String scheduleReadyToPublish(int storeNumber){
+        return hrService.scheduleReadyToPublish(storeNumber);
+    }
+
+    public String getEmployeeProf(String employeeId) {
+        return hrService.getEmployeeProf(employeeId);
+    }
+
+    public String getCurrentSchedule(int storeNumber) {
+        return hrService.getCurrentSchedule(storeNumber);
+    }
     public String setPassword(String empId,String password) {
         return employeeService.setPassword(empId,password);
 

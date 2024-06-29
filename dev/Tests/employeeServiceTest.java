@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import ServiceLayer.ServiceFactory;
 import org.junit.Test;
 
 import com.google.gson.Gson;
@@ -23,7 +24,7 @@ import ServiceLayer.HRservice;
 import ServiceLayer.employeeService;
 
 public class employeeServiceTest {
-    private HRservice hrs;
+    private ServiceFactory serviceFactory;
     private EmployeeController empC;
     private HRManager hrManager;
     private String HRPassword;
@@ -51,15 +52,12 @@ public class employeeServiceTest {
         hrManager = new HRManager(HRPassword);
         empC = new EmployeeController(hrManager);
         emS = new employeeService(empC);
-        employees = new ArrayList<>();
-        empC.setStoreForTest("lee sheeba", "Beer Sheba", null, employees, 1, 0, 1);
         employees = getEmployees();
+        empC.setStoreForTest("lee sheeba", "Beer Sheba", null, employees, 1, 0, 1);
         for (Employee employee : employees) {
-            empC.addEmployee(employee);
             emS.setPassword(employee.getID(), "12345678");
         }
-
-        hrs = new HRservice(empC);
+        serviceFactory = new ServiceFactory(empC);
     }
 
     private List<Employee> getEmployees() {
@@ -113,14 +111,16 @@ public class employeeServiceTest {
     @Test
     public void loginTestPos() {
         initHRManager();
-        Response res = R(emS.loginForEmployee("1", "12345678"));
+        Response res = R(serviceFactory.loginForEmployee("1", "12345678"));
+        assertEquals(false,res.isErrorOccured());
         assertEquals("Successfully logged in", res.getReturnValue());
     }
 
     @Test
     public void loginTestNeg() {
         initHRManager();
-        Response res = R(emS.loginForEmployee("1", "1234567"));
+        Response res = R(serviceFactory.loginForEmployee("1", "1234567"));
+        assertEquals(true,res.isErrorOccured());
         assertEquals(Errors.InvalidPassword, res.getErrorMessage());
     }
 
@@ -131,16 +131,28 @@ public class employeeServiceTest {
         List<Employee> emps= new ArrayList<>();
         LocalDate start5 = LocalDate.of(2024, 6, 1);
         LocalDate end5 = LocalDate.of(2025, 6, 1);
-        List<Role> roles5 = new ArrayList<>();
-        roles5.add(Role.StoreManager);
-        empC.setStoreForTest("hi", "saa", null, employees, 2, 1, deadLine);
-        empC.addEmployee(new Employee("1","alaoi", "777-55559", 5000, -1, roles5, start5, end5, 2));
+        Role[] roles5 = new Role[1];
+        roles5[0] = Role.StoreManager;
+        empC.setStoreForTest("hi", "saa", null, employees, 1, 1, deadLine);
+        //Response re = R(serviceFactory.addEmployee("1","alaoi", "777-55559", 5000, roles5, start5, end5, 2));
+        serviceFactory.startAddingConstrainsForNextWeek(1);
     }
 
     @Test
     public void setConstrainsAfterDeadlineTest(){
-        Response res= R(emS.addConstrains("1", "12345678", LocalDate.of(2024, 6, 9), ShiftTime.Day));
+        beforeConstrainsTest(5);
+        Response res = R(serviceFactory.addConstrains("1", "12345678", empC.getStoreForTest(1).getNextWeek().plusDays(4), ShiftTime.Day));
         assertEquals(true, res.isErrorOccured());
+        assertEquals("deadline have been reached! cannot add constrain", res.getErrorMessage());
+    }
+
+    @Test
+    public void setConstrainsBeforeDeadlineTest(){
+        beforeConstrainsTest(6);
+        Response res = R(serviceFactory.addConstrains("1", "12345678", empC.getStoreForTest(1).getNextWeek().plusDays(3), ShiftTime.Day));
+        assertEquals(false, res.isErrorOccured());
+        assertEquals("Successfully add constrains", res.getReturnValue());
+
     }
 
 
@@ -149,22 +161,29 @@ public class employeeServiceTest {
     @Test
     public void addRoleTest1_pos() {
         initHRManager();
-        Response res = R(emS.addRole("1", "12345678", Role.Storekeeper));
+        Response res = R(serviceFactory.addRole("1", "12345678", Role.Storekeeper));
         assertEquals("Successfully add role", res.getReturnValue());
         assertArrayEquals(new Role[] { Role.Cashier, Role.Storekeeper }, empC.getEmployeeRoles("1"));
-
-        Response res2 = R(emS.addRole("1", "12345678", Role.GroubManager));
+        Response res2 = R(serviceFactory.addRole("1", "12345678", Role.GroubManager));
         assertEquals("Successfully add role", res2.getReturnValue());
         assertArrayEquals(new Role[] { Role.Cashier, Role.Storekeeper, Role.GroubManager }, empC.getEmployeeRoles("1"));
 
+    }
+
+    @Test
+    public void addRoleTest1_neg() {
+        initHRManager();
+        Response res = R(serviceFactory.addRole("1", "12345678", Role.Cashier));
+        assertEquals(true, res.isErrorOccured());
+        assertEquals("employee already has role " + Role.Cashier.toString(), res.getErrorMessage());
     }
 
     // =================================== remove Role
     @Test
     public void removeRoleTest2_pos() {
         initHRManager();
-        Response resOfAdd = R(emS.addRole("1", "12345678", Role.Storekeeper));
-        Response res = R(emS.removeRole("1", "12345678", Role.Cashier));
+        Response resOfAdd = R(serviceFactory.addRole("1", "12345678", Role.Storekeeper));
+        Response res = R(serviceFactory.removeRole("1", "12345678", Role.Cashier));
         assertEquals("Successfully remove role", res.getReturnValue());
         assertArrayEquals(new Role[] { Role.Storekeeper }, empC.getEmployeeRoles("1"));
     }
@@ -172,10 +191,45 @@ public class employeeServiceTest {
     @Test
     public void removeRoleTest2_neg() {
         initHRManager();
-        Response resOfLastRole = R(emS.removeRole("3", "12345678", Role.Storekeeper));
+        Response resOfLastRole = R(serviceFactory.removeRole("3", "12345678", Role.Storekeeper));
         assertEquals(true, resOfLastRole.isErrorOccured());
         assertEquals(Errors.cantRemoveTheLastRole, resOfLastRole.getErrorMessage());
         assertArrayEquals(new Role[] { Role.Storekeeper }, empC.getEmployeeRoles("3"));
+    }
+
+    // =================================== set bank account
+    @Test
+    public void setBankAccountTest_pos(){
+        initHRManager();
+        Response res = R(serviceFactory.setBankAccount("1","12345678","bank-000"));
+        assertEquals(false, res.isErrorOccured());
+        assertEquals("Successfully set bank account", res.getReturnValue());
+    }
+
+    @Test
+    public void setBankAccountTest_neg(){
+        initHRManager();
+        Response res = R(serviceFactory.setBankAccount("1","12345678",""));
+        assertEquals(true, res.isErrorOccured());
+        assertEquals(Errors.bankAccountIsNull, res.getErrorMessage());
+
+    }
+
+    // ================================== terminate job req
+    @Test
+    public void terminateJobReq_pos(){
+        initHRManager();
+        Response res = R(serviceFactory.terminateJobReq("1","12345678",LocalDate.now().plusMonths(2)));
+        assertEquals(false, res.isErrorOccured());
+        assertEquals("Successfully terminate job request", res.getReturnValue());
+    }
+
+    @Test
+    public void terminateJobReq_neg(){
+        initHRManager();
+        Response res = R(serviceFactory.terminateJobReq("1","12345678",LocalDate.now()));
+        assertEquals(true, res.isErrorOccured());
+        assertEquals("finish date must be after one month or more!", res.getErrorMessage());
     }
 
 }

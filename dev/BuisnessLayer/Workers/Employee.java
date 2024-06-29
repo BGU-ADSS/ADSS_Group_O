@@ -77,10 +77,11 @@ public class Employee {
 
     public void addRole(Role role) {
         if(!containsRole(role)) roles.add(role);
+        else throw new IllegalArgumentException("employee already has role " + role);
     }
 
     public void setBankAccount(String newBankAccount) {
-        if(newBankAccount==null) throw new IllegalArgumentException(Errors.bankAccountIsNull);
+        if(newBankAccount.isEmpty() || newBankAccount == null) throw new IllegalArgumentException(Errors.bankAccountIsNull);
         bankAccount= newBankAccount;
     }
 
@@ -96,11 +97,25 @@ public class Employee {
         if( !this.password.equals(password) ){
             throw new IllegalArgumentException(Errors.InvalidPassword);
         }
-        Logs.debug("logiin successs");
+        Logs.debug("login successs");
         return true;
     }
 
     public void updateSalary(int monthSalary) {
+        if(monthSalary<0) {
+            throw new IllegalArgumentException("salary cannot be negative");
+        }
         this.monthSalary = monthSalary;
+    }
+
+    public String getProf(){
+
+        String str = "Employee name:" + getName() +"\n";
+        str += "Employee ID:" + getID() +"\n";
+        str += "Employee Roles:" + roles + "\n";
+        str += "Employee Salary:" + monthSalary + "\n";
+        str += "Store Number:" + storeNum + "\n";
+        str += "Bank Account:" + bankAccount + "\n";
+        return str;
     }
 }

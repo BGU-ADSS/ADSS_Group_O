@@ -119,8 +119,48 @@ public class HRservice {
         Response res;
         try {
             empController.startAddingConstrainsForNextWeek(storeNum);
-            res = new Response(null,"next week starts successfully");
+            res = new Response(null,"success! - all employees can put there constrains now");
         } catch (Exception e) {
+            res = new Response(e.getMessage());
+        }
+        return gson.toJson(res);
+    }
+
+    public String scheduleReadyToPublish(int storeNumber){
+
+        Response res;
+        try
+        {
+            empController.scheduleReadyToPublish(storeNumber);
+            res = new Response(null,"schedule is ready to publish");
+        }
+        catch(Exception e){
+            res = new Response(e.getMessage());
+        }
+        return gson.toJson(res);
+    }
+
+    public String getEmployeeProf(String employeeId) {
+
+        Response res;
+        try
+        {
+            res = new Response(null,empController.getEmployeeProf(employeeId));
+        }
+        catch(Exception e){
+            res = new Response(e.getMessage());
+        }
+        return gson.toJson(res);
+    }
+
+    public String getCurrentSchedule(int storeNumber) {
+
+        Response res;
+        try
+        {
+            res = new Response(null,empController.getCurrentSchedule(storeNumber));
+        }
+        catch(Exception e){
             res = new Response(e.getMessage());
         }
         return gson.toJson(res);
