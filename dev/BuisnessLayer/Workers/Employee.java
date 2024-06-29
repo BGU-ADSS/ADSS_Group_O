@@ -18,7 +18,8 @@ public class Employee {
     private LocalDate startDate;
     private LocalDate endDate;
     private int storeNum;
-    private String password;// notify bahaa !!!!!!!!!!!!!!!!!!
+    private String password;// notify bahaa !!!!!!!!!!!!!!!!!!\
+    private String defaultPassword = "12345678";
 
    
 
@@ -33,6 +34,7 @@ public class Employee {
         this.startDate=startDate;
         this.endDate = enddDate;
         this.storeNum=storeNum;
+        this.password = defaultPassword;
     }
 
     public String getID() {

@@ -133,10 +133,8 @@ public class employeeService {
         {
             empController.loginForEmployee(Id,password);
             res = new Response(null,"Successfully logged in");
-            Logs.debug("loginnnnn");
         }
         catch (Exception e){
-            Logs.debug(e.getMessage());
             res = new Response(e.getMessage());
         }
         return gson.toJson(res);
