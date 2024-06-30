@@ -20,7 +20,7 @@ public abstract class DB {
     // DTO object
     // we have to add the names of the columns as a static members
 
-    private String url = "jdbc:sqlite:dev\\DataAccessLayer\\ADSS_DB_EMPLOYEE_MODULE.db";
+    protected String url = "jdbc:sqlite:dev\\DataAccessLayer\\ADSS_DB_EMPLOYEE_MODULE.db";
 
     protected String tableName;
     protected List<String> columnNamesSet;
@@ -96,7 +96,7 @@ public abstract class DB {
         return null;
     }
 
-    private List<DTO> excuteResultSetToDTOs(ResultSet queryResult) {
+    protected List<DTO> excuteResultSetToDTOs(ResultSet queryResult) {
         List<DTO> toRet = new ArrayList<>();
         try {
             while (queryResult.next()) {

@@ -1,9 +1,13 @@
 package DataAccessLayer.DBs;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
+import java.util.List;
 
 import DataAccessLayer.DTOs.DTO;
 import DataAccessLayer.DTOs.ShiftInStoreDTO;
@@ -60,8 +64,16 @@ public class ShiftInStoreDB extends DB {
     }
 
     public ShiftInStoreDTO getMinIdShiftInStore(String storeId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMinIdShiftInStore'");
+        String sql = "SELECT * FROM " + tableName;
+        try (Connection conn = DriverManager.getConnection(url);
+                Statement stmt = conn.createStatement();
+                ResultSet queryResult = stmt.executeQuery(sql)) {
+                    List<DTO> returned = excuteResultSetToDTOs(queryResult);
+            if(returned.size()>0) return (ShiftInStoreDTO)returned.get(0);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 
 }
