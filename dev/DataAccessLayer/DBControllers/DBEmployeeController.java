@@ -72,6 +72,10 @@ public class DBEmployeeController {
         return storesWithID[0];
     }
 
+    public int getTheLastIdInShifts(){
+        
+    }
+
     private HashMap<String,Object> getIdentefierMap(String empID){
         HashMap<String,Object> identiferMap = new HashMap<>();
         identiferMap.put(EmployeeDB.id_COLUMN, empID);
