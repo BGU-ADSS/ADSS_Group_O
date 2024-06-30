@@ -3,7 +3,7 @@ package DataAccessLayer.DTOs;
 import java.time.LocalDate;
 import java.util.HashMap;
 
-import DataAccessLayer.DAOs.EmployeeDB;
+import DataAccessLayer.DBs.EmployeeDB;
 
 public class EmployeeDTO extends DTO {
     
@@ -38,7 +38,7 @@ public class EmployeeDTO extends DTO {
         EmployeeDTO toTest = new EmployeeDTO("212", "bhaa", "8887", 5002, LocalDate.now().toString(), LocalDate.now().plusYears(1).toString(), 0, "123", null);
         HashMap<String,Object> map = new HashMap<>();
         map.put(EmployeeDB.id_COLUMN, "212");
-        toTest.controller.updateSpecifecColumnForOneRow(map, EmployeeDB.name_COLUMN, "bhaa helo", "string");
+        toTest.controller.deleteDTO(map);
     }
 
 }

@@ -1,4 +1,4 @@
-package DataAccessLayer.DAOs;
+package DataAccessLayer.DBs;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,4 +1,4 @@
-package DataAccessLayer.DAOs;
+package DataAccessLayer.DBs;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,8 +8,9 @@ import java.util.HashMap;
 
 import DataAccessLayer.DTOs.DTO;
 import DataAccessLayer.DTOs.EmployeeDTO;
+import PresentationLayer.Logs;
 
-public class EmployeeDB extends Controller {
+public class EmployeeDB extends DB {
 
     public static String id_COLUMN = "ID";
     public static String name_COLUMN = "NAME";
@@ -88,10 +89,11 @@ public class EmployeeDB extends Controller {
 
     @Override
     public void setValuesToPreparedStatmnetInWherePart(HashMap<String, Object> toDelIdentiferMap,
-            PreparedStatement pstmt) {
+            PreparedStatement pstmt,int index) {
         if(toDelIdentiferMap.containsKey(id_COLUMN)){
             try {
-                pstmt.setString(1, (String)toDelIdentiferMap.get(id_COLUMN));
+                pstmt.setString(index, (String)toDelIdentiferMap.get(id_COLUMN));
+                Logs.debug(pstmt.toString());
             } catch (SQLException e) {
                 e.printStackTrace();
             }

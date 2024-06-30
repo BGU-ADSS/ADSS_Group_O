@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import DataAccessLayer.DAOs.Controller;
+import DataAccessLayer.DBs.DB;
 
 public  class DTO {
     
-    protected Controller controller ;
+    protected DB controller ;
 
 
     public  void  persist(){

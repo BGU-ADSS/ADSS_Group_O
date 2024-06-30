@@ -1,4 +1,4 @@
-package DataAccessLayer.DAOs;
+package DataAccessLayer.DBs;
 
 import java.sql.Statement;
 import java.sql.Connection;
@@ -13,7 +13,7 @@ import java.util.List;
 import DataAccessLayer.DTOs.DTO;
 import PresentationLayer.Logs;
 
-public abstract class Controller {
+public abstract class DB {
     // for each child class we have to :
     // in the constructor we have to set the table name
     // implement the function getObjectDTOFromOneResult that convert from result to
@@ -25,27 +25,33 @@ public abstract class Controller {
     protected String tableName;
     protected List<String> columnNamesSet;
 
-    public void updateSpecifecColumnForOneRow(HashMap<String, Object> toDelIdentiferMap,String columnName,Object newValueToUpdate,String typeIntOrString){
-        String sql = "UPDATE "+tableName+" SET "+columnName+"=?"+buildWhereQuery();
+    public void updateSpecifecColumnForOneRow(HashMap<String, Object> toDelIdentiferMap, String columnName,
+            Object newValueToUpdate, String typeIntOrString) {
+        String sql = "UPDATE " + tableName + " SET " + columnName + "=?" + buildWhereQuery();
+        Logs.debug(sql);
         try (Connection conn = DriverManager.getConnection(url);
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            setValuesToPreparedStatmnetInWherePart(toDelIdentiferMap, pstmt);
-            if(typeIntOrString=="int") pstmt.setInt(toDelIdentiferMap.size()+1, (int)newValueToUpdate);
-            else if(typeIntOrString=="string") pstmt.setString(toDelIdentiferMap.size()+1, (String)newValueToUpdate);
-            else throw new IllegalArgumentException("the type of the updated column is not 'string' or 'int'"); 
+            if (typeIntOrString == "int")
+                pstmt.setInt( 1, (int) newValueToUpdate);
+            else if (typeIntOrString == "string")
+                pstmt.setString(1, (String) newValueToUpdate);
+            else
+                throw new IllegalArgumentException("the type of the updated column is not 'string' or 'int'");
+            setValuesToPreparedStatmnetInWherePart(toDelIdentiferMap, pstmt,2);
             pstmt.executeUpdate();
+            Logs.debug("must updated +" + (typeIntOrString == "string"));
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public void deleteDTO(HashMap<String,Object  > toDelIdentiferMap) {
+    public void deleteDTO(HashMap<String, Object> toDelIdentiferMap) {
         String sql = "DELETE FROM " + tableName + buildWhereQuery();
         try (Connection conn = DriverManager.getConnection(url);
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            setValuesToPreparedStatmnetInWherePart(toDelIdentiferMap, pstmt);
+            setValuesToPreparedStatmnetInWherePart(toDelIdentiferMap, pstmt,1);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -114,7 +120,8 @@ public abstract class Controller {
     protected abstract String getTheRestOfInsertQuery(DTO toInsert);
 
     // according to the order of the buildWhereQuery() set the values to the pstmt
-    public abstract void setValuesToPreparedStatmnetInWherePart(HashMap<String, Object> toDelIdentiferMap,PreparedStatement pstmt);
+    public abstract void setValuesToPreparedStatmnetInWherePart(HashMap<String, Object> toDelIdentiferMap,
+            PreparedStatement pstmt,int index);
 
     // build where id=? ...
     public abstract String buildWhereQuery();
