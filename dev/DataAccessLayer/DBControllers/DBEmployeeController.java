@@ -4,15 +4,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import DataAccessLayer.DBs.AvaliableWorkerInShiftDB;
 import DataAccessLayer.DBs.EmployeeDB;
 import DataAccessLayer.DBs.RoleForEmployeeDB;
+import DataAccessLayer.DBs.ShiftInStoreDB;
+import DataAccessLayer.DBs.StoreDB;
+import DataAccessLayer.DBs.WorkersInShiftDB;
 import DataAccessLayer.DTOs.DTO;
 import DataAccessLayer.DTOs.EmployeeDTO;
 import DataAccessLayer.DTOs.RoleForEmployeeDTO;
+import DataAccessLayer.DTOs.StoreDTO;
 
 public class DBEmployeeController {
     private EmployeeDB employeeDBC = new EmployeeDB();
     private RoleForEmployeeDB rolesDBC = new RoleForEmployeeDB();
+    private AvaliableWorkerInShiftDB avaliableWorkersDBC = new AvaliableWorkerInShiftDB();
+    private WorkersInShiftDB workersInshiftsDBC = new WorkersInShiftDB();
+    private StoreDB storeDBC = new StoreDB();
+    private ShiftInStoreDB shiftsDBC = new ShiftInStoreDB();
+
 
     public EmployeeDTO[] getEmployeeInTheStore(int storeId){
         DTO[] DTOs= (DTO[]) (employeeDBC.getDTOsWhere(" WHERE "+EmployeeDB.storeId_COLUMN+"="+storeId)).toArray();
@@ -56,7 +66,7 @@ public class DBEmployeeController {
     }
 
 
-
+    public StoreDTO getStoreFromDB
 
     private HashMap<String,Object> getIdentefierMap(String empID){
         HashMap<String,Object> identiferMap = new HashMap<>();
