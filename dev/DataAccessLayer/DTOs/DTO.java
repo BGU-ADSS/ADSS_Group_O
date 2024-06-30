@@ -9,7 +9,7 @@ import java.util.List;
 
 import DataAccessLayer.DBs.DB;
 
-public  class DTO {
+public abstract class DTO {
     
     protected DB controller ;
 

@@ -83,8 +83,8 @@ public abstract class DB {
 
     }
 
-    public List<DTO> getAllDTOs() {
-        String sql = "SELECT * FROM " + tableName;
+    public List<DTO> getDTOsWhere(String whereQuery) {
+        String sql = "SELECT * FROM " + tableName+whereQuery;
         try (Connection conn = DriverManager.getConnection(url);
                 Statement stmt = conn.createStatement();
                 ResultSet queryResult = stmt.executeQuery(sql)) {
