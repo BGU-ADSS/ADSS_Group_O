@@ -73,7 +73,7 @@ public class DBEmployeeController {
     }
 
     public int getTheLastIdInShifts(){
-        
+        return 0;
     }
 
     private HashMap<String,Object> getIdentefierMap(String empID){
