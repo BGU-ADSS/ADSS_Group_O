@@ -33,6 +33,7 @@ public class Employee {
         this.startDate=startDate;
         this.endDate = enddDate;
         this.storeNum=storeNum;
+        this.password = "123";
     }
 
     public String getID() {

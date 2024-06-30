@@ -17,7 +17,6 @@ public class Store {
 
     private String name;
     private String address;
-    private Employee storeManager;
     private Schedule schedule;
     private HashMap<String, Employee> employees;
     private int storeNumber;
