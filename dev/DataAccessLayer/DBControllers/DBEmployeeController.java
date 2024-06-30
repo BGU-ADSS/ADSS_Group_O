@@ -1,5 +1,6 @@
 package DataAccessLayer.DBControllers;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import DataAccessLayer.DBs.WorkersInShiftDB;
 import DataAccessLayer.DTOs.DTO;
 import DataAccessLayer.DTOs.EmployeeDTO;
 import DataAccessLayer.DTOs.RoleForEmployeeDTO;
+import DataAccessLayer.DTOs.ShiftInStoreDTO;
 import DataAccessLayer.DTOs.StoreDTO;
 
 public class DBEmployeeController {
@@ -72,6 +74,22 @@ public class DBEmployeeController {
         return storesWithID[0];
     }
 
+    public ShiftInStoreDTO[] getShiftsInStore(String storeId,LocalDate from){
+        ShiftInStoreDTO minShiftId = shiftsDBC.getMinIdShiftInStore(storeId);
+        String minDate = minShiftId.date;
+        
+        if(from.isBefore(getDateFromString(minDate) )){
+            return (ShiftInStoreDTO[])(DTO[]) shiftsDBC.getDTOsWhere(" WHERE "+ShiftInStoreDB.storeId_column+"="+storeId).toArray();
+        }else{
+            ShiftInStoreDTO[] startShift = (ShiftInStoreDTO[])(DTO[]) shiftsDBC.getDTOsWhere(" WHERE "+ShiftInStoreDB.date_column+"="+from.toString()).toArray();
+            int minId = 0;
+            for(ShiftInStoreDTO shiftWithGivenDate:startShift)minId = Math.max(shiftWithGivenDate.shiftId, minId);
+            return (ShiftInStoreDTO[])(DTO[]) shiftsDBC.getDTOsWhere(" WHERE "+ShiftInStoreDB.shiftId_column+">"+minId).toArray();
+        }
+
+
+    }
+
     public int getTheLastIdInShifts(String storeId){
         return 0;
     }
@@ -80,6 +98,13 @@ public class DBEmployeeController {
         HashMap<String,Object> identiferMap = new HashMap<>();
         identiferMap.put(EmployeeDB.id_COLUMN, empID);
         return identiferMap;
+    }
+
+    private LocalDate getDateFromString(String date){
+        int year = Integer.parseInt( date.substring(0,4));
+        int mounth = Integer.parseInt( date.substring(5,7));
+        int day = Integer.parseInt( date.substring(8,10));
+        return LocalDate.of(year, mounth, day);
     }
 
 }

@@ -59,4 +59,9 @@ public class ShiftInStoreDB extends DB {
         return "";
     }
 
+    public ShiftInStoreDTO getMinIdShiftInStore(String storeId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getMinIdShiftInStore'");
+    }
+
 }
