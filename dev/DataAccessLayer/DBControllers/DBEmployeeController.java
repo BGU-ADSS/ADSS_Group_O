@@ -66,8 +66,6 @@ public class DBEmployeeController {
     }
 
 
-    public StoreDTO getStoreFromDB
-
     private HashMap<String,Object> getIdentefierMap(String empID){
         HashMap<String,Object> identiferMap = new HashMap<>();
         identiferMap.put(EmployeeDB.id_COLUMN, empID);

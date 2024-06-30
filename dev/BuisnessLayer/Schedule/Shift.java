@@ -18,10 +18,12 @@ public class Shift {
     private HashMap<Role, List<Employee>> workersInShift;
     private HashMap<Role, List<Employee>> workersAvailable;
     private int minEmployeeNumberInShift;
+    private int id;
 
-    public Shift(List<Employee> employees, LocalDate dateForDayToAdd, ShiftTime day2, int minEmployees) {
+    public Shift(List<Employee> employees, LocalDate dateForDayToAdd, ShiftTime day2, int minEmployees, int id) {
         this.day = dateForDayToAdd;
         this.shiftTime = day2;
+        this.id = id;
         this.minEmployeeNumberInShift = minEmployees;
         this.workersInShift = new HashMap<>();
         this.workersAvailable = new HashMap<>();
