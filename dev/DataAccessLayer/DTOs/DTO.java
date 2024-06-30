@@ -11,7 +11,7 @@ import DataAccessLayer.DAOs.Controller;
 
 public  class DTO {
     
-    private Controller controller ;
+    protected Controller controller ;
 
 
     public  void  persist(){
