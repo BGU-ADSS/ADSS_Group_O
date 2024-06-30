@@ -37,11 +37,23 @@ public class DBEmployeeController {
     }
 
     public void addRole(String empId,String role){
-        
+        if(getEmployeeFromDB(empId)!=null){
+            RoleForEmployeeDTO roleToInsert = new RoleForEmployeeDTO(empId, role);
+            roleToInsert.persist();
+        }
+    }
+
+    public void removeRole(String empId,String role){
+        HashMap<String,Object> identefier = new HashMap<>();
+        identefier.put(RoleForEmployeeDB.emplID_column, empId);
+        identefier.put(RoleForEmployeeDB.role_column, role);
+        rolesDBC.deleteDTO(identefier);
     }
 
 
-
+    public void setTerminationJobToDB(String empId,String date){
+        employeeDBC.updateSpecifecColumnForOneRow(getIdentefierMap(empId), EmployeeDB.terminationDate_COLUMN, date, "string");
+    }
 
 
 
