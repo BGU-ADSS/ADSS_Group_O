@@ -20,6 +20,7 @@ public class Employee {
     private int storeNum;
     private String password;// notify bahaa !!!!!!!!!!!!!!!!!!\
     private String defaultPassword = "12345678";
+    private LocalDate terminatedDate;
 
    
 
@@ -117,5 +118,14 @@ public class Employee {
         str += "Store Number:" + storeNum + "\n";
         str += "Bank Account:" + bankAccount + "\n";
         return str;
+    }
+
+    public void terminateJobInDate(LocalDate finishDate) {
+        this.terminatedDate = finishDate;
+    }
+
+    public Boolean canWorkInShift(LocalDate date){
+        if(terminatedDate!=null) return date.isBefore(terminatedDate);
+        return true;
     }
 }
