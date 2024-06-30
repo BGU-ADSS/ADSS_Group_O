@@ -107,7 +107,8 @@ public class Schedule {
         List<Employee> toRet = new ArrayList<>();
         Iterator<Employee> iter = employees.values().iterator();
         while(iter.hasNext()){
-            toRet.add(iter.next());
+            Employee employee= iter.next();
+            if(employee.canWorkInShift(currentWeek)) toRet.add(employee);
         }
         return toRet;
     }

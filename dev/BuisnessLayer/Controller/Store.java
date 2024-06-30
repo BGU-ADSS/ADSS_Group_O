@@ -80,6 +80,7 @@ public class Store {
         isEmployeeExist(empId);
         if( finishDate.isAfter(LocalDate.now().plusMonths(1)) ||
         finishDate.isEqual(LocalDate.now().plusMonths(1))) {
+            employees.get(empId).terminateJobInDate(finishDate);
             return true;
         }
         throw new IllegalArgumentException("finish date must be after one month or more!");
