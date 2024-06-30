@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import DataAccessLayer.DBControllers.DBEmployeeController;
 import com.google.gson.Gson;
 
 import BuisnessLayer.Schedule.Shift;
@@ -25,6 +26,8 @@ public class EmployeeController {
     private HRManager hrManager;
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
+
+    private DBEmployeeController dbEmployeeController = new DBEmployeeController();
 
     public EmployeeController(File configFile, File dataFile) {
         int deadLineConstrains=0;
@@ -98,6 +101,12 @@ public class EmployeeController {
         this.hrManager = hrManager;
         stores = new HashMap<Integer, Store>();
         employeesStore = new HashMap<String, Integer>();
+
+    }
+
+    public void loadStore(int storeId){
+
+
 
     }
 
@@ -331,7 +340,6 @@ public class EmployeeController {
         }
         store.scheduleReadyToPublish();
     }
-
 
    
 
