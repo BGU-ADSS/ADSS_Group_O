@@ -72,7 +72,7 @@ public class DBEmployeeController {
         return storesWithID[0];
     }
 
-    public int getTheLastIdInShifts(){
+    public int getTheLastIdInShifts(String storeId){
         return 0;
     }
 
