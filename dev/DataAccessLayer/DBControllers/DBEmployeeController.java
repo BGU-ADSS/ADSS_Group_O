@@ -66,6 +66,16 @@ public class DBEmployeeController {
     }
 
 
+    public StoreDTO getStoreFromDB(int storeId){
+        StoreDTO[] storesWithID =(StoreDTO[]) storeDBC.getDTOsWhere(" WHERE "+StoreDB.id_column+"="+storeId).toArray();
+        if(storesWithID.length==0)throw new IllegalArgumentException("there are no store with id: "+storeId);
+        return storesWithID[0];
+    }
+
+    public int getTheLastIdInShifts(String storeId){
+        return 0;
+    }
+
     private HashMap<String,Object> getIdentefierMap(String empID){
         HashMap<String,Object> identiferMap = new HashMap<>();
         identiferMap.put(EmployeeDB.id_COLUMN, empID);
