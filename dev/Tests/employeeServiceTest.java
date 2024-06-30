@@ -140,8 +140,8 @@ public class employeeServiceTest {
 
     @Test
     public void setConstrainsAfterDeadlineTest(){
-        beforeConstrainsTest(5);
-        Response res = R(serviceFactory.addConstrains("1", "12345678", empC.getStoreForTest(1).getNextWeek().plusDays(4), ShiftTime.Day));
+        beforeConstrainsTest(1);
+        Response res = R(serviceFactory.addConstrains("1", "12345678", empC.getStoreForTest(1).getNextWeek().plusDays(3), ShiftTime.Day));
         assertEquals(true, res.isErrorOccured());
         assertEquals("deadline have been reached! cannot add constrain", res.getErrorMessage());
     }

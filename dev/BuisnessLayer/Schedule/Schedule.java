@@ -21,20 +21,24 @@ public class Schedule {
     private List<LocalDate> breakDates = new ArrayList<>();
     private int minEmployees;
     private boolean isReadyToPublish;
+    private int idCounter;
 
     public Schedule(int deadline, List<Employee> employees, int minEmployees, List<LocalDate> breakDays) {
         this.isReadyToPublish = false;
         dayShifts = new HashMap<>();
         this.deadline = deadline;
         breakDates=breakDays;
+        this.idCounter = 0;
         this.currentWeek = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
         this.nextWeek = currentWeek.plusWeeks(1);
         for (int day = 0; day < 7; day++) {
             LocalDate dateForDayToAdd = currentWeek.plusDays(day);
             if (!breakDates.contains(dateForDayToAdd)) {
                 Shift[] shiftsInDayToAdd = new Shift[2];
-                shiftsInDayToAdd[0] = new Shift(employees, dateForDayToAdd, ShiftTime.Day, minEmployees);
-                shiftsInDayToAdd[1] = new Shift(employees, dateForDayToAdd, ShiftTime.Night, minEmployees);
+                shiftsInDayToAdd[0] = new Shift(employees, dateForDayToAdd, ShiftTime.Day, minEmployees, idCounter);
+                idCounter++;
+                shiftsInDayToAdd[1] = new Shift(employees, dateForDayToAdd, ShiftTime.Night, minEmployees, idCounter);
+                idCounter++;
                 dayShifts.put(dateForDayToAdd, shiftsInDayToAdd);
             }
         }
@@ -95,8 +99,10 @@ public class Schedule {
         LocalDate d = nextWeek;
         while (d.isBefore(nextWeek.plusWeeks(1))) {
             Shift[] shift = new Shift[2];
-            shift[0] = new Shift(getEmployees(employees),d,ShiftTime.Day,minEmployees);
-            shift[1] = new Shift(getEmployees(employees),d,ShiftTime.Night,minEmployees);
+            shift[0] = new Shift(getEmployees(employees),d,ShiftTime.Day,minEmployees, idCounter);
+            idCounter++;
+            shift[1] = new Shift(getEmployees(employees),d,ShiftTime.Night,minEmployees, idCounter);
+            idCounter++;
             dayShifts.put(d, shift);
             d = d.plusDays(1);
         }
