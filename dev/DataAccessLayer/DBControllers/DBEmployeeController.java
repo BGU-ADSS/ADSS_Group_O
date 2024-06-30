@@ -1,5 +1,6 @@
 package DataAccessLayer.DBControllers;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import DataAccessLayer.DBs.WorkersInShiftDB;
 import DataAccessLayer.DTOs.DTO;
 import DataAccessLayer.DTOs.EmployeeDTO;
 import DataAccessLayer.DTOs.RoleForEmployeeDTO;
+import DataAccessLayer.DTOs.ShiftInStoreDTO;
 import DataAccessLayer.DTOs.StoreDTO;
 
 public class DBEmployeeController {
@@ -70,6 +72,10 @@ public class DBEmployeeController {
         StoreDTO[] storesWithID =(StoreDTO[]) storeDBC.getDTOsWhere(" WHERE "+StoreDB.id_column+"="+storeId).toArray();
         if(storesWithID.length==0)throw new IllegalArgumentException("there are no store with id: "+storeId);
         return storesWithID[0];
+    }
+
+    public ShiftInStoreDTO[] getShiftsInStore(String storeId,LocalDate from){
+        
     }
 
     public int getTheLastIdInShifts(String storeId){
