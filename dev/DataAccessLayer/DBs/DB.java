@@ -112,9 +112,7 @@ public abstract class DB {
     // convert the result using result.getInt(<column name>)
     public abstract DTO getObjectDTOFromOneResult(ResultSet result);
 
-    // using pstmt set the ids columns values
-    protected abstract void setValuesToPrepareStatment(DTO toDel, PreparedStatement pstmt);
-
+   
     protected abstract void setTheValuesToTheInsertQuery(PreparedStatement pstmt, DTO toInsert);
 
     protected abstract String getTheRestOfInsertQuery(DTO toInsert);

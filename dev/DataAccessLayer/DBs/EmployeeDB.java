@@ -50,15 +50,6 @@ public class EmployeeDB extends DB {
         return null;
     }
 
-    @Override
-    protected void setValuesToPrepareStatment(DTO toDel, PreparedStatement pstmt) {
-        try {
-            pstmt.setString(1,((EmployeeDTO) toDel).id);
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
 
    
 
