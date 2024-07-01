@@ -11,11 +11,7 @@ import DataAccessLayer.DBs.RoleForEmployeeDB;
 import DataAccessLayer.DBs.ShiftInStoreDB;
 import DataAccessLayer.DBs.StoreDB;
 import DataAccessLayer.DBs.WorkersInShiftDB;
-import DataAccessLayer.DTOs.DTO;
-import DataAccessLayer.DTOs.EmployeeDTO;
-import DataAccessLayer.DTOs.RoleForEmployeeDTO;
-import DataAccessLayer.DTOs.ShiftInStoreDTO;
-import DataAccessLayer.DTOs.StoreDTO;
+import DataAccessLayer.DTOs.*;
 
 public class DBEmployeeController {
     private EmployeeDB employeeDBC = new EmployeeDB();
@@ -74,7 +70,7 @@ public class DBEmployeeController {
         return storesWithID[0];
     }
 
-    public ShiftInStoreDTO[] getShiftsInStore(String storeId,LocalDate from){
+    public ShiftInStoreDTO[] getShiftsInStore(int storeId,LocalDate from){
         ShiftInStoreDTO minShiftId = shiftsDBC.getMinIdShiftInStore(storeId);
         String minDate = minShiftId.date;
         
@@ -90,10 +86,23 @@ public class DBEmployeeController {
 
     }
 
-    public int getTheLastIdInShifts(String storeId){
+    //===========================================================================
+    public int getTheLastIdInShifts(int storeId){
         return 0;
     }
 
+    public boolean getIsReadyToPublish(int storeId){
+        return false;
+    }
+
+    public AvaliableWorkerInShiftDTO[] getAvaliableWorkerInShifts(int ShiftId){
+        return null;
+    }
+
+    public WorkerInShiftDTO[] getWorkerInShifts(int ShiftId){
+        return null;
+    }
+    //============================================================================
     private HashMap<String,Object> getIdentefierMap(String empID){
         HashMap<String,Object> identiferMap = new HashMap<>();
         identiferMap.put(EmployeeDB.id_COLUMN, empID);

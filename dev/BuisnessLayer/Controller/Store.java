@@ -32,6 +32,14 @@ public class Store {
         }
     }
 
+    public Store(){}
+    public void loadData(String name,String address,Schedule schedule,HashMap<String, Employee> employees,int id){
+        this.name=name;
+        this.address=address;
+        this.schedule=schedule;
+        this.employees=employees;
+        this.storeNumber=id;
+    }
     public void addConstrains(String empId, LocalDate day, ShiftTime shiftTime) {
         isEmployeeExist(empId);
         schedule.addConstrains(empId, day, shiftTime);

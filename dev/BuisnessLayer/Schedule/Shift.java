@@ -32,11 +32,13 @@ public class Shift {
         workersAvailable.put(Role.GroubManager, new ArrayList<>());
         workersAvailable.put(Role.Storekeeper, new ArrayList<>());
         workersAvailable.put(Role.StoreManager, new ArrayList<>());
+        workersAvailable.put(Role.Driver, new ArrayList<>());
         workersInShift.put(Role.ShiftManager, new ArrayList<>());
         workersInShift.put(Role.Cashier, new ArrayList<>());
         workersInShift.put(Role.GroubManager, new ArrayList<>());
         workersInShift.put(Role.Storekeeper, new ArrayList<>());
         workersInShift.put(Role.StoreManager, new ArrayList<>());
+        workersInShift.put(Role.Driver, new ArrayList<>());
         for (Employee employee : employees) {
             for (Role role : employee.getRoles()) {
                 workersAvailable.get(role).add(employee);
@@ -44,6 +46,16 @@ public class Shift {
         }
 
     }
+    public Shift(){}
+    public void loadData(LocalDate day,ShiftTime shiftTime,int id,HashMap<Role, List<Employee>> workersInShift, HashMap<Role, List<Employee>> workersAvailable) {
+        this.workersInShift = workersInShift;
+        this.workersAvailable = workersAvailable;
+        this.day = day;
+        this.shiftTime = shiftTime;
+        this.id = id;
+
+    }
+
     public void submit(){
         int sum = 0;
         if( workersInShift.get(Role.ShiftManager).isEmpty() ){

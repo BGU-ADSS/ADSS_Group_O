@@ -46,6 +46,16 @@ public class Schedule {
 
     }
 
+    public Schedule(){}
+    public void loadData( HashMap<LocalDate, Shift[]> dayShifts, LocalDate currentWeek, LocalDate nextWeek, List<LocalDate> breakDates, int minEmployees, boolean isReadyToPublish , int idCounter) {
+        this.dayShifts = dayShifts;
+        this.currentWeek = currentWeek;
+        this.nextWeek = nextWeek;
+        this.breakDates = breakDates;
+        this.minEmployees = minEmployees;
+        this.isReadyToPublish = isReadyToPublish;
+        this.idCounter = idCounter;
+    }
     public void addConstrains(String empId, LocalDate day, ShiftTime shiftTime) {
 
         checkRelatedDateShift(day);

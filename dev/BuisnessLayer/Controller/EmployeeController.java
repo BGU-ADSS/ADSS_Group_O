@@ -2,13 +2,17 @@ package BuisnessLayer.Controller;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import BuisnessLayer.Schedule.Schedule;
 import DataAccessLayer.DBControllers.DBEmployeeController;
+import DataAccessLayer.DTOs.*;
 import com.google.gson.Gson;
 
 import BuisnessLayer.Schedule.Shift;
@@ -24,15 +28,15 @@ public class EmployeeController {
     private HashMap<Integer,Store> stores;
     private HashMap<String, Integer> employeesStore;
     private HRManager hrManager;
+    List<LocalDate> breakDays = new ArrayList<>();
+    int deadLineConstrains=0;
+    int minEmployees=0;
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
 
     private DBEmployeeController dbEmployeeController = new DBEmployeeController();
 
     public EmployeeController(File configFile, File dataFile) {
-        int deadLineConstrains=0;
-        int minEmployees=0;
-        List<LocalDate> breakDays = new ArrayList<>();
         this.employeesStore=new HashMap<>();
         try {
             List<String> configLines = Files.readAllLines(configFile.toPath());
@@ -106,8 +110,85 @@ public class EmployeeController {
 
     public void loadStore(int storeId){
 
+        StoreDTO store = dbEmployeeController.getStoreFromDB(storeId);
+        EmployeeDTO[] employeesInStore = dbEmployeeController.getEmployeeInTheStore(storeId);
+        List<Employee> employees = new ArrayList<>();
+        for(EmployeeDTO empl : employeesInStore){
+            RoleForEmployeeDTO[] roles = dbEmployeeController.getRolesForEmployeeDTOs(empl.id);
+            List<Role> roleList = new ArrayList<>();
+            for(RoleForEmployeeDTO role : roles){
+                roleList.add(Role.valueOf(role.Role));
+            }
+            employees.add(new Employee(empl.id,empl.name, empl.bankAccount,empl.monthSalary,-1,roleList,LocalDate.parse(empl.startDate,formatter),LocalDate.parse(empl.endDate,formatter),storeId));
+        }
 
+        HashMap<LocalDate, Shift[]> shifts = new HashMap<>();
+        List<Role> allRoles = new ArrayList<>();
+        allRoles.add(Role.Cashier);
+        allRoles.add(Role.Storekeeper);
+        allRoles.add(Role.Driver);
+        allRoles.add(Role.StoreManager);
+        allRoles.add(Role.ShiftManager);
+        allRoles.add(Role.GroubManager);
+        LocalDate lastSunday = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
+        ShiftInStoreDTO[] shiftsInStore = dbEmployeeController.getShiftsInStore(storeId,lastSunday);
+        for(int i = 0;i<shiftsInStore.length;i++) {
+            WorkerInShiftDTO[] workerInShift = dbEmployeeController.getWorkerInShifts(shiftsInStore[i].shiftId);
+            AvaliableWorkerInShiftDTO[] avaliableWorkerInShift = dbEmployeeController.getAvaliableWorkerInShifts(shiftsInStore[i].shiftId);
+            HashMap<Role, List<Employee>> wis = new HashMap<>();
+            HashMap<Role, List<Employee>> awis = new HashMap<>();
+            for(Role role : allRoles){
+                wis.put(role,getEmplInRoleW(employees,role,workerInShift));
+                awis.put(role,getEmplInRoleW(employees,role,workerInShift));
+            }
+            LocalDate day = LocalDate.parse(shiftsInStore[i].date);
+            if( !shifts.containsKey(day) ){
+                shifts.put(day, new Shift[2]);
+                shifts.get(day)[0].loadData(day,ShiftTime.Day,shiftsInStore[i].shiftId,wis,awis);
+            }else {
+                shifts.get(day)[1].loadData(day,ShiftTime.Day,shiftsInStore[i].shiftId,wis,awis);
+            }
+        }
+        Schedule schedule = new Schedule();
+        schedule.loadData(shifts,lastSunday,lastSunday.plusWeeks(1),breakDays,minEmployees,dbEmployeeController.getIsReadyToPublish(storeId),dbEmployeeController.getTheLastIdInShifts(storeId) + 1);
+        Store finalStore = new Store();
+        finalStore.loadData(store.name,store.address,schedule,prepareEmpls(employees),store.id);
+        stores.put(store.id,finalStore);
+        for(EmployeeDTO empl : employeesInStore){
+            employeesStore.put(empl.id,storeId);
+        }
 
+    }
+
+    private HashMap<String, Employee> prepareEmpls(List<Employee> empls){
+        HashMap<String, Employee> emplMap = new HashMap<>();
+        for(Employee emp : empls){
+            emplMap.put(emp.getID(),emp);
+        }
+        return emplMap;
+    }
+    private List<Employee> getEmplInRoleW(List<Employee> empls, Role role, WorkerInShiftDTO[] workers){
+        List<Employee> employees = new ArrayList<>();
+        for(Employee empl : empls){
+            for(WorkerInShiftDTO dto : workers){
+                if( empl.getID().equals(dto.empId) && empl.getRoles().contains(role)){
+                    employees.add(empl);
+                }
+            }
+        }
+        return employees;
+    }
+
+    private List<Employee> getEmplInRoleA(List<Employee> empls, Role role, AvaliableWorkerInShiftDTO[] workers){
+        List<Employee> employees = new ArrayList<>();
+        for(Employee empl : empls){
+            for(AvaliableWorkerInShiftDTO dto : workers){
+                if( empl.getID().equals(dto.empId) && empl.getRoles().contains(role)){
+                    employees.add(empl);
+                }
+            }
+        }
+        return employees;
     }
 
     public void setStoreForTest(String storeName, String address, Employee manager, List<Employee> employees, int storeNum,int minEmps,int deadLine) {
