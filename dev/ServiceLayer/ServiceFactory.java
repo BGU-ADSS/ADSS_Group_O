@@ -14,9 +14,14 @@ public class ServiceFactory {
     private HRservice hrService;
     private EmployeeController employeeController;
 
-    public ServiceFactory(){
-        employeeController = new EmployeeController(new File("C:\\Users\\WINDOWS 10 PRO\\OneDrive\\Desktop\\ADSS\\ADSS_Group_O\\dev\\DTOs\\config.txt"),
-                new File("C:\\Users\\WINDOWS 10 PRO\\OneDrive\\Desktop\\ADSS\\ADSS_Group_O\\dev\\DTOs\\Data.txt"));
+    public ServiceFactory(boolean withData){
+        if(withData) {
+            employeeController = new EmployeeController(new File("C:\\Users\\WINDOWS 10 PRO\\OneDrive\\Desktop\\ADSS\\ADSS_Group_O\\dev\\DTOs\\config.txt"),
+                    new File("C:\\Users\\WINDOWS 10 PRO\\OneDrive\\Desktop\\ADSS\\ADSS_Group_O\\dev\\DTOs\\Data.txt"));
+        }
+        else {
+            employeeController = new EmployeeController(new File("C:\\Users\\WINDOWS 10 PRO\\OneDrive\\Desktop\\ADSS\\ADSS_Group_O\\dev\\DTOs\\config.txt"));
+        }
         employeeService = new employeeService(employeeController);
         hrService = new HRservice(employeeController);
     }
@@ -26,6 +31,25 @@ public class ServiceFactory {
         hrService = new HRservice(controller);
     }
 
+    public String addHRmanager(String password){
+        try {
+            employeeController.addHRmanager(password);
+            return "hr added successfuly";
+        }
+        catch (Exception ex){
+            return ex.getMessage();
+        }
+    }
+
+    public String addStore(int storeNumber, String storeName, String StoreAddress){
+        try {
+            employeeController.addStore(storeNumber,storeName,StoreAddress);
+            return "store added successfuly";
+        }
+        catch (Exception ex){
+            return ex.getMessage();
+        }
+    }
     public String loginForHR(String password) {
         return hrService.loginForHR(password);
     }

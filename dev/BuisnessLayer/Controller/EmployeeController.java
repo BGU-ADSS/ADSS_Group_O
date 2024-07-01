@@ -85,9 +85,6 @@ public class EmployeeController {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
-
-
     }
 
 
@@ -100,12 +97,51 @@ public class EmployeeController {
     }
 
 
+    public EmployeeController(File configFile) {
+        this.employeesStore=new HashMap<>();
+        try {
+            List<String> configLines = Files.readAllLines(configFile.toPath());
+            for (String line : configLines) {
+                if (line.startsWith("#")) {
+                    int index = getSplitIndex(line);
+                    String key = line.substring(1, index);
+                    String value = line.substring(index + 1);
+                    switch (key) {
+                        case "deadLineConstrains":
+                            deadLineConstrains = Integer.parseInt(value);
+                            break;
+                        case "breakDayes":
+                            breakDays.add(LocalDate.parse(value, formatter));
+                            break;
+                        case "minEmployees":
+                            minEmployees = Integer.parseInt(value);
+                        default:
+                            break;
+                    }
+
+                }
+            }
+            stores = new HashMap();
+            employeesStore = new HashMap<>();
+        }
+        catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
     public EmployeeController(HRManager hrManager) {
 
         this.hrManager = hrManager;
         stores = new HashMap<Integer, Store>();
         employeesStore = new HashMap<String, Integer>();
 
+    }
+
+    public void addHRmanager(String password){
+        hrManager = new HRManager(password);
+    }
+    public void saveStore(Store store){
+        dbEmployeeController.insertStore(convertStroreToDTO(store));
     }
 
     public void loadStore(int storeId){
@@ -191,6 +227,52 @@ public class EmployeeController {
         return employees;
     }
 
+    public void addStore(int storeNumber, String StoreName, String address){
+        if (stores.get(storeNumber) != null){
+            throw new IllegalArgumentException("store number already exist!");
+        }
+        Store s = new Store(StoreName,address,storeNumber,new ArrayList<>(),deadLineConstrains,minEmployees,breakDays);
+        stores.put(storeNumber,s);
+        dbEmployeeController.insertStore(convertStroreToDTO(s));
+        saveShifts(s.getSchedule().getCurrentWeek(),s.getSchedule().getDayShifts(),storeNumber);
+
+    }
+
+    public void saveShifts(LocalDate from, HashMap<LocalDate, Shift[]> shifts, int storeId){
+
+        for ( LocalDate day : shifts.keySet() ){
+            if( day.isAfter(from) || day.isEqual(from) ){
+                Shift[] shif = shifts.get(day);
+                dbEmployeeController.insertShiftToDB(convertShiftToDTO(shif[0],storeId));
+                dbEmployeeController.insertShiftToDB(convertShiftToDTO(shif[1],storeId));
+                for (int i = 0; i < 2; i++){
+                    List<String> emplIds = new ArrayList<>();
+                    for ( List<Employee> emplS : shif[i].getWorkersAvailable().values() ){
+                        for (Employee employee : emplS){
+                            if (!emplIds.contains(employee.getID())){
+                                emplIds.add(employee.getID());
+                            }
+                        }
+                    }
+                    for ( String id : emplIds ) {
+                        dbEmployeeController.insertWorkerAvailableInShift(new AvaliableWorkerInShiftDTO(id,shif[i].getId()));
+                    }
+                    emplIds = new ArrayList<>();
+                    for ( List<Employee> emplS : shif[i].getWorkersInShift().values() ){
+                        for (Employee employee : emplS){
+                            if (!emplIds.contains(employee.getID())){
+                                emplIds.add(employee.getID());
+                            }
+                        }
+                    }
+                    for ( String id : emplIds ) {
+                        dbEmployeeController.insertEmplInWorkerInShift(new WorkerInShiftDTO(id,shif[i].getId()));
+                    }
+
+                }
+            }
+        }
+    }
     public void setStoreForTest(String storeName, String address, Employee manager, List<Employee> employees, int storeNum,int minEmps,int deadLine) {
         Store store = new Store(storeName, address, storeNum, employees,deadLine,minEmps  ,new ArrayList<>() );
         stores.put(storeNum,store);
@@ -218,6 +300,7 @@ public class EmployeeController {
     }
     public void setPassword(String password, String empId){
 
+        checkStore(dbEmployeeController.getEmployeeStore((empId)));
         if ( employeesStore.get(empId) == null ){
             throw new IllegalArgumentException("Employee does not exist");
         }
@@ -225,31 +308,39 @@ public class EmployeeController {
         int storeNum = employeesStore.get(empId);
         Store store = stores.get(storeNum);
         store.setPassword(password,empId);
+        dbEmployeeController.setPasswordInDB(empId,password);
     }
     public void addConstrains(String empId, LocalDate day, ShiftTime shift){
 
+        checkStore(dbEmployeeController.getEmployeeStore(empId));
         if ( employeesStore.get(empId) == null ){
             throw new IllegalArgumentException("Employee does not exist");
         }
 
         int storeNum = employeesStore.get(empId);
         Store store = stores.get(storeNum);
-        store.addConstrains(empId,day,shift);
+        int shiftId = store.addConstrains(empId,day,shift);
+        dbEmployeeController.deleteFromAvailable(shiftId, empId);
     }
 
     public void addEmployee(Employee employee){
+
+        checkStore(employee.getStoreNum());
         Logs.debug( employeesStore.get(employee.getID())+" the store returned for this employee "+employeesStore.size());
         if( employeesStore.get(employee.getID()) != null ){
             throw new IllegalArgumentException(Errors.EmployeeAlreadyExistInStore);
         }
         stores.get(employee.getStoreNum()).addEmployee(employee);
         employeesStore.put(employee.getID(), employee.getStoreNum());
+        dbEmployeeController.intsertEmployee(convrtEmplToDTO(employee));
+        dbEmployeeController.insertRolesForEmployee(rolesToDTO(employee));
         Logs.debug( employeesStore.get(employee.getID())+" the store returned for this employee "+employeesStore.size());
 
     }
 
     public String getShiftHistory(LocalDate fromDate, int StoreNum){
 
+        checkStore(StoreNum);
         if ( stores.get(StoreNum) == null ){
             throw new IllegalArgumentException("Store does not exist");
         }
@@ -259,27 +350,35 @@ public class EmployeeController {
 
     public boolean terminateJobReq(String empId, LocalDate finishDate){
 
+        checkStore(dbEmployeeController.getEmployeeStore(empId));
         if ( employeesStore.get(empId) == null ){
             throw new IllegalArgumentException("Employee does not exist");
         }
         Store store = stores.get(employeesStore.get(empId));
-        return store.terminateJobReq(empId,finishDate);
-
+        if(store.terminateJobReq(empId,finishDate)){
+            dbEmployeeController.setTerminationJobToDB(empId,finishDate.toString());
+            return true;
+        }
+        return false;
     }
 
     public boolean removeRoleFromEmployee(String empId, Role role){
 
+        checkStore(dbEmployeeController.getEmployeeStore(empId));
         if ( employeesStore.get(empId) == null ){
             throw new IllegalArgumentException("Employee does not exist");
         }
-        
-
         Store store = stores.get(employeesStore.get(empId));
-        return store.removeRoleFromEmployee(empId,role);
+        if (store.removeRoleFromEmployee(empId,role)){
+            dbEmployeeController.removeRole(empId,role.toString());
+            return true;
+        }
+        return false;
     }
 
     public String getCurrentWeekSchedule(String empId){
 
+        checkStore(dbEmployeeController.getEmployeeStore(empId));
         if ( employeesStore.get(empId) == null ){
             throw new IllegalArgumentException("Employee does not exist");
         }
@@ -291,6 +390,7 @@ public class EmployeeController {
 
     public String getNextWeekSchedule(String empId){
 
+        checkStore(dbEmployeeController.getEmployeeStore(empId));
         if ( employeesStore.get(empId) == null ){
             throw new IllegalArgumentException("Employee does not exist");
         }
@@ -302,15 +402,18 @@ public class EmployeeController {
 
     public void startAddingConstrainsForNextWeek(int storeNum){
 
+        checkStore(storeNum);
         if ( stores.get(storeNum) == null ){
             throw new IllegalArgumentException("Store does not exist");
         }
         Store store = stores.get(storeNum);
         store.startAddingConstrainsForNextWeek();
+        saveShifts(store.getNextWeek(),store.getSchedule().getDayShifts(),storeNum);
 
     }
 
     public String getEmployeeProf(String empId){
+        checkStore(dbEmployeeController.getEmployeeStore(empId));
         if ( employeesStore.get(empId) == null ){
             throw new IllegalArgumentException("Employee does not exist");
         }
@@ -321,6 +424,7 @@ public class EmployeeController {
 
     public String getCurrentSchedule(int storeNumber){
 
+        checkStore(storeNumber);
         Store store = stores.get(storeNumber);
         if( store == null ){
             throw new IllegalArgumentException("Store does not exist");
@@ -329,6 +433,7 @@ public class EmployeeController {
     }
     //--------------------------------------------------------------------------------------------------//
     public Employee getEmployee(String empId) {
+        checkStore(dbEmployeeController.getEmployeeStore(empId));
         Store store = getStoreForEmployee(empId);
         return store!=null?store.getEmployee(empId):null;
     }
@@ -363,15 +468,21 @@ public class EmployeeController {
 
 
     public List<Shift> getAvailableDaysForEmployee(String empId){
+
+        int storeNum = dbEmployeeController.getEmployeeStore(empId);
+        checkStore(storeNum);
         int storeNumOfEmployee = employeesStore.get(empId);
         Store storeOfEmployee = stores.get(storeNumOfEmployee);
         return storeOfEmployee.getAvailableDaysForEmployee(empId);
+
     }
 
     public boolean removeEmployee(String empId){
+        checkStore(dbEmployeeController.getEmployeeStore(empId));
         Store store = getStoreForEmployee(empId);
         store.removeEmployee(empId);
         employeesStore.remove(empId);
+        dbEmployeeController.deleteEmployeeFromDB(empId);
         return true;
     }
 
@@ -387,22 +498,28 @@ public class EmployeeController {
     //
 
     public void setEmployeeInShift(LocalDate date,ShiftTime shiftTime , String empId,Role role){
+        checkStore(dbEmployeeController.getEmployeeStore(empId));
         Store store = getStoreForEmployee(empId);
-        store.setEmployeeInShift(date,shiftTime,empId,role);
+        int id = store.setEmployeeInShift(date,shiftTime,empId,role);
+        dbEmployeeController.insertEmplInWorkerInShift(new WorkerInShiftDTO(empId,id));
     }
 
 
     public boolean addRoleForEmployee(String empId,Role role){
+        checkStore(dbEmployeeController.getEmployeeStore(empId));
         Store store = getStoreForEmployee(empId);
         Logs.debug(empId+" employee id to add in");
         store.addRoleForEmployee(empId,role);
+        dbEmployeeController.addRole(empId,role.toString());
         return true;
     }
 
 
     public void setBankAccountForEmployee(String empId,String newBankAccount){
+        checkStore(dbEmployeeController.getEmployeeStore(empId));
         Store store = getStoreForEmployee(empId);
         store.setBankAccountForEmployee(empId,newBankAccount);
+        dbEmployeeController.setBankAccount(empId,newBankAccount);
     }
 
     public void updateSalary(String emplId, int monthSalary) {
@@ -412,16 +529,44 @@ public class EmployeeController {
         }
         Store store = stores.get(employeesStore.get(emplId));
         store.updateSalary(emplId,monthSalary);
+        dbEmployeeController.updateSalaryForEmployee(emplId,monthSalary);
     }
 
     public void scheduleReadyToPublish(int StoreNumber){
+        checkStore(StoreNumber);
         Store store = stores.get(StoreNumber);
         if (store==null){
             throw new IllegalArgumentException("Store does not exist");
         }
         store.scheduleReadyToPublish();
+        dbEmployeeController.updateReadyToPublish(false);
     }
 
-   
+    public void checkStore(int StoreNumber){
 
+        Store store = stores.get(StoreNumber);
+        if (store==null){
+            loadStore(StoreNumber);
+        }
+    }
+
+    public EmployeeDTO convrtEmplToDTO(Employee employee){
+        return new EmployeeDTO(employee.getID(),employee.getName(),employee.getBankAccount(),employee.getMounthSalary(),employee.getStartDate().toString(),employee.getEndDate().toString(),employee.getStoreNum(),employee.getPassword(),employee.getTerminatedDate().toString());
+    }
+
+    public RoleForEmployeeDTO[] rolesToDTO(Employee employee){
+        RoleForEmployeeDTO[] dtos = new RoleForEmployeeDTO[employee.getRoles().size()];
+        for (int i = 0; i < employee.getRoles().size(); i++) {
+            dtos[i] = new RoleForEmployeeDTO(employee.getID(), employee.getRoles().get(i).toString());
+        }
+        return dtos;
+    }
+
+    public StoreDTO convertStroreToDTO(Store store){
+        return new StoreDTO(store.getStoreNumber(),store.getName(),store.getAddress());
+    }
+
+    public ShiftInStoreDTO convertShiftToDTO(Shift shift, int id){
+        return new ShiftInStoreDTO(id, shift.getDay().toString(),shift.getShiftTime().toString(),shift.getId());
+    }
 }

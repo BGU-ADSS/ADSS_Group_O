@@ -40,9 +40,9 @@ public class Store {
         this.employees=employees;
         this.storeNumber=id;
     }
-    public void addConstrains(String empId, LocalDate day, ShiftTime shiftTime) {
+    public int addConstrains(String empId, LocalDate day, ShiftTime shiftTime) {
         isEmployeeExist(empId);
-        schedule.addConstrains(empId, day, shiftTime);
+        return schedule.addConstrains(empId, day, shiftTime);
     }
 
     public List<Shift> getAvailableDaysForEmployee(String empId) {
@@ -119,9 +119,9 @@ public class Store {
     public String getCurrentSchedule(){
         return schedule.getCurrentSchedule();
     }
-    public void setEmployeeInShift(LocalDate date, ShiftTime shiftTime, String empId,Role role) {
+    public int setEmployeeInShift(LocalDate date, ShiftTime shiftTime, String empId,Role role) {
         isEmployeeExist(empId);
-        schedule.setEmployeeInShift(date,shiftTime,empId,role);
+        return schedule.setEmployeeInShift(date,shiftTime,empId,role);
     }
 
     public void addRoleForEmployee(String empId, Role role) {
@@ -173,5 +173,21 @@ public class Store {
 
     public void updateSalary(String emplId, int monthSalary) {
         employees.get(emplId).updateSalary(monthSalary);
+    }
+
+    public int getStoreNumber(){
+        return storeNumber;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public String getAddress(){
+        return address;
+    }
+
+    public Schedule getSchedule(){
+        return schedule;
     }
 }

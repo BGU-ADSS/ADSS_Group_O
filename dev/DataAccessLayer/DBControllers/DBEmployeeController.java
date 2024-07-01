@@ -102,7 +102,41 @@ public class DBEmployeeController {
     public WorkerInShiftDTO[] getWorkerInShifts(int ShiftId){
         return null;
     }
-    //============================================================================
+
+    // return the store that this employee belongs to and throws exception if employee id not exist
+    public int getEmployeeStore(String empId){
+        return 0;
+    }
+
+    //insert a new employee
+    public void intsertEmployee(EmployeeDTO employee){}
+
+    //delete an employee
+    public void deleteEmployeeFromDB(String empId){}
+    //update new salary
+    public void updateSalaryForEmployee(String empId, int newSalary){}
+    // set shift for employee
+    public void insertEmplInWorkerInShift(WorkerInShiftDTO worker){}
+    // update ready to publish
+    public void updateReadyToPublish(boolean isReady){}
+    // delete from available
+    public void deleteFromAvailable(int shiftId, String emplI){}
+    // insert new store
+    public void insertStore(StoreDTO stroe){}
+    //
+    public void insertShiftToDB(ShiftInStoreDTO shift){}
+    //
+    public void insertWorkerAvailableInShift(AvaliableWorkerInShiftDTO shift){}
+    //============================================================================//
+
+    // insert his roles
+    public void insertRolesForEmployee(RoleForEmployeeDTO[] role){
+
+        for(RoleForEmployeeDTO roleForEmployeeDTO:role){
+            addRole(roleForEmployeeDTO.employeeId,roleForEmployeeDTO.Role);
+            }
+    }
+
     private HashMap<String,Object> getIdentefierMap(String empID){
         HashMap<String,Object> identiferMap = new HashMap<>();
         identiferMap.put(EmployeeDB.id_COLUMN, empID);

@@ -8,10 +8,15 @@ public class presentationController {
     private ServiceFactory serviceFactory;
     private boolean finish;
 
-    public presentationController(){
-        serviceFactory = new ServiceFactory();
-        emPres = new EmployeePres(serviceFactory);
-        hrPres = new HRPres(serviceFactory);
+    public presentationController(boolean withData){
+        if(withData) {
+            serviceFactory = new ServiceFactory(withData);
+            emPres = new EmployeePres(serviceFactory);
+            hrPres = new HRPres(serviceFactory);
+        }
+        else {
+            runIfWithoutData();
+        }
     }
 
     public void runPresentation(){
@@ -28,5 +33,29 @@ public class presentationController {
                 System.out.println("Invalid Input!!");
             }
         }
+    }
+
+    public void runIfWithoutData(){
+        serviceFactory = new ServiceFactory(false);
+        Logs.print("choose an option:-");
+        Logs.print("1 - add HR mannager");
+        Logs.print("2 - add store");
+        Logs.print("3 - done");
+        String opt = Logs.getInput();
+        while (!opt.equals("3")){
+            if (opt.equals("1")){
+                Logs.print(serviceFactory.addHRmanager(Logs.getNewPassword()));
+            }
+            else if (opt.equals("2")){
+                Logs.print(serviceFactory.addStore(Logs.getStoreNumber(),Logs.getStoreName(),Logs.getStoreAddress()));
+            }
+            Logs.print("\nchoose an option:-");
+            Logs.print("1 - add HR mannager");
+            Logs.print("2 - add store");
+            Logs.print("3 - done");
+            opt = Logs.getInput();
+        }
+        hrPres = new HRPres(serviceFactory);
+        hrPres = new HRPres(serviceFactory);
     }
 }

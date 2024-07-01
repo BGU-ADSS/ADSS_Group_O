@@ -56,7 +56,7 @@ public class Schedule {
         this.isReadyToPublish = isReadyToPublish;
         this.idCounter = idCounter;
     }
-    public void addConstrains(String empId, LocalDate day, ShiftTime shiftTime) {
+    public int addConstrains(String empId, LocalDate day, ShiftTime shiftTime) {
 
         checkRelatedDateShift(day);
         if (dayShifts.get(day) == null) {
@@ -65,13 +65,14 @@ public class Schedule {
         if( LocalDate.now().isAfter(currentWeek.plusDays(deadline)) ) {
             throw new IllegalArgumentException("deadline have been reached! cannot add constrain");
         }
-
+        int id;
         Shift[] shifts = dayShifts.get(day);
         if (shiftTime == ShiftTime.Day) {
-            shifts[0].removeFromAvailableWorkers(empId);
+            id = shifts[0].removeFromAvailableWorkers(empId);
         } else {
-            shifts[1].removeFromAvailableWorkers(empId);
+            id = shifts[1].removeFromAvailableWorkers(empId);
         }
+        return id;
     }
 
     public void addEmployee(Employee employee) {
@@ -199,15 +200,16 @@ public class Schedule {
         }
     }
 
-    public void setEmployeeInShift(LocalDate date, ShiftTime shiftTime, String empId, Role role) {
+    public int setEmployeeInShift(LocalDate date, ShiftTime shiftTime, String empId, Role role) {
         checkRelatedDateShift(date);
+        int id;
         if ( shiftTime == ShiftTime.Day) {
-            dayShifts.get(date)[0].setEmployeeToShift(empId,role);
+            id = dayShifts.get(date)[0].setEmployeeToShift(empId,role);
         }
         else {
-            dayShifts.get(date)[1].setEmployeeToShift(empId,role);
+            id = dayShifts.get(date)[1].setEmployeeToShift(empId,role);
         }
-
+        return id;
     }
 
     // this function must check if there are shift in the given date
@@ -297,5 +299,13 @@ public class Schedule {
 
     public LocalDate getNextWeek() {
         return nextWeek;
+    }
+
+    public LocalDate getCurrentWeek() {
+        return currentWeek;
+    }
+
+    public HashMap<LocalDate, Shift[]> getDayShifts(){
+        return dayShifts;
     }
 }
