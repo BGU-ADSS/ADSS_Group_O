@@ -127,6 +127,7 @@ public class HRPres {
     }
 
     private void removeEmployee() {
+
         String input = Logs.logRemoveEmplAndGetId();
         String res = serviceFactory.removeEmployee(input);
         printValue(res);

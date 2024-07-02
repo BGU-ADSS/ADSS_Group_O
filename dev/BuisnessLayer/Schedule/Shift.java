@@ -68,7 +68,12 @@ public class Shift {
         if(sum < minEmployeeNumberInShift){
             throw new IllegalArgumentException("cannot submit shift with fewer than minimum employees");
         }
+
+        if( !workersInShift.get(Role.Driver).isEmpty() && workersInShift.get(Role.Storekeeper).isEmpty() ){
+            throw new IllegalArgumentException("shift "+day+" "+shiftTime+"has a driver without storeKeeper!");
+        }
     }
+
     public HashMap<Role, List<Employee>> getWorkersInShift() {
         return workersInShift;
     }
@@ -76,13 +81,14 @@ public class Shift {
         return getEmployeeFromgivenDict(empId, workersAvailable)!=null;
     }
 
-    public void removeFromAvailableWorkers(String empId) {
+    public int removeFromAvailableWorkers(String empId) {
 
         Employee employee = getEmployeeFromgivenDict(empId, workersAvailable);
         if ( employee == null ){
             throw new IllegalArgumentException("constrains already added!");
         }
         removeEmployeeFromGivenDict(empId,workersAvailable);
+        return id;
     }
 
 
@@ -135,7 +141,7 @@ public class Shift {
     }
 
     //
-    public void setEmployeeToShift(String empId, Role role) {
+    public int setEmployeeToShift(String empId, Role role) {
         Employee empl = getEmployeeFromgivenDict(empId, workersAvailable);
         if(empl == null) throw new IllegalArgumentException(Errors.cantSetShiftDueConstrains);
         if(!empl.containsRole(role)) throw new IllegalArgumentException("employee doesn't have role " + role);
@@ -145,6 +151,7 @@ public class Shift {
         }else {
             throw new IllegalArgumentException(Errors.cantSetShiftDueConstrains);
         }
+        return id;
     }
 
     public String toStringForSchedule(){
@@ -162,5 +169,17 @@ public class Shift {
 
     public String toString(){
         return day.toString() +" "+ shiftTime.toString() + '\n';
+    }
+
+    public HashMap<Role, List<Employee>> getWorkersAvailable(){
+        return workersAvailable;
+    }
+
+    public LocalDate getDay(){
+        return day;
+    }
+
+    public int getId(){
+        return id;
     }
 }

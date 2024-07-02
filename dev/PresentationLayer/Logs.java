@@ -15,6 +15,11 @@ public class Logs {
         System.out.println(toPrint);
     }
 
+    public static void withDataOrNot(){
+        print("options :-");
+        print(" 1 . start with the data in data file.");
+        print(" 2 . start without the data.");
+    }
     public static void logWelcomeToSystem(){
         System.out.println("welcome to super lee ");
         System.out.println(" - to login as an employee write: login-<Id>-<password>");
@@ -56,7 +61,7 @@ public class Logs {
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_RED = "\u001B[31m";
     public static void logRolesInShift() {
-        print("0-StoreManager,\n1-Cashier,\n2-Storekeeper,\n3-ShiftManager,\n4-GroubManager");
+        print("0-StoreManager,\n1-Cashier,\n2-Storekeeper,\n3-ShiftManager,\n4-GroubManager,\n5-Driver");
     }
     public static Role fromInt(int i) {
         switch (i) {
@@ -65,6 +70,7 @@ public class Logs {
             case 2: return Role.Storekeeper;
             case 3: return Role.ShiftManager;
             case 4: return Role.GroubManager;
+            case 5: return Role.Driver;
             default: print("Invaild num");return getRoleToAdd();
         }
     }
@@ -226,6 +232,16 @@ public class Logs {
     public static int getStoreNumber() {
         print("Enter store number :");
         return getIntInput();    
+    }
+
+    public static String getStoreName() {
+        print("Enter store name :");
+        return getInput();
+    }
+
+    public static String getStoreAddress() {
+        print("Enter store adress :");
+        return getInput();
     }
 
     public static String getNewPassword(){

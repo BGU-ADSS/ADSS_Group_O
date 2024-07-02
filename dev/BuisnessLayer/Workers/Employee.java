@@ -46,11 +46,11 @@ public class Employee {
         return roles.size();
     }
 
-    public Object getName() {
+    public String getName() {
         return empName;
     }
 
-    public Object getMounthSalary() {
+    public int getMounthSalary() {
         return monthSalary;
     }
 
@@ -127,5 +127,25 @@ public class Employee {
     public Boolean canWorkInShift(LocalDate date){
         if(terminatedDate!=null) return date.isBefore(terminatedDate);
         return true;
+    }
+
+    public String getBankAccount(){
+        return bankAccount;
+    }
+
+    public LocalDate getStartDate(){
+        return startDate;
+    }
+
+    public String getPassword(){
+        return password;
+    }
+
+    public LocalDate getEndDate(){
+        return endDate;
+    }
+
+    public LocalDate getTerminatedDate(){
+        return terminatedDate;
     }
 }

@@ -5,6 +5,9 @@ public class HRManager {
     private String password;
 
     public HRManager(String hRPassword) {
+        if(hRPassword.isEmpty() || hRPassword == null){
+            throw new IllegalArgumentException("password cannot be null or empty");
+        }
         this.password = hRPassword;
     }
 
