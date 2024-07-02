@@ -171,6 +171,7 @@ public class EmployeeController {
                 Shift[] shiftsInDay = new Shift[2];
                 shiftsInDay[0] = new Shift();
                 shiftsInDay[1] = new Shift();
+                
                 shifts.put(day, shiftsInDay);
             }
             shifts.get(day)[0].loadData(day, ShiftTime.Day, shiftsInStore[i].shiftId, wis, awis);
