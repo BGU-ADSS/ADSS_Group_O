@@ -92,41 +92,70 @@ public class DBEmployeeController {
     }
 
     public boolean getIsReadyToPublish(int storeId){
-        return false;
+        return storeDBC.getSpecifecStore(storeId).readyToPublish;
     }
 
-    public AvaliableWorkerInShiftDTO[] getAvaliableWorkerInShifts(int ShiftId){
-        return null;
+    public AvaliableWorkerInShiftDTO[] getAvaliableWorkerInShifts(int ShiftId,int storeId){
+        return  avaliableWorkersDBC.getAvaliableWorkers(ShiftId,storeId);
     }
 
-    public WorkerInShiftDTO[] getWorkerInShifts(int ShiftId){
-        return null;
+    public WorkerInShiftDTO[] getWorkerInShifts(int shiftId,int storId){
+        return workersInshiftsDBC.getWorkers(shiftId,storId);
     }
 
     // return the store that this employee belongs to and throws exception if employee id not exist
     public int getEmployeeStore(String empId){
-        return 0;
+        EmployeeDTO employee =employeeDBC.getEmployeeWithId(empId);
+        return employee.storeId;
     }
 
     //insert a new employee
-    public void intsertEmployee(EmployeeDTO employee){}
+    public void intsertEmployee(EmployeeDTO employee){
+        employeeDBC.insertDTO(employee);
+        
+    }
 
     //delete an employee
-    public void deleteEmployeeFromDB(String empId){}
+    public void deleteEmployeeFromDB(String empId){
+        employeeDBC.deleteDTO(getIdentefierMap(empId));
+        HashMap<String,Object> roleIDentefierMap = new HashMap<>();
+        roleIDentefierMap.put(RoleForEmployeeDB.emplID_column, empId);
+        rolesDBC.deleteDTO(roleIDentefierMap);
+    }
     //update new salary
-    public void updateSalaryForEmployee(String empId, int newSalary){}
+    public void updateSalaryForEmployee(String empId, int newSalary){
+        employeeDBC.updateSpecifecColumnForOneRow(getIdentefierMap(empId), EmployeeDB.monthSalary_COLUMN, newSalary, "int");
+    }
     // set shift for employee
-    public void insertEmplInWorkerInShift(WorkerInShiftDTO worker){}
+    public void insertEmplInWorkerInShift(WorkerInShiftDTO worker){
+        workersInshiftsDBC.insertDTO(worker);
+    }
     // update ready to publish
-    public void updateReadyToPublish(boolean isReady){}
+    public void updateReadyToPublish(boolean isReady,int storeId){
+        HashMap<String,Object> identefier = new HashMap<>();
+        identefier.put(StoreDB.id_column, storeId);
+        storeDBC.updateSpecifecColumnForOneRow(identefier, StoreDB.readyToPublih_column, isReady?1:0, "int");
+    }
     // delete from available
-    public void deleteFromAvailable(int shiftId, String emplI){}
+    public void deleteFromAvailable(int shiftId, String emplI,int storeID){
+        HashMap<String,Object> id = new HashMap<>();
+        id.put(AvaliableWorkerInShiftDB.empId_column, emplI);
+        id.put(AvaliableWorkerInShiftDB.shiftId_column, shiftId);
+        id.put(AvaliableWorkerInShiftDB.storeId_column,storeID);
+        avaliableWorkersDBC.deleteDTO(id);
+    }
     // insert new store
-    public void insertStore(StoreDTO stroe){}
+    public void insertStore(StoreDTO stroe){
+        storeDBC.insertDTO(stroe);
+    }
     //
-    public void insertShiftToDB(ShiftInStoreDTO shift){}
+    public void insertShiftToDB(ShiftInStoreDTO shift){
+        shiftsDBC.insertDTO(shift);
+    }
     //
-    public void insertWorkerAvailableInShift(AvaliableWorkerInShiftDTO shift){}
+    public void insertWorkerAvailableInShift(AvaliableWorkerInShiftDTO shift){
+        avaliableWorkersDBC.insertDTO(shift);
+    }
     //============================================================================//
 
     // insert his roles

@@ -14,6 +14,7 @@ public class StoreDB extends DB{
     public static final String id_column = "ID";
     public static final String adress_column = "Adress";
     public static final String name_column = "NAME";
+    public static final String readyToPublih_column = "READY_TO_PUBLISH";
 
     public StoreDB(){
         this.tableName="STORE_TABLE";
@@ -23,7 +24,7 @@ public class StoreDB extends DB{
     @Override
     public DTO getObjectDTOFromOneResult(ResultSet result) {
         try {
-            return new StoreDTO(result.getInt(id_column), result.getString(name_column), result.getString(name_column));
+            return new StoreDTO(result.getInt(id_column), result.getString(name_column), result.getString(name_column),result.getInt(readyToPublih_column)==1);
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -37,6 +38,7 @@ public class StoreDB extends DB{
             pstmt.setInt(1, ((StoreDTO)toInsert).id);
             pstmt.setString(2, ((StoreDTO)toInsert).name);
             pstmt.setString(3, ((StoreDTO)toInsert).address);
+            pstmt.setInt(0, ((StoreDTO)toInsert).readyToPublish?1:0);
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -45,7 +47,7 @@ public class StoreDB extends DB{
 
     @Override
     protected String getTheRestOfInsertQuery(DTO toInsert) {
-        return "(+"+id_column+","+name_column+","+adress_column+"+) VALUES (?,?,?)";
+        return "("+id_column+","+name_column+","+adress_column+","+readyToPublih_column+") VALUES (?,?,?,?)";
     }
 
     @Override
@@ -67,6 +69,13 @@ public class StoreDB extends DB{
     @Override
     public String buildWhereQuery() {
         return " WHERE "+id_column+"=?";
+    }
+
+
+    public StoreDTO getSpecifecStore(int storeId) {
+        StoreDTO[] storeBox =(StoreDTO[])(DTO[]) getDTOsWhere(" WHERE "+StoreDB.id_column+"="+storeId).toArray();
+        if(storeBox.length==0) return null;
+        return storeBox[0];
     }
     
 }

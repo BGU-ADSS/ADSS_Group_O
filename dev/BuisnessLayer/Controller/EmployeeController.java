@@ -169,8 +169,8 @@ public class EmployeeController {
         LocalDate lastSunday = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
         ShiftInStoreDTO[] shiftsInStore = dbEmployeeController.getShiftsInStore(storeId,lastSunday);
         for(int i = 0;i<shiftsInStore.length;i++) {
-            WorkerInShiftDTO[] workerInShift = dbEmployeeController.getWorkerInShifts(shiftsInStore[i].shiftId);
-            AvaliableWorkerInShiftDTO[] avaliableWorkerInShift = dbEmployeeController.getAvaliableWorkerInShifts(shiftsInStore[i].shiftId);
+            WorkerInShiftDTO[] workerInShift = dbEmployeeController.getWorkerInShifts(shiftsInStore[i].shiftId,store.id);
+            AvaliableWorkerInShiftDTO[] avaliableWorkerInShift = dbEmployeeController.getAvaliableWorkerInShifts(shiftsInStore[i].shiftId,storeId);
             HashMap<Role, List<Employee>> wis = new HashMap<>();
             HashMap<Role, List<Employee>> awis = new HashMap<>();
             for(Role role : allRoles){
@@ -255,7 +255,7 @@ public class EmployeeController {
                         }
                     }
                     for ( String id : emplIds ) {
-                        dbEmployeeController.insertWorkerAvailableInShift(new AvaliableWorkerInShiftDTO(id,shif[i].getId()));
+                        dbEmployeeController.insertWorkerAvailableInShift(new AvaliableWorkerInShiftDTO(id,shif[i].getId(),storeId));
                     }
                     emplIds = new ArrayList<>();
                     for ( List<Employee> emplS : shif[i].getWorkersInShift().values() ){
@@ -266,7 +266,7 @@ public class EmployeeController {
                         }
                     }
                     for ( String id : emplIds ) {
-                        dbEmployeeController.insertEmplInWorkerInShift(new WorkerInShiftDTO(id,shif[i].getId()));
+                        dbEmployeeController.insertEmplInWorkerInShift(new WorkerInShiftDTO(id,shif[i].getId(),storeId));
                     }
 
                 }
@@ -320,7 +320,7 @@ public class EmployeeController {
         int storeNum = employeesStore.get(empId);
         Store store = stores.get(storeNum);
         int shiftId = store.addConstrains(empId,day,shift);
-        dbEmployeeController.deleteFromAvailable(shiftId, empId);
+        dbEmployeeController.deleteFromAvailable(shiftId, empId,storeNum);
     }
 
     public void addEmployee(Employee employee){
@@ -501,7 +501,7 @@ public class EmployeeController {
         checkStore(dbEmployeeController.getEmployeeStore(empId));
         Store store = getStoreForEmployee(empId);
         int id = store.setEmployeeInShift(date,shiftTime,empId,role);
-        dbEmployeeController.insertEmplInWorkerInShift(new WorkerInShiftDTO(empId,id));
+        dbEmployeeController.insertEmplInWorkerInShift(new WorkerInShiftDTO(empId,id,store.getStoreNumber()));
     }
 
 
@@ -539,7 +539,7 @@ public class EmployeeController {
             throw new IllegalArgumentException("Store does not exist");
         }
         store.scheduleReadyToPublish();
-        dbEmployeeController.updateReadyToPublish(false);
+        dbEmployeeController.updateReadyToPublish(false,StoreNumber);
     }
 
     public void checkStore(int StoreNumber){
@@ -563,7 +563,7 @@ public class EmployeeController {
     }
 
     public StoreDTO convertStroreToDTO(Store store){
-        return new StoreDTO(store.getStoreNumber(),store.getName(),store.getAddress());
+        return new StoreDTO(store.getStoreNumber(),store.getName(),store.getAddress(),store.isReadyToPublish());
     }
 
     public ShiftInStoreDTO convertShiftToDTO(Shift shift, int id){

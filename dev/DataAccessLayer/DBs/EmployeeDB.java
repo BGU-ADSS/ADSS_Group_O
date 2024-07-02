@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import DTOs.Errors;
 import DataAccessLayer.DTOs.DTO;
 import DataAccessLayer.DTOs.EmployeeDTO;
 import PresentationLayer.Logs;
@@ -98,6 +99,13 @@ public class EmployeeDB extends DB {
     @Override
     public String buildWhereQuery() {
         return " WHERE "+id_COLUMN+"=?";
+    }
+
+
+    public EmployeeDTO getEmployeeWithId(String empId) {
+        EmployeeDTO[] employeeBox =(EmployeeDTO[])(DTO[])getDTOsWhere(" WHERE "+id_COLUMN+"="+empId).toArray();
+        if(employeeBox.length==0) throw new IllegalArgumentException(Errors.EmployeeNotFound);
+        return employeeBox[0];
     }
 
 
