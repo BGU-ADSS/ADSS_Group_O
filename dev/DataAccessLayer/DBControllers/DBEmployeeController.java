@@ -88,7 +88,7 @@ public class DBEmployeeController {
 
     //===========================================================================
     public int getTheLastIdInShifts(int storeId){
-        return 0;
+        return shiftsDBC.getMaxShiftId();
     }
 
     public boolean getIsReadyToPublish(int storeId){

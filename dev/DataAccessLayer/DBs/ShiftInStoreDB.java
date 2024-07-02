@@ -1,8 +1,11 @@
 package DataAccessLayer.DBs;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 
 import DataAccessLayer.DTOs.DTO;
@@ -59,9 +62,40 @@ public class ShiftInStoreDB extends DB {
         return "";
     }
 
-    public ShiftInStoreDTO getMinIdShiftInStore(String storeId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMinIdShiftInStore'");
+    public ShiftInStoreDTO getMinIdShiftInStore(int storeId) {
+        String sql  = "SELECT MIN("+ShiftInStoreDB.shiftId_column+") FROM "+tableName + " WHERE "+ShiftInStoreDB.storeId_column+"="+storeId;
+        try (Connection conn = DriverManager.getConnection(url);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            if (rs.next()) {
+                int minShiftId = rs.getInt(ShiftInStoreDB.shiftId_column);
+                ShiftInStoreDTO[] shifts = (ShiftInStoreDTO[])(DTO[]) getDTOsWhere("WHERE "+ShiftInStoreDB.shiftId_column+"="+minShiftId+" AND "+ShiftInStoreDB.storeId_column+"="+storeId).toArray();
+                if(shifts.length>0) return shifts[0];
+                else return null;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
+
+    public int getMaxShiftId(){
+        String sql  = "SELECT MAX("+ShiftInStoreDB.shiftId_column+") FROM "+tableName ;
+        try (Connection conn = DriverManager.getConnection(url);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            if (rs.next()) {
+                return rs.getInt(ShiftInStoreDB.shiftId_column);
+                
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }
