@@ -22,6 +22,15 @@ public class DBEmployeeController {
     private ShiftInStoreDB shiftsDBC = new ShiftInStoreDB();
 
 
+    public void deleteAllData(){
+        employeeDBC.deleteAllData();
+        rolesDBC.deleteAllData();
+        avaliableWorkersDBC.deleteAllData();
+        workersInshiftsDBC.deleteAllData();
+        storeDBC.deleteAllData();
+        shiftsDBC.deleteAllData();
+    }
+
     public EmployeeDTO[] getEmployeeInTheStore(int storeId){
         List<DTO> DTOs=  (employeeDBC.getDTOsWhere(" WHERE "+EmployeeDB.storeId_COLUMN+"="+storeId));
         EmployeeDTO[] toRet = new EmployeeDTO[DTOs.size()];
@@ -39,7 +48,9 @@ public class DBEmployeeController {
     }
 
     public EmployeeDTO getEmployeeFromDB(String id){
-        return (EmployeeDTO) employeeDBC.getDTOsWhere(" WHERE "+EmployeeDB.id_COLUMN+ "="+id);
+        List<DTO> dtoBox = employeeDBC.getDTOsWhere(" WHERE "+EmployeeDB.id_COLUMN+ "="+id);
+        if(dtoBox.size()==0) return null;
+        return (EmployeeDTO)dtoBox.get(0);
     }
 
     public void setPasswordInDB(String empID , String newPassword){

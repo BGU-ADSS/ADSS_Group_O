@@ -3,3 +3,4 @@ the format is #key-value
 #breakDays-22/05/2025
 #breakDays-18/06/2025
 #minEmployees-1
+#hrPassword-123
