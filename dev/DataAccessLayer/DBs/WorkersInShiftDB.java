@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 
 import DataAccessLayer.DTOs.AvaliableWorkerInShiftDTO;
 import DataAccessLayer.DTOs.DTO;
@@ -70,7 +71,10 @@ public class WorkersInShiftDB extends DB{
 
 
     public WorkerInShiftDTO[] getWorkers(int shiftId, int storId) {
-        return (WorkerInShiftDTO[]) (DTO[] ) getDTOsWhere(" WHERE "+shiftId_column+"="+shiftId+" AND "+storeId_column+"="+storId).toArray();
+        List<DTO> dtos =  getDTOsWhere(" WHERE "+shiftId_column+"="+shiftId+" AND "+storeId_column+"="+storId);
+        WorkerInShiftDTO[] toRet = new WorkerInShiftDTO[dtos.size()];
+        for(int i=0;i<dtos.size();i++)toRet[i] = (WorkerInShiftDTO)dtos.get(i);
+        return toRet;
     }
     
 }

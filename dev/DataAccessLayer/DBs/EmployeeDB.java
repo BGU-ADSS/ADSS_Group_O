@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import DTOs.Errors;
 import DataAccessLayer.DTOs.DTO;
@@ -103,9 +104,9 @@ public class EmployeeDB extends DB {
 
 
     public EmployeeDTO getEmployeeWithId(String empId) {
-        EmployeeDTO[] employeeBox =(EmployeeDTO[])(DTO[])getDTOsWhere(" WHERE "+id_COLUMN+"="+empId).toArray();
-        if(employeeBox.length==0) throw new IllegalArgumentException(Errors.EmployeeNotFound);
-        return employeeBox[0];
+        List<DTO> dtoBox =  getDTOsWhere(" WHERE "+id_COLUMN+"="+empId);
+        if(dtoBox.size()==0) throw new IllegalArgumentException(Errors.EmployeeNotFound);
+        return (EmployeeDTO) dtoBox.get(0);
     }
 
 

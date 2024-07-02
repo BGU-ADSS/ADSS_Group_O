@@ -4,6 +4,8 @@ import BuisnessLayer.Controller.EmployeeController;
 import BuisnessLayer.Schedule.Shift;
 import BuisnessLayer.Workers.Employee;
 import DTOs.*;
+import PresentationLayer.Logs;
+
 import com.google.gson.GsonBuilder;
 
 import java.io.File;
@@ -65,6 +67,7 @@ public class HRservice {
             res = new Response(null,"employee added successfully");
         } catch (Exception ex) {
             res = new Response(ex.getMessage(), null);
+            ex.printStackTrace();
         }
         return gson.toJson(res);
     }

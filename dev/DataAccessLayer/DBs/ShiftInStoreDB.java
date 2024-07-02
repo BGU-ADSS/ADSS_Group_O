@@ -7,9 +7,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.List;
 
+import DataAccessLayer.DBControllers.DBEmployeeController;
 import DataAccessLayer.DTOs.DTO;
 import DataAccessLayer.DTOs.ShiftInStoreDTO;
+import PresentationLayer.Logs;
 
 public class ShiftInStoreDB extends DB {
     public static final String storeId_column = "STORE_ID";
@@ -63,16 +66,17 @@ public class ShiftInStoreDB extends DB {
     }
 
     public ShiftInStoreDTO getMinIdShiftInStore(int storeId) {
-        String sql  = "SELECT MIN("+ShiftInStoreDB.shiftId_column+") FROM "+tableName + " WHERE "+ShiftInStoreDB.storeId_column+"="+storeId;
+        String sql  = "SELECT MIN("+ShiftInStoreDB.shiftId_column+") AS minid FROM "+tableName + " WHERE "+ShiftInStoreDB.storeId_column+"="+storeId;
         try (Connection conn = DriverManager.getConnection(url);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
-
+                Logs.debug("hi");
             if (rs.next()) {
-                int minShiftId = rs.getInt(ShiftInStoreDB.shiftId_column);
-                ShiftInStoreDTO[] shifts = (ShiftInStoreDTO[])(DTO[]) getDTOsWhere("WHERE "+ShiftInStoreDB.shiftId_column+"="+minShiftId+" AND "+ShiftInStoreDB.storeId_column+"="+storeId).toArray();
-                if(shifts.length>0) return shifts[0];
-                else return null;
+                int minShiftId = rs.getInt("minid");
+                List<DTO> shifts =  getDTOsWhere(" WHERE "+ShiftInStoreDB.shiftId_column+"="+minShiftId+" AND "+ShiftInStoreDB.storeId_column+"="+storeId);
+                if(shifts.size()==0)return null;
+                return (ShiftInStoreDTO)shifts.get(0);
+                
             }
 
         } catch (Exception e) {
@@ -83,7 +87,7 @@ public class ShiftInStoreDB extends DB {
 
 
     public int getMaxShiftId(){
-        String sql  = "SELECT MAX("+ShiftInStoreDB.shiftId_column+") FROM "+tableName ;
+        String sql  = "SELECT MAX("+ShiftInStoreDB.shiftId_column+") AS SHIFT_ID FROM "+tableName ;
         try (Connection conn = DriverManager.getConnection(url);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {

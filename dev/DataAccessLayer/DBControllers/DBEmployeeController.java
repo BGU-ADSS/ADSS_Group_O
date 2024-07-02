@@ -23,13 +23,19 @@ public class DBEmployeeController {
 
 
     public EmployeeDTO[] getEmployeeInTheStore(int storeId){
-        DTO[] DTOs= (DTO[]) (employeeDBC.getDTOsWhere(" WHERE "+EmployeeDB.storeId_COLUMN+"="+storeId)).toArray();
-        EmployeeDTO[] toRet = (EmployeeDTO[])DTOs;
+        List<DTO> DTOs=  (employeeDBC.getDTOsWhere(" WHERE "+EmployeeDB.storeId_COLUMN+"="+storeId));
+        EmployeeDTO[] toRet = new EmployeeDTO[DTOs.size()];
+        for(int i=0;i<toRet.length;i++){
+            toRet[i]=(EmployeeDTO)DTOs.get(i);
+        }
         return toRet;    
     }
 
     public RoleForEmployeeDTO[] getRolesForEmployeeDTOs(String empId){
-        return (RoleForEmployeeDTO[])(DTO[]) rolesDBC.getDTOsWhere(" WHERE "+RoleForEmployeeDB.emplID_column+"="+empId).toArray();
+        List<DTO> dtosList =  rolesDBC.getDTOsWhere(" WHERE "+RoleForEmployeeDB.emplID_column+"="+empId);
+        RoleForEmployeeDTO[] roles = new RoleForEmployeeDTO[dtosList.size()];
+        for(int i=0;i<roles.length;i++) roles[i]=(RoleForEmployeeDTO)dtosList.get(i);
+        return roles;
     }
 
     public EmployeeDTO getEmployeeFromDB(String id){
@@ -65,22 +71,26 @@ public class DBEmployeeController {
 
 
     public StoreDTO getStoreFromDB(int storeId){
-        StoreDTO[] storesWithID =(StoreDTO[]) storeDBC.getDTOsWhere(" WHERE "+StoreDB.id_column+"="+storeId).toArray();
-        if(storesWithID.length==0)throw new IllegalArgumentException("there are no store with id: "+storeId);
-        return storesWithID[0];
+        List<DTO> storesWithID = storeDBC.getDTOsWhere(" WHERE "+StoreDB.id_column+"="+storeId);
+        if(storesWithID.size()==0)throw new IllegalArgumentException("there are no store with id: "+storeId);
+        StoreDTO toRet = (StoreDTO)storesWithID.get(0);
+        return toRet;
     }
 
     public ShiftInStoreDTO[] getShiftsInStore(int storeId,LocalDate from){
         ShiftInStoreDTO minShiftId = shiftsDBC.getMinIdShiftInStore(storeId);
-        String minDate = minShiftId.date;
+        if(minShiftId==null){
+            return new ShiftInStoreDTO[0];
+        }
+         String minDate = minShiftId.date;
         
         if(from.isBefore(getDateFromString(minDate) )){
-            return (ShiftInStoreDTO[])(DTO[]) shiftsDBC.getDTOsWhere(" WHERE "+ShiftInStoreDB.storeId_column+"="+storeId).toArray();
+            return convertToShiftInStoreDTOs( shiftsDBC.getDTOsWhere(" WHERE "+ShiftInStoreDB.storeId_column+"="+storeId));
         }else{
-            ShiftInStoreDTO[] startShift = (ShiftInStoreDTO[])(DTO[]) shiftsDBC.getDTOsWhere(" WHERE "+ShiftInStoreDB.date_column+"="+from.toString()).toArray();
+            List<DTO> startShift = shiftsDBC.getDTOsWhere(" WHERE "+ShiftInStoreDB.date_column+"="+from.toString());
             int minId = 0;
-            for(ShiftInStoreDTO shiftWithGivenDate:startShift)minId = Math.max(shiftWithGivenDate.shiftId, minId);
-            return (ShiftInStoreDTO[])(DTO[]) shiftsDBC.getDTOsWhere(" WHERE "+ShiftInStoreDB.shiftId_column+">"+minId).toArray();
+            for(DTO shiftWithGivenDate:startShift)minId = Math.max(((ShiftInStoreDTO)shiftWithGivenDate).shiftId, minId);
+            return convertToShiftInStoreDTOs( shiftsDBC.getDTOsWhere(" WHERE "+ShiftInStoreDB.shiftId_column+">"+minId));
         }
 
 
@@ -179,4 +189,11 @@ public class DBEmployeeController {
         return LocalDate.of(year, mounth, day);
     }
 
+    private ShiftInStoreDTO[] convertToShiftInStoreDTOs(List<DTO> dtos){
+        ShiftInStoreDTO [] toRet = new ShiftInStoreDTO[dtos.size()];
+        for(int index = 0; index<toRet.length;index++){
+            toRet[index] = (ShiftInStoreDTO)dtos.get(index);
+        }
+        return toRet;
+    }
 }

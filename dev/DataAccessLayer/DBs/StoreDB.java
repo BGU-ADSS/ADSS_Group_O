@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 
 import DataAccessLayer.DTOs.DTO;
 import DataAccessLayer.DTOs.StoreDTO;
@@ -38,7 +39,7 @@ public class StoreDB extends DB{
             pstmt.setInt(1, ((StoreDTO)toInsert).id);
             pstmt.setString(2, ((StoreDTO)toInsert).name);
             pstmt.setString(3, ((StoreDTO)toInsert).address);
-            pstmt.setInt(0, ((StoreDTO)toInsert).readyToPublish?1:0);
+            pstmt.setInt(4, ((StoreDTO)toInsert).readyToPublish?1:0);
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -73,9 +74,10 @@ public class StoreDB extends DB{
 
 
     public StoreDTO getSpecifecStore(int storeId) {
-        StoreDTO[] storeBox =(StoreDTO[])(DTO[]) getDTOsWhere(" WHERE "+StoreDB.id_column+"="+storeId).toArray();
-        if(storeBox.length==0) return null;
-        return storeBox[0];
+        List<DTO> dtosBox =  getDTOsWhere(" WHERE "+StoreDB.id_column+"="+storeId);
+
+        if(dtosBox.size()==0) return null;
+        return (StoreDTO)dtosBox.get(0);
     }
     
 }

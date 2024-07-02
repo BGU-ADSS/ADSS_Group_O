@@ -233,7 +233,9 @@ public class EmployeeController {
         }
         Store s = new Store(StoreName,address,storeNumber,new ArrayList<>(),deadLineConstrains,minEmployees,breakDays);
         stores.put(storeNumber,s);
+        Logs.debug("going to add store in db");
         dbEmployeeController.insertStore(convertStroreToDTO(s));
+        Logs.debug("store must be added to db");
         saveShifts(s.getSchedule().getCurrentWeek(),s.getSchedule().getDayShifts(),storeNumber);
 
     }
@@ -551,7 +553,7 @@ public class EmployeeController {
     }
 
     public EmployeeDTO convrtEmplToDTO(Employee employee){
-        return new EmployeeDTO(employee.getID(),employee.getName(),employee.getBankAccount(),employee.getMounthSalary(),employee.getStartDate().toString(),employee.getEndDate().toString(),employee.getStoreNum(),employee.getPassword(),employee.getTerminatedDate().toString());
+        return new EmployeeDTO(employee.getID(),employee.getName(),employee.getBankAccount(),employee.getMounthSalary(),employee.getStartDate().toString(),employee.getEndDate().toString(),employee.getStoreNum(),employee.getPassword(),employee.getTerminatedDate()==null?null:employee.getTerminatedDate().toString());
     }
 
     public RoleForEmployeeDTO[] rolesToDTO(Employee employee){
