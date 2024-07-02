@@ -20,6 +20,8 @@ public class Shift {
     private int minEmployeeNumberInShift;
     private int id;
 
+    
+
     public Shift(List<Employee> employees, LocalDate dateForDayToAdd, ShiftTime day2, int minEmployees, int id) {
         this.day = dateForDayToAdd;
         this.shiftTime = day2;

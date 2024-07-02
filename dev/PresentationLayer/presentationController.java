@@ -38,7 +38,7 @@ public class presentationController {
     public void runIfWithoutData(){
         serviceFactory = new ServiceFactory(false);
         Logs.print("choose an option:-");
-        Logs.print("1 - add HR mannager");
+        Logs.print("1 - set HR mannager password");
         Logs.print("2 - add store");
         Logs.print("3 - done");
         String opt = Logs.getInput();
@@ -56,6 +56,6 @@ public class presentationController {
             opt = Logs.getInput();
         }
         hrPres = new HRPres(serviceFactory);
-        hrPres = new HRPres(serviceFactory);
+        emPres = new EmployeePres(serviceFactory);
     }
 }

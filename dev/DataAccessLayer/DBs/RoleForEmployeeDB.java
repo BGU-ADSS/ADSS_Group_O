@@ -15,7 +15,7 @@ public class RoleForEmployeeDB extends DB {
     public static final String role_column = "ROLE";
 
     public RoleForEmployeeDB() {
-        this.tableName = "ROLE_FOR_EMPLOYEE";
+        this.tableName = "ROLE_FOR_EMPLYEE";
     }
 
     @Override

@@ -190,4 +190,8 @@ public class Store {
     public Schedule getSchedule(){
         return schedule;
     }
+
+    public boolean isReadyToPublish(){
+        return schedule.doesItReadyToPublish();
+    }
 }

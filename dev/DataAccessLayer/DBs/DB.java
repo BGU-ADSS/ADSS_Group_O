@@ -70,9 +70,11 @@ public abstract class DB {
     }
 
     public void insertDTO(DTO toInsert) {
+        Logs.debug("joining insert query");
         String sql = "INSERT INTO " + tableName + getTheRestOfInsertQuery(toInsert);
         try (Connection conn = DriverManager.getConnection(url);
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            Logs.debug("joining the try scoope");
             setTheValuesToTheInsertQuery(pstmt, toInsert);
             pstmt.executeUpdate();
             Logs.debug("dto must be added to the db");
