@@ -22,7 +22,7 @@ public class ServiceFactory {
             employeeController = new EmployeeController(new File("dev\\DTOs\\config.txt"),
                     new File("dev\\DTOs\\Data.txt"));
         } else {
-            employeeController = new EmployeeController(new File("dev\\DTOs\\Data.txt"));
+            employeeController = new EmployeeController(new File("dev\\DTOs\\config.txt"));
         }
         employeeService = new employeeService(employeeController);
         hrService = new HRservice(employeeController);

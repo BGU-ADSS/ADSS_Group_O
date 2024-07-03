@@ -30,6 +30,7 @@ public class Store {
         for(Employee employeeToAdd:employees){
             this.employees.put(employeeToAdd.getID(),employeeToAdd);
         }
+        
     }
 
     public Store(){}
