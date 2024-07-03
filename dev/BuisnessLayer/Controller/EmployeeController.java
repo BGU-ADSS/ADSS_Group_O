@@ -341,6 +341,7 @@ public class EmployeeController {
         stores.get(employee.getStoreNum()).addEmployee(employee);
         dbEmployeeController.intsertEmployee(convrtEmplToDTO(employee));
         dbEmployeeController.insertRolesForEmployee(rolesToDTO(employee));
+        employeesStore.put(employee.getID(), employee.getStoreNum());
         Logs.debug(employeesStore.get(employee.getID()) + " the store returned for this employee "
                 + employeesStore.size());
     }
