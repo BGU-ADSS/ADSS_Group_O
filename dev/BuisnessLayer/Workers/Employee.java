@@ -38,6 +38,21 @@ public class Employee {
         this.password = defaultPassword;
     }
 
+    public Employee(String empId, String empName, String bankAccount, int monthSalary, int hourSalary, List<Role> roles, LocalDate startDate,
+                    LocalDate enddDate, int storeNum, String password, LocalDate terminatedDate) {
+        this.password = password;
+        this.terminatedDate = terminatedDate;
+        this.bankAccount=bankAccount;
+        this.empID=empId;
+        this.empName=empName;
+        this.hourSalary = hourSalary;
+        this.roles = roles;
+        this.monthSalary=monthSalary;
+        this.startDate=startDate;
+        this.endDate = enddDate;
+        this.storeNum=storeNum;
+    }
+
     public String getID() {
         return empID;
     }

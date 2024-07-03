@@ -142,7 +142,7 @@ public class EmployeeController {
                 roleList.add(Role.valueOf(role.Role));
             }
             employees.add(new Employee(empl.id, empl.name, empl.bankAccount, empl.monthSalary, -1, roleList,
-                    LocalDate.parse(empl.startDate, formatter), LocalDate.parse(empl.endDate, formatter), storeId));
+                    LocalDate.parse(empl.startDate, formatter), LocalDate.parse(empl.endDate, formatter), storeId, empl.password, LocalDate.parse(empl.terminationDate)));
         }
 
         HashMap<LocalDate, Shift[]> shifts = new HashMap<>();
