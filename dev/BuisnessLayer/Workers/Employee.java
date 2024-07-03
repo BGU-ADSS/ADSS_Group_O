@@ -39,9 +39,10 @@ public class Employee {
     }
 
     public Employee(String empId, String empName, String bankAccount, int monthSalary, int hourSalary, List<Role> roles, LocalDate startDate,
-                    LocalDate enddDate, int storeNum, String password, LocalDate terminatedDate) {
-        this.password = password;
-        this.terminatedDate = terminatedDate;
+                    LocalDate enddDate, int storeNum, String password, String terminatedDate) {
+        Logs.debug("ans red");
+                        this.password = password;
+        this.terminatedDate = terminatedDate==null? null: LocalDate.parse(terminatedDate);
         this.bankAccount=bankAccount;
         this.empID=empId;
         this.empName=empName;
@@ -51,6 +52,8 @@ public class Employee {
         this.startDate=startDate;
         this.endDate = enddDate;
         this.storeNum=storeNum;
+        Logs.debug("rami is gay");
+
     }
 
     public String getID() {

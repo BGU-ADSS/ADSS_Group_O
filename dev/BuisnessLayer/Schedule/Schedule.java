@@ -6,6 +6,7 @@ import DTOs.Role;
 import DTOs.ShiftTime;
 import DataAccessLayer.DBControllers.DBEmployeeController;
 import DataAccessLayer.DTOs.AvaliableWorkerInShiftDTO;
+import PresentationLayer.Logs;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -51,7 +52,7 @@ public class Schedule {
     }
 
     public Schedule(){}
-    public void loadData( HashMap<LocalDate, Shift[]> dayShifts, LocalDate currentWeek, LocalDate nextWeek, List<LocalDate> breakDates, int minEmployees, boolean isReadyToPublish , int idCounter) {
+    public void loadData( HashMap<LocalDate, Shift[]> dayShifts, LocalDate currentWeek, LocalDate nextWeek, List<LocalDate> breakDates, int minEmployees, boolean isReadyToPublish , int idCounter,int deadLine) {
         this.dayShifts = dayShifts;
         this.currentWeek = currentWeek;
         this.nextWeek = nextWeek;
@@ -59,6 +60,7 @@ public class Schedule {
         this.minEmployees = minEmployees;
         this.isReadyToPublish = isReadyToPublish;
         this.idCounter = idCounter;
+        this.deadline = deadLine;
     }
     public int addConstrains(String empId, LocalDate day, ShiftTime shiftTime) {
 
@@ -67,13 +69,18 @@ public class Schedule {
             throw new IllegalArgumentException("the HR manager does not permit to add constrain yet!");
         }
         if( LocalDate.now().isAfter(currentWeek.plusDays(deadline)) ) {
+            Logs.debug(currentWeek.plusDays(deadline).toString()+" <=");
+            Logs.debug(deadline+"");
+            Logs.debug(currentWeek.toString());
             throw new IllegalArgumentException("deadline have been reached! cannot add constrain");
         }
         int id;
         Shift[] shifts = dayShifts.get(day);
         if (shiftTime == ShiftTime.Day) {
+            Logs.debug("hi from day and the shift time is "+shifts[0].getShiftTime().toString()+" and the id is "+shifts[0].getId());
             id = shifts[0].removeFromAvailableWorkers(empId);
         } else {
+
             id = shifts[1].removeFromAvailableWorkers(empId);
         }
         return id;

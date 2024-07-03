@@ -131,7 +131,7 @@ public class EmployeeController {
     }
 
     public void loadStore(int storeId) {
-
+        Logs.debug("from here is loading stooooore");
         StoreDTO store = dbEmployeeController.getStoreFromDB(storeId);
         EmployeeDTO[] employeesInStore = dbEmployeeController.getEmployeeInTheStore(storeId);
         List<Employee> employees = new ArrayList<>();
@@ -142,9 +142,9 @@ public class EmployeeController {
                 roleList.add(Role.valueOf(role.Role));
             }
             employees.add(new Employee(empl.id, empl.name, empl.bankAccount, empl.monthSalary, -1, roleList,
-                    LocalDate.parse(empl.startDate, formatter), LocalDate.parse(empl.endDate, formatter), storeId, empl.password, LocalDate.parse(empl.terminationDate, formatter)));
+            LocalDate.parse(empl.startDate, formatter), LocalDate.parse(empl.endDate, formatter), storeId, empl.password, empl.terminationDate));
+            Logs.debug("fuck dahleh");
         }
-
         HashMap<LocalDate, Shift[]> shifts = new HashMap<>();
         List<Role> allRoles = new ArrayList<>();
         allRoles.add(Role.Cashier);
@@ -156,8 +156,10 @@ public class EmployeeController {
         LocalDate lastSunday = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
         ShiftInStoreDTO[] shiftsInStore = dbEmployeeController.getShiftsInStore(storeId, lastSunday);
         for (int i = 0; i < shiftsInStore.length; i++) {
-            WorkerInShiftDTO[] workerInShift = dbEmployeeController.getWorkerInShifts(shiftsInStore[i].shiftId, store.id);
-            AvaliableWorkerInShiftDTO[] avaliableWorkerInShift = dbEmployeeController.getAvaliableWorkerInShifts(shiftsInStore[i].shiftId, storeId);
+            WorkerInShiftDTO[] workerInShift = dbEmployeeController.getWorkerInShifts(shiftsInStore[i].shiftId,
+                    store.id);
+            AvaliableWorkerInShiftDTO[] avaliableWorkerInShift = dbEmployeeController
+                    .getAvaliableWorkerInShifts(shiftsInStore[i].shiftId, storeId);
             HashMap<Role, List<Employee>> wis = new HashMap<>();
             HashMap<Role, List<Employee>> awis = new HashMap<>();
             for (Role role : allRoles) {
@@ -171,22 +173,26 @@ public class EmployeeController {
                 shiftsInDay[1] = new Shift();
 
                 shifts.put(day, shiftsInDay);
+                shifts.get(day)[0].loadData(day, ShiftTime.Day, shiftsInStore[i].shiftId, wis, awis);
             }
-            shifts.get(day)[0].loadData(day, ShiftTime.Day, shiftsInStore[i].shiftId, wis, awis);
+            else{
 
-            shifts.get(day)[1].loadData(day, ShiftTime.Night, shiftsInStore[i].shiftId, wis, awis);
+                shifts.get(day)[1].loadData(day, ShiftTime.Night, shiftsInStore[i].shiftId, wis, awis);
+            }
+
 
         }
         Schedule schedule = new Schedule();
         schedule.loadData(shifts, lastSunday, lastSunday.plusWeeks(1), breakDays, minEmployees,
                 dbEmployeeController.getIsReadyToPublish(storeId),
-                dbEmployeeController.getTheLastIdInShifts(storeId) + 1);
+                dbEmployeeController.getTheLastIdInShifts(storeId) + 1,deadLineConstrains);
         Store finalStore = new Store();
         finalStore.loadData(store.name, store.address, schedule, prepareEmpls(employees), store.id);
         stores.put(store.id, finalStore);
         for (EmployeeDTO empl : employeesInStore) {
             employeesStore.put(empl.id, storeId);
         }
+        Logs.debug("we finished loading store");
 
     }
 
@@ -510,7 +516,7 @@ public class EmployeeController {
         checkStore(dbEmployeeController.getEmployeeStore(empId));
         Store store = getStoreForEmployee(empId);
         int id = store.setEmployeeInShift(date, shiftTime, empId, role);
-        dbEmployeeController.insertEmplInWorkerInShift(new WorkerInShiftDTO(empId, id, store.getStoreNumber(), role.toString()));
+        dbEmployeeController.insertEmplInWorkerInShift(new WorkerInShiftDTO(empId, id, store.getStoreNumber()));
     }
 
     public boolean addRoleForEmployee(String empId, Role role) {
