@@ -32,7 +32,7 @@ public class EmployeeController {
     List<LocalDate> breakDays = new ArrayList<>();
     int deadLineConstrains = 0;
     int minEmployees = 0;
-    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
 
     private DBEmployeeController dbEmployeeController = new DBEmployeeController();
@@ -143,6 +143,7 @@ public class EmployeeController {
             }
             employees.add(new Employee(empl.id, empl.name, empl.bankAccount, empl.monthSalary, -1, roleList,
                     LocalDate.parse(empl.startDate, formatter), LocalDate.parse(empl.endDate, formatter), storeId));
+            System.out.println("fuck");
         }
 
         HashMap<LocalDate, Shift[]> shifts = new HashMap<>();
@@ -422,6 +423,7 @@ public class EmployeeController {
     }
 
     public String getEmployeeProf(String empId) {
+        System.out.println(dbEmployeeController.getEmployeeStore(empId));
         checkStore(dbEmployeeController.getEmployeeStore(empId));
         if (employeesStore.get(empId) == null) {
             throw new IllegalArgumentException("Employee does not exist");
