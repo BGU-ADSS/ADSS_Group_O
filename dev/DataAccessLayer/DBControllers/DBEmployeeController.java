@@ -139,10 +139,15 @@ public class DBEmployeeController {
     //delete an employee
     public void deleteEmployeeFromDB(String empId){
         employeeDBC.deleteDTO(getIdentefierMap(empId));
-        HashMap<String,Object> roleIDentefierMap = new HashMap<>();
-        roleIDentefierMap.put(RoleForEmployeeDB.emplID_column, empId);
-        rolesDBC.deleteDTO(roleIDentefierMap);
+        rolesDBC.deleteEmployeeRoles(empId);
     }
+
+    public static void main(String[] args){
+        DBEmployeeController db = new DBEmployeeController();
+        
+    }
+
+
     //update new salary
     public void updateSalaryForEmployee(String empId, int newSalary){
         employeeDBC.updateSpecifecColumnForOneRow(getIdentefierMap(empId), EmployeeDB.monthSalary_COLUMN, newSalary, "int");
