@@ -143,7 +143,6 @@ public class EmployeeController {
             }
             employees.add(new Employee(empl.id, empl.name, empl.bankAccount, empl.monthSalary, -1, roleList,
                     LocalDate.parse(empl.startDate, formatter), LocalDate.parse(empl.endDate, formatter), storeId));
-            System.out.println("fuck");
         }
 
         HashMap<LocalDate, Shift[]> shifts = new HashMap<>();
