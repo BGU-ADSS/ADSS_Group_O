@@ -50,7 +50,7 @@ public class EmployeeController {
                         case "deadLineConstrains":
                             deadLineConstrains = Integer.parseInt(value);
                             break;
-                        case "breakDayes":
+                        case "breakDays":
                             breakDays.add(LocalDate.parse(value, formatter));
                             break;
                         case "minEmployees":
@@ -63,7 +63,7 @@ public class EmployeeController {
 
                 }
             }
-            stores = new HashMap();
+            stores = new HashMap<>();
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -94,7 +94,7 @@ public class EmployeeController {
                         case "deadLineConstrains":
                             deadLineConstrains = Integer.parseInt(value);
                             break;
-                        case "breakDayes":
+                        case "breakDays":
                             breakDays.add(LocalDate.parse(value, formatter));
                             break;
                         case "minEmployees":
@@ -105,7 +105,7 @@ public class EmployeeController {
 
                 }
             }
-            stores = new HashMap();
+            stores = new HashMap<>();
             employeesStore = new HashMap<>();
         } catch (IOException e) {
             // TODO Auto-generated catch block
