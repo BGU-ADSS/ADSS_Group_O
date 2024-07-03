@@ -142,7 +142,7 @@ public class EmployeeController {
                 roleList.add(Role.valueOf(role.Role));
             }
             employees.add(new Employee(empl.id, empl.name, empl.bankAccount, empl.monthSalary, -1, roleList,
-                    LocalDate.parse(empl.startDate, formatter), LocalDate.parse(empl.endDate, formatter), storeId, empl.password, LocalDate.parse(empl.terminationDate)));
+                    LocalDate.parse(empl.startDate, formatter), LocalDate.parse(empl.endDate, formatter), storeId, empl.password, LocalDate.parse(empl.terminationDate, formatter)));
         }
 
         HashMap<LocalDate, Shift[]> shifts = new HashMap<>();
@@ -156,10 +156,8 @@ public class EmployeeController {
         LocalDate lastSunday = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
         ShiftInStoreDTO[] shiftsInStore = dbEmployeeController.getShiftsInStore(storeId, lastSunday);
         for (int i = 0; i < shiftsInStore.length; i++) {
-            WorkerInShiftDTO[] workerInShift = dbEmployeeController.getWorkerInShifts(shiftsInStore[i].shiftId,
-                    store.id);
-            AvaliableWorkerInShiftDTO[] avaliableWorkerInShift = dbEmployeeController
-                    .getAvaliableWorkerInShifts(shiftsInStore[i].shiftId, storeId);
+            WorkerInShiftDTO[] workerInShift = dbEmployeeController.getWorkerInShifts(shiftsInStore[i].shiftId, store.id);
+            AvaliableWorkerInShiftDTO[] avaliableWorkerInShift = dbEmployeeController.getAvaliableWorkerInShifts(shiftsInStore[i].shiftId, storeId);
             HashMap<Role, List<Employee>> wis = new HashMap<>();
             HashMap<Role, List<Employee>> awis = new HashMap<>();
             for (Role role : allRoles) {
@@ -512,7 +510,7 @@ public class EmployeeController {
         checkStore(dbEmployeeController.getEmployeeStore(empId));
         Store store = getStoreForEmployee(empId);
         int id = store.setEmployeeInShift(date, shiftTime, empId, role);
-        dbEmployeeController.insertEmplInWorkerInShift(new WorkerInShiftDTO(empId, id, store.getStoreNumber()));
+        dbEmployeeController.insertEmplInWorkerInShift(new WorkerInShiftDTO(empId, id, store.getStoreNumber(), role.toString()));
     }
 
     public boolean addRoleForEmployee(String empId, Role role) {
