@@ -1,5 +1,7 @@
 package DataAccessLayer.DBs;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -63,7 +65,18 @@ public class RoleForEmployeeDB extends DB {
 
     @Override
     public String buildWhereQuery() {
-        return "WHERE " + emplID_column + "=? AND " + role_column + "=?";
+        return " WHERE " + emplID_column + "=? AND " + role_column + "=?";
+    }
+
+    public void deleteEmployeeRoles(String empId){
+        String sql = "DELETE FROM "+tableName+" WHERE "+emplID_column+"="+empId;
+        try (Connection conn = DriverManager.getConnection(url);
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 }

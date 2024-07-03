@@ -19,10 +19,10 @@ public class ServiceFactory {
 
     public ServiceFactory(boolean withData) {
         if (withData) {
-            employeeController = new EmployeeController(new File("C:\\Users\\WINDOWS 10 PRO\\OneDrive\\Desktop\\ADSS\\ADSS_Group_O\\dev\\DTOs\\config.txt"),
+            employeeController = new EmployeeController(new File("dev\\DTOs\\config.txt"),
                     new File("dev\\DTOs\\Data.txt"));
         } else {
-            employeeController = new EmployeeController(new File("C:\\Users\\WINDOWS 10 PRO\\OneDrive\\Desktop\\ADSS\\ADSS_Group_O\\dev\\DTOs\\Data.txt"));
+            employeeController = new EmployeeController(new File("dev\\DTOs\\Data.txt"));
         }
         employeeService = new employeeService(employeeController);
         hrService = new HRservice(employeeController);

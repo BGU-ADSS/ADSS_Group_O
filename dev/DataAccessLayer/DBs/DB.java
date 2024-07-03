@@ -20,7 +20,7 @@ public abstract class DB {
     // DTO object
     // we have to add the names of the columns as a static members
 
-    protected String url = "jdbc:sqlite:C:\\Users\\WINDOWS 10 PRO\\OneDrive\\Desktop\\ADSS\\ADSS_Group_O\\dev\\DataAccessLayer\\ADSS_DB_EMPLOYEE_MODULE.db";
+    protected String url = "jdbc:sqlite:dev\\DataAccessLayer\\ADSS_DB_EMPLOYEE_MODULE.db";
 
     protected String tableName;
     protected List<String> columnNamesSet;
