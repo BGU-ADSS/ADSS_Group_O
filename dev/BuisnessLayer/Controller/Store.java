@@ -67,7 +67,7 @@ public class Store {
         if (employees.get(employee.getID()) != null) {
             throw new IllegalArgumentException(Errors.EmployeeAlreadyExistInStore);
         }
-        schedule.addEmployee(employee);
+        schedule.addEmployee(employee,storeNumber);
         employees.put(employee.getID(), employee);
     }
 

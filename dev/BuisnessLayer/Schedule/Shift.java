@@ -4,6 +4,8 @@ import BuisnessLayer.Workers.Employee;
 import DTOs.Errors;
 import DTOs.Role;
 import DTOs.ShiftTime;
+import DataAccessLayer.DBControllers.DBEmployeeController;
+import DataAccessLayer.DTOs.AvaliableWorkerInShiftDTO;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ public class Shift {
     private HashMap<Role, List<Employee>> workersAvailable;
     private int minEmployeeNumberInShift;
     private int id;
+    private DBEmployeeController dbEmployeeController = new DBEmployeeController();
 
     
 
