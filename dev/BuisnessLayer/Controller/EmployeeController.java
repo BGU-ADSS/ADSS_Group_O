@@ -208,7 +208,7 @@ public class EmployeeController {
         List<Employee> employees = new ArrayList<>();
         for (Employee empl : empls) {
             for (WorkerInShiftDTO dto : workers) {
-                if (empl.getID().equals(dto.empId) && empl.getRoles().contains(role)) {
+                if (empl.getID().equals(dto.empId) && Role.valueOf(dto.role) == role) {
                     employees.add(empl);
                 }
             }
@@ -262,18 +262,17 @@ public class EmployeeController {
                         dbEmployeeController.insertWorkerAvailableInShift(
                                 new AvaliableWorkerInShiftDTO(id, shif[i].getId(), storeId));
                     }
-                    emplIds = new ArrayList<>();
-                    for (List<Employee> emplS : shif[i].getWorkersInShift().values()) {
-                        for (Employee employee : emplS) {
-                            if (!emplIds.contains(employee.getID())) {
-                                emplIds.add(employee.getID());
-                            }
+
+                    for (Role role : shif[i].getWorkersInShift().keySet()) {
+                        for (Employee employee : shif[i].getWorkersInShift().get(role)) {
+                            //workers.put(role,employee);
+                            dbEmployeeController.insertEmplInWorkerInShift(new WorkerInShiftDTO(employee.getID(), shif[i].getId(), storeId, role.toString()));
                         }
                     }
-                    for (String id : emplIds) {
-                        dbEmployeeController
-                                .insertEmplInWorkerInShift(new WorkerInShiftDTO(id, shif[i].getId(), storeId));
-                    }
+//                    for (String id : emplIds) {
+//                        dbEmployeeController
+//                                .insertEmplInWorkerInShift(new WorkerInShiftDTO(id, shif[i].getId(), storeId));
+//                    }
 
                 }
             }
@@ -516,7 +515,7 @@ public class EmployeeController {
         checkStore(dbEmployeeController.getEmployeeStore(empId));
         Store store = getStoreForEmployee(empId);
         int id = store.setEmployeeInShift(date, shiftTime, empId, role);
-        dbEmployeeController.insertEmplInWorkerInShift(new WorkerInShiftDTO(empId, id, store.getStoreNumber()));
+        dbEmployeeController.insertEmplInWorkerInShift(new WorkerInShiftDTO(empId, id, store.getStoreNumber(),role.toString()));
     }
 
     public boolean addRoleForEmployee(String empId, Role role) {

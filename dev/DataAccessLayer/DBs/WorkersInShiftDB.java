@@ -15,7 +15,7 @@ public class WorkersInShiftDB extends DB{
     public static final String shiftId_column = "SHIFT_ID";
     public static final String empId_column = "EMP_ID";
     public static final String storeId_column = "STORE_ID";
-    public static final String role_column = "WHICH ROLE";
+    public static final String role_column = "WHICH_ROLE";
 
     public WorkersInShiftDB(){
         this.tableName = "WORKERS_IN_SHIFT";
