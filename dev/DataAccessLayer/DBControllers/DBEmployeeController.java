@@ -54,7 +54,7 @@ public class DBEmployeeController {
     }
 
     public void setPasswordInDB(String empID , String newPassword){
-        employeeDBC.updateSpecifecColumnForOneRow(getIdentefierMap(empID), EmployeeDB.password_COLUMN, empID, "string");
+        employeeDBC.updateSpecifecColumnForOneRow(getIdentefierMap(empID), EmployeeDB.password_COLUMN, newPassword, "string");
     }
 
     public void setBankAccount(String empId,String newBankAccount){
