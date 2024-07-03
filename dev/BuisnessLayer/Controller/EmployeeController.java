@@ -176,7 +176,7 @@ public class EmployeeController {
             }
             shifts.get(day)[0].loadData(day, ShiftTime.Day, shiftsInStore[i].shiftId, wis, awis);
 
-            shifts.get(day)[1].loadData(day, ShiftTime.Day, shiftsInStore[i].shiftId, wis, awis);
+            shifts.get(day)[1].loadData(day, ShiftTime.Night, shiftsInStore[i].shiftId, wis, awis);
 
         }
         Schedule schedule = new Schedule();
@@ -296,6 +296,7 @@ public class EmployeeController {
 
     public boolean loginForEmployee(String empId, String password) {
 
+        checkStore(dbEmployeeController.getEmployeeStore(empId));
         if (employeesStore.get(empId) == null) {
             throw new IllegalArgumentException("Employee does not exist");
         }
