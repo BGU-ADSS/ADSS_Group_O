@@ -4,6 +4,9 @@ import BuisnessLayer.Workers.Employee;
 import DTOs.Errors;
 import DTOs.Role;
 import DTOs.ShiftTime;
+import DataAccessLayer.DBControllers.DBEmployeeController;
+import DataAccessLayer.DTOs.AvaliableWorkerInShiftDTO;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
@@ -22,6 +25,7 @@ public class Schedule {
     private int minEmployees;
     private boolean isReadyToPublish;
     private int idCounter;
+    private DBEmployeeController dbEmployeeController = new DBEmployeeController();
 
     public Schedule(int deadline, List<Employee> employees, int minEmployees, List<LocalDate> breakDays) {
         this.isReadyToPublish = false;
@@ -75,7 +79,7 @@ public class Schedule {
         return id;
     }
 
-    public void addEmployee(Employee employee) {
+    public void addEmployee(Employee employee, int store) {
         if(employee.getRoles().contains(Role.GroubManager)) {
             throw new IllegalArgumentException(Errors.cantSetGroubManagerToNewEmployee);
         }
@@ -84,7 +88,9 @@ public class Schedule {
             LocalDate day = iter.next();
             Shift[] shifts = dayShifts.get(day);
             shifts[0].addEmployee(employee);
+            dbEmployeeController.insertWorkerAvailableInShift(new AvaliableWorkerInShiftDTO(employee.getID(),shifts[0].getId(),store));
             shifts[1].addEmployee(employee);
+            dbEmployeeController.insertWorkerAvailableInShift(new AvaliableWorkerInShiftDTO(employee.getID(),shifts[1].getId(),store));
             dayShifts.put(day, shifts);
         }
     }

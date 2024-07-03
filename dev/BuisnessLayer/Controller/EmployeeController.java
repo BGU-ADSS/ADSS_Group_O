@@ -340,12 +340,11 @@ public class EmployeeController {
             throw new IllegalArgumentException(Errors.EmployeeAlreadyExistInStore);
         }
         stores.get(employee.getStoreNum()).addEmployee(employee);
-        employeesStore.put(employee.getID(), employee.getStoreNum());
         dbEmployeeController.intsertEmployee(convrtEmplToDTO(employee));
         dbEmployeeController.insertRolesForEmployee(rolesToDTO(employee));
+        employeesStore.put(employee.getID(), employee.getStoreNum());
         Logs.debug(employeesStore.get(employee.getID()) + " the store returned for this employee "
                 + employeesStore.size());
-
     }
 
     public String getShiftHistory(LocalDate fromDate, int StoreNum) {
