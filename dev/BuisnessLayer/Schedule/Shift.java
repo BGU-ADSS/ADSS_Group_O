@@ -165,7 +165,7 @@ public class Shift {
         for ( Role r : workersInShift.keySet() ){
             List<Employee> employees = workersInShift.get(r);
             for (int i = 0; i < employees.size() ; i++){
-                str += employees.get(i).getName() + " as " + employees.get(i).getRoles().toString() + ",";
+                str += employees.get(i).getName() + " as " + r.toString() + ",";
             }
 
         }

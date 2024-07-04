@@ -36,14 +36,14 @@ public class ServiceFactory {
     public String addHRmanager(String password) {
         try {
             employeeController.addHRmanager(password);
-//            List<String> lines = Files.readAllLines(Paths.get("dev\\DTOs\\config.txt"));
-//            int hrPassLine = -1;
-//            for (int i = 0; i < lines.size(); i++)
-//                if (lines.get(i).startsWith("#hrPassword"))
-//                    hrPassLine = i;
-//            if(hrPassLine==-1) hrPassLine= lines.size();
-//            lines.set(hrPassLine, "#hrPassword-"+password);
-//            Files.write(Paths.get("dev\\DTOs\\config.txt"), lines);
+            List<String> lines = Files.readAllLines(Paths.get("dev\\DTOs\\config.txt"));
+            int hrPassLine = -1;
+            for (int i = 0; i < lines.size(); i++)
+                if (lines.get(i).startsWith("#hrPassword"))
+                    hrPassLine = i;
+            if(hrPassLine==-1) hrPassLine= lines.size();
+            lines.set(hrPassLine, "#hrPassword-"+password);
+            Files.write(Paths.get("dev\\DTOs\\config.txt"), lines);
 
             return "hr added successfuly";
         } catch (Exception ex) {
