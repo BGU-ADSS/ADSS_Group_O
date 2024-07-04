@@ -217,4 +217,84 @@ public class HRserviceTest {
         assertEquals(true, res.isErrorOccured());
     }
 
+
+    //===================================================================================================
+    //===================================================================================================
+    //====================
+    //         new TESTS :
+    //====================
+
+
+
+    private ServiceFactory service ;
+    @Test
+    public void persistEmployee(){
+        addEmployee();
+        service = new ServiceFactory(false);
+        service.addStore(0, "bhaa store", "arraba");
+        service.addEmployee("212", "bhaa", "123", 0,new Role[]{Role.Cashier} , LocalDate.now(), LocalDate.now().plusYears(1), 0);
+        
+        service = null;
+        service = new ServiceFactory(true);
+        Response returnedProfRespString =R( service.getEmployeeProf("212"));
+        String returnedProf =(String) returnedProfRespString.getReturnValue();
+        String str = "Employee name:" + "bhaa" +"\n";
+        str += "Employee ID:" + "212" +"\n";
+        str += "Employee Roles:" + "[Cashier]" + "\n";
+        str += "Employee Salary:" + "0" + "\n";
+        str += "Store Number:" + 0 + "\n";
+        str += "Bank Account:" + 123 + "\n";
+        assertEquals(str, returnedProf);
+    }
+
+    private void addEmployee(){
+        service = new ServiceFactory(false);
+        service.addStore(0, "bhaa store", "arraba");
+        service.addEmployee("212", "bhaa", "123", 0,new Role[]{Role.Cashier} , LocalDate.now(), LocalDate.now().plusYears(1), 0);
+        
+    }
+
+    @Test 
+    public void persistPassword(){
+        addEmployee();
+
+        service.setPassword("212", "123");
+        service = null;
+        service=new ServiceFactory(true);
+        Response res =  R(service.loginForEmployee("212", "123"));
+        assertEquals((String)res.getReturnValue(), "Successfully logged in");
+
+    }
+
+    @Test
+    public void persistConstrains(){
+        addEmployee();
+        service.startAddingConstrainsForNextWeek(0);
+        service.addConstrains("212", "123", LocalDate.now().plusDays(7), ShiftTime.Day);
+        service = null;
+        service = new ServiceFactory(true);
+        Response res =R(service.setShift(LocalDate.now().plusDays(7), ShiftTime.Day, "212", Role.Cashier));
+        assertEquals(res.getErrorMessage(), "cant set shift due to constrains");
+    }
+
+    @Test
+    public void check_if_driver_with_storekeeper(){
+        addEmployee();
+        service.addEmployee("1", "driver", "123", 1, new Role[]{Role.Driver}, LocalDate.now(), LocalDate.now().plusYears(1), 0);
+        service.addEmployee("2", "shift manager", "123", 123, new Role[]{Role.ShiftManager}, LocalDate.now() , LocalDate.now().plusYears(7), 0);
+        service.startAddingConstrainsForNextWeek(0);
+        for(int i=7;i<14;i++){
+            service.setShift(LocalDate.of(2024,7,i), ShiftTime.Day, "2",Role.ShiftManager );
+            service.setShift(LocalDate.of(2024,7,i), ShiftTime.Night, "2",Role.ShiftManager );
+        }
+        
+        service.setShift(LocalDate.of(2024,7,8), ShiftTime.Night, "1",Role.Driver );
+        Response res = R(service.scheduleReadyToPublish(0));
+        assertEquals(res.isErrorOccured(), true);
+        assertEquals(res.getErrorMessage(), "shift "+LocalDate.of(2024,7,8)+" "+ShiftTime.Night.toString()+"has a driver without storeKeeper!");
+    }
+
+
+    
+
 }

@@ -56,7 +56,7 @@ public class StoreDB extends DB{
             PreparedStatement pstmt, int index) {
         if(toDelIdentiferMap.containsKey(id_column)){
             try {
-                pstmt.setString(index, (String)toDelIdentiferMap.get(id_column));
+                pstmt.setInt(index, (int)toDelIdentiferMap.get(id_column));
                 Logs.debug(pstmt.toString());
             } catch (SQLException e) {
                 e.printStackTrace();

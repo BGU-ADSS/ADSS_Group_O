@@ -241,7 +241,8 @@ public class Schedule {
         Iterator<LocalDate> iter = dayShifts.keySet().iterator();
         while ( iter.hasNext() ) {
             LocalDate nextDay = iter.next();
-            if ( nextDay.isEqual(nextWeek) || nextDay.isBefore(nextWeek)) {
+            Logs.debug("we got this "+nextDay+" : "+nextDay.isAfter(nextWeek)+" , next weak is "+nextWeek);
+            if ( nextDay.isEqual(nextWeek) || nextDay.isAfter(nextWeek)) {
                 dayShifts.get(nextDay)[0].submit();
                 dayShifts.get(nextDay)[1].submit();
             }

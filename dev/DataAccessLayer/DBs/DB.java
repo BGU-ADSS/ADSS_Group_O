@@ -32,12 +32,13 @@ public abstract class DB {
         try (Connection conn = DriverManager.getConnection(url);
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
             if (typeIntOrString == "int")
-                pstmt.setInt( 1, (int) newValueToUpdate);
+                pstmt.setInt(1, (int) newValueToUpdate);
             else if (typeIntOrString == "string")
                 pstmt.setString(1, (String) newValueToUpdate);
             else
                 throw new IllegalArgumentException("the type of the updated column is not 'string' or 'int'");
-            setValuesToPreparedStatmnetInWherePart(toDelIdentiferMap, pstmt,2);
+            Logs.debug("we have to excute this update");
+            setValuesToPreparedStatmnetInWherePart(toDelIdentiferMap, pstmt, 2);
             pstmt.executeUpdate();
             Logs.debug("must updated +" + (typeIntOrString == "string"));
         } catch (SQLException e) {
@@ -51,7 +52,7 @@ public abstract class DB {
         String sql = "DELETE FROM " + tableName + buildWhereQuery();
         try (Connection conn = DriverManager.getConnection(url);
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            setValuesToPreparedStatmnetInWherePart(toDelIdentiferMap, pstmt,1);
+            setValuesToPreparedStatmnetInWherePart(toDelIdentiferMap, pstmt, 1);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -86,7 +87,7 @@ public abstract class DB {
     }
 
     public List<DTO> getDTOsWhere(String whereQuery) {
-        String sql = "SELECT * FROM " + tableName+whereQuery;
+        String sql = "SELECT * FROM " + tableName + whereQuery;
         try (Connection conn = DriverManager.getConnection(url);
                 Statement stmt = conn.createStatement();
                 ResultSet queryResult = stmt.executeQuery(sql)) {
@@ -114,14 +115,13 @@ public abstract class DB {
     // convert the result using result.getInt(<column name>)
     public abstract DTO getObjectDTOFromOneResult(ResultSet result);
 
-   
     protected abstract void setTheValuesToTheInsertQuery(PreparedStatement pstmt, DTO toInsert);
 
     protected abstract String getTheRestOfInsertQuery(DTO toInsert);
 
     // according to the order of the buildWhereQuery() set the values to the pstmt
     public abstract void setValuesToPreparedStatmnetInWherePart(HashMap<String, Object> toDelIdentiferMap,
-            PreparedStatement pstmt,int index);
+            PreparedStatement pstmt, int index);
 
     // build where id=? ...
     public abstract String buildWhereQuery();
