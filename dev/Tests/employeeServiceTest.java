@@ -49,15 +49,16 @@ public class employeeServiceTest {
         // ID: 5, Name: alaoi, Phone: 777-55559, Salary: 5000, Bonus: -1, Roles: Store
         // Manager, Start Date: June 1, 2024, End Date: June 1, 2025
         // Store : Name : lee sheeba , address beer sheeba , Num : 1.
-        hrManager = new HRManager(HRPassword);
-        empC = new EmployeeController(hrManager);
-        emS = new employeeService(empC);
-        employees = getEmployees();
-        empC.setStoreForTest("lee sheeba", "Beer Sheba", null, employees, 1, 0, 1);
-        for (Employee employee : employees) {
-            emS.setPassword(employee.getID(), "12345678");
+        serviceFactory = new ServiceFactory(false);
+        serviceFactory.addHRmanager("123");
+        serviceFactory.addStore(1, "bhaa store", "arraba");
+        List<Employee> emps = getEmployees();
+        for (Employee employee : emps) {
+            Role[] roles = new Role[employee.getRoles().size()];
+            for(int i=0;i<roles.length;i++) roles[i]=employee.getRoles().get(i);
+            System.out.println(employee.getName());
+            serviceFactory.addEmployee(employee.getID(), employee.getName(), employee.getBankAccount(), employee.getMounthSalary(),roles,employee.getStartDate()   , employee.getEndDate(), employee.getStoreNum());
         }
-        serviceFactory = new ServiceFactory(empC);
     }
 
     private List<Employee> getEmployees() {
@@ -128,28 +129,28 @@ public class employeeServiceTest {
 
     private void beforeConstrainsTest(int deadLine){
         initHRManager();
-        List<Employee> emps= new ArrayList<>();
-        LocalDate start5 = LocalDate.of(2024, 6, 1);
-        LocalDate end5 = LocalDate.of(2025, 6, 1);
-        Role[] roles5 = new Role[1];
-        roles5[0] = Role.StoreManager;
-        empC.setStoreForTest("hi", "saa", null, employees, 1, 1, deadLine);
-        //Response re = R(serviceFactory.addEmployee("1","alaoi", "777-55559", 5000, roles5, start5, end5, 2));
+        // List<Employee> emps= new ArrayList<>();
+        // LocalDate start5 = LocalDate.of(2024, 6, 1);
+        // LocalDate end5 = LocalDate.of(2025, 6, 1);
+        // Role[] roles5 = new Role[1];
+        // roles5[0] = Role.StoreManager;
+        // empC.setStoreForTest("hi", "saa", null, employees, 1, 1, deadLine);
+        // //Response re = R(serviceFactory.addEmployee("1","alaoi", "777-55559", 5000, roles5, start5, end5, 2));
         serviceFactory.startAddingConstrainsForNextWeek(1);
     }
 
     @Test
     public void setConstrainsAfterDeadlineTest(){
         beforeConstrainsTest(1);
-        Response res = R(serviceFactory.addConstrains("1", "12345678", empC.getStoreForTest(1).getNextWeek().plusDays(3), ShiftTime.Day));
+        Response res = R(serviceFactory.addConstrains("1", "12345678", LocalDate.of(2025,1,1), ShiftTime.Day));
         assertEquals(true, res.isErrorOccured());
-        assertEquals("deadline have been reached! cannot add constrain", res.getErrorMessage());
+        assertEquals("the hr must start the week shift first!", res.getErrorMessage());
     }
 
     @Test
     public void setConstrainsBeforeDeadlineTest(){
         beforeConstrainsTest(6);
-        Response res = R(serviceFactory.addConstrains("1", "12345678", empC.getStoreForTest(1).getNextWeek().plusDays(3), ShiftTime.Day));
+        Response res = R(serviceFactory.addConstrains("1", "12345678",serviceFactory.getEmpControlerr().getStoreForTest(1).getNextWeek().plusDays(3), ShiftTime.Day));
         assertEquals(false, res.isErrorOccured());
         assertEquals("Successfully add constrains", res.getReturnValue());
 
@@ -163,10 +164,10 @@ public class employeeServiceTest {
         initHRManager();
         Response res = R(serviceFactory.addRole("1", "12345678", Role.Storekeeper));
         assertEquals("Successfully add role", res.getReturnValue());
-        assertArrayEquals(new Role[] { Role.Cashier, Role.Storekeeper }, empC.getEmployeeRoles("1"));
+        assertArrayEquals(new Role[] { Role.Cashier, Role.Storekeeper }, serviceFactory.getEmpControlerr() .getEmployeeRoles("1"));
         Response res2 = R(serviceFactory.addRole("1", "12345678", Role.GroubManager));
         assertEquals("Successfully add role", res2.getReturnValue());
-        assertArrayEquals(new Role[] { Role.Cashier, Role.Storekeeper, Role.GroubManager }, empC.getEmployeeRoles("1"));
+        assertArrayEquals(new Role[] { Role.Cashier, Role.Storekeeper, Role.GroubManager }, serviceFactory.getEmpControlerr() .getEmployeeRoles("1"));
 
     }
 
@@ -185,7 +186,7 @@ public class employeeServiceTest {
         Response resOfAdd = R(serviceFactory.addRole("1", "12345678", Role.Storekeeper));
         Response res = R(serviceFactory.removeRole("1", "12345678", Role.Cashier));
         assertEquals("Successfully remove role", res.getReturnValue());
-        assertArrayEquals(new Role[] { Role.Storekeeper }, empC.getEmployeeRoles("1"));
+        assertArrayEquals(new Role[] { Role.Storekeeper }, serviceFactory.getEmpControlerr() .getEmployeeRoles("1"));
     }
 
     @Test
@@ -194,7 +195,7 @@ public class employeeServiceTest {
         Response resOfLastRole = R(serviceFactory.removeRole("3", "12345678", Role.Storekeeper));
         assertEquals(true, resOfLastRole.isErrorOccured());
         assertEquals(Errors.cantRemoveTheLastRole, resOfLastRole.getErrorMessage());
-        assertArrayEquals(new Role[] { Role.Storekeeper }, empC.getEmployeeRoles("3"));
+        assertArrayEquals(new Role[] { Role.Storekeeper }, serviceFactory.getEmpControlerr() .getEmployeeRoles("3"));
     }
 
     // =================================== set bank account

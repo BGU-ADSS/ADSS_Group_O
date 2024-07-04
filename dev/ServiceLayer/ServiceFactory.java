@@ -141,4 +141,8 @@ public class ServiceFactory {
     public String getProfile(String id) {
         return employeeService.getProfile(id);
     }
+
+	public EmployeeController getEmpControlerr() {
+		return employeeController;
+	}
 }
