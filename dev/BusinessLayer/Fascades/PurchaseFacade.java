@@ -1,24 +1,27 @@
 package BusinessLayer.Fascades;
 
-import BusinessLayer.Fascades.DiscountFacade;
-import BusinessLayer.Fascades.ProductFacade;
 import BusinessLayer.Objects.Item;
+import BusinessLayer.Objects.ItemCondition;
 import BusinessLayer.Objects.Product;
 import BusinessLayer.Objects.Purchase;
+import DataAccessLayer.ItemDAO;
+import DataAccessLayer.ItemDTO;
+import DataAccessLayer.PurchaseDAO;
+import DataAccessLayer.PurchaseDTO;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class PurchaseFacade {
-
     private int purchaseCounter;
     private ProductFacade productFacade;
     private DiscountFacade discountFacade;
     private HashMap<Integer, Purchase> purchases;
+    private PurchaseDAO purchaseDAO;
+    private ItemDAO itemDAO;
 
     public PurchaseFacade(ProductFacade productFacade, DiscountFacade discountFacade)
     {
@@ -26,6 +29,8 @@ public class PurchaseFacade {
         this.productFacade=productFacade;
         this.discountFacade=discountFacade;
         purchases=new HashMap<>();
+        purchaseDAO = new PurchaseDAO();
+        itemDAO=new ItemDAO();
     }
     public double calculateTotal(int purchaseId) throws Exception{
         Purchase purchase=purchases.get(purchaseId);
@@ -54,7 +59,9 @@ public class PurchaseFacade {
                 purchase.setTotal(purchase.getTotal() + entry.getValue().size() * product.getPriceBeforeDiscount());
             }
         }
-
+        purchaseDAO.getPurchaseById(purchaseId).setTotal(purchase.getTotal());
+        PurchaseDTO purchaseDTO=new PurchaseDTO(purchase.getPurchaseID(),purchase.getPurchaseDate(), purchase.getTotal(), purchase.getCustomerID());
+        purchaseDAO.update(purchaseDTO);
         return purchase.getTotal();
 
     }
@@ -73,9 +80,12 @@ public class PurchaseFacade {
                         t = i;
                     }
                 }
-//                productFacade.removeItem(itemID,true);
                 if(t == null){
                     throw new Exception("Error occurred");
+                }
+                if(t.getCondition()== ItemCondition.SOLD)
+                {
+                    throw new Exception("cannot add sold item");
                 }
                 if(!purchases.get(purchaseId).getProducts().containsKey(p)){
                     List<Item> l = new LinkedList<>();
@@ -85,6 +95,13 @@ public class PurchaseFacade {
                 else{
                     purchases.get(purchaseId).getProducts().get(p).add(t);
                 }
+                t.setCondition(ItemCondition.SOLD);
+                itemDAO.update(new ItemDTO(t.getItemID(),t.getProduct().getMKT(),t.getExpirationDate(),t.getCondition().toString(),purchaseId));
+                Purchase purchase1=purchases.get(purchaseId);
+                double total=calculateTotal(purchaseId);
+                purchase1.setTotal(total);
+                purchaseDAO.update(new PurchaseDTO(purchase1.getPurchaseID(),purchase1.getPurchaseDate(),purchase1.getTotal(),purchase1.getCustomerID()));
+
             }
         }
 //        try {
@@ -94,19 +111,36 @@ public class PurchaseFacade {
 //
 //        }
     }
-    public void buildPurchase(LocalDate purchaseDate, int customerID, String customerName) throws Exception{
-        if(customerName == null){
-            throw new Exception("Customer name is invalid");
+    public void buildPurchase(LocalDate purchaseDate, int customerID) throws Exception{
+        if(customerID < 0){
+            throw new Exception("Customer id is invalid");
         }
-        Purchase p = new Purchase(purchases.size() + 1, purchaseDate, customerID, customerName);
+        Purchase p = new Purchase(purchases.size() + 1, purchaseDate, customerID);
         purchases.put(p.getPurchaseID(), p);
+        PurchaseDTO p1 = new PurchaseDTO(p.getPurchaseID(),purchaseDate,0,customerID);
+        purchaseDAO.addPurchase(p1);
     }
-    public int getPurchaseIDByCustomerAndDate(String customerName, LocalDate purchaseDate) throws Exception{
+    public int getPurchaseIDByCustomerAndDate(int customerID, LocalDate purchaseDate) throws Exception{
         for(HashMap.Entry<Integer, Purchase> p : purchases.entrySet()){
-            if(p.getValue().getCustomerName().equals(customerName) && p.getValue().getPurchaseDate().equals(purchaseDate)){
+            if(p.getValue().getCustomerID() == customerID && p.getValue().getPurchaseDate().equals(purchaseDate)){
                 return p.getKey();
             }
         }
         throw new Exception("The person name and purchase date are not found in list of purchases");
+    }
+    public void loadData() throws SQLException {
+        for(PurchaseDTO p : purchaseDAO.getAllPurchases()){
+            purchases.put(p.getPurchaseID(), new Purchase(p.getPurchaseID(), p.getPurchaseDate(), p.getCustomerID()));
+        }
+    }
+    public void deleteData() throws SQLException {
+        purchaseDAO.deleteData();
+        if(purchases!=null) {
+            purchases.clear();
+        }
+    }
+    public Purchase getPurchase(int id)
+    {
+        return purchases.get(id);
     }
 }
