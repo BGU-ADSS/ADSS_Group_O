@@ -15,10 +15,15 @@ public class ProductService {
     private DiscountFacade discountFacade;
     private CategoryFascade categoryFascade;
 
-    public ProductService() {
+    /*public ProductService() {
         this.productFascade = new ProductFacade();
         this.discountFacade = new DiscountFacade();
         this.categoryFascade = new CategoryFascade(discountFacade, productFascade);
+    }*/
+    public ProductService(ProductFacade productFacade, DiscountFacade discountFacade, CategoryFascade categoryFascade) {
+        this.productFascade = productFacade;
+        this.discountFacade = discountFacade;
+        this.categoryFascade = categoryFascade;
     }
     public ProductFacade getProductFascade(){
         return productFascade;
@@ -141,9 +146,10 @@ public class ProductService {
             throw new Exception(e.getMessage());
         }
     }
-    public String  buildItem(int prodID, LocalDate expirationDate) throws Exception{
+    public String buildItem(int prodID, LocalDate expirationDate, boolean inStore) throws Exception{
         try {
-            productFascade.buildItem(prodID, expirationDate);
+            productFascade.buildItem(prodID, expirationDate, inStore);
+//            productFascade.addToStorage(productFascade.getFirstItemByProductID(prodID));
             return "Item built successfully";
         } catch (Exception e) {
             throw new Exception(e.getMessage());

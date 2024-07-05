@@ -12,10 +12,10 @@ public class DiscountService {
     private DiscountFacade discountFacade;
     private ProductFacade productFacade;
     private CategoryFascade categoryFascade;
-    public DiscountService(){
-        this.discountFacade = new DiscountFacade();
-        this.productFacade = new ProductFacade();
-        this.categoryFascade = new CategoryFascade(discountFacade, productFacade);
+    public DiscountService(DiscountFacade discountFacade,ProductFacade productFacade ,CategoryFascade categoryFascade){
+        this.discountFacade = discountFacade;
+        this.productFacade = productFacade;
+        this.categoryFascade = categoryFascade;
     }
     public DiscountFacade getDiscountFacade(){
         return discountFacade;

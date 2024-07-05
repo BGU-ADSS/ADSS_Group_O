@@ -11,16 +11,16 @@ public class PurchaseService {
     public ProductFacade productFascade;
     private DiscountFacade discountFacade;
 
-    public PurchaseService(ProductFacade productFascade, DiscountFacade discountFacade) {
+    public PurchaseService(ProductFacade productFascade, DiscountFacade discountFacade ,PurchaseFacade purchaseFacade) {
         this.productFascade = productFascade;
         this.discountFacade = discountFacade;
-        this.purchaseFacade = new PurchaseFacade(productFascade, discountFacade);
+        this.purchaseFacade = purchaseFacade;
     }
-    public PurchaseService() {
-        this.productFascade = new ProductFacade();
-        this.discountFacade = new DiscountFacade();
-        this.purchaseFacade = new PurchaseFacade(productFascade, discountFacade);
-    }
+//    public PurchaseService() {
+//        this.productFascade = new ProductFacade();
+//        this.discountFacade = new DiscountFacade();
+//        this.purchaseFacade = new PurchaseFacade(productFascade, discountFacade);
+//    }
 
     public String calculateTotal(int purchaseId) throws Exception {
         try {
@@ -40,17 +40,17 @@ public class PurchaseService {
         }
     }
 
-    public int getPurchaseIDByCustomerAndDate(String customerName, LocalDate purchaseDate) throws Exception {
+    public int getPurchaseIDByCustomerAndDate(int customerID, LocalDate purchaseDate) throws Exception {
         try {
-            return purchaseFacade.getPurchaseIDByCustomerAndDate(customerName, purchaseDate);
+            return purchaseFacade.getPurchaseIDByCustomerAndDate(customerID, purchaseDate);
         } catch (Exception e) {
             throw new Exception("Error occurred");
         }
     }
 
-    public String buildPurchase(LocalDate purchaseDate, int customerID, String customerName) throws Exception {
+    public String buildPurchase(LocalDate purchaseDate, int customerID) throws Exception {
         try {
-            purchaseFacade.buildPurchase(purchaseDate,customerID,customerName);
+            purchaseFacade.buildPurchase(purchaseDate,customerID);
             return "Building purchase succeeded";
         } catch (Exception e) {
             throw new Exception("Error occurred");

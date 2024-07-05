@@ -10,9 +10,9 @@ import java.util.List;
 public class ReportService {
     private ReportFascade reportFacade;
     private ProductFacade productFacade;
-    public ReportService() {
-        productFacade =  new ProductFacade();
-        this.reportFacade = new ReportFascade(productFacade);
+    public ReportService(ProductFacade productFacade ,ReportFascade reportFascade ) {
+        this.productFacade =  productFacade;
+        this.reportFacade = reportFascade;
     }
     public String buildReport(List<Category> categories){
         try {
@@ -30,6 +30,16 @@ public class ReportService {
             return ans;
         }
         catch(Exception e){
+            return e.getMessage();
+        }
+    }
+    public  String buildShoratgeReport() throws  Exception{
+        try
+        {
+            return reportFacade.buildReportShortages();
+        }
+        catch (Exception e)
+        {
             return e.getMessage();
         }
     }
