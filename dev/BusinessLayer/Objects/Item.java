@@ -1,5 +1,6 @@
 package BusinessLayer.Objects;
 
+
 import java.time.LocalDate;
 
 
@@ -32,5 +33,8 @@ public class Item {
     public ItemCondition getCondition()
     {
         return  this.condition;
+    }
+    public void setCondition(ItemCondition condition) {
+        this.condition = condition;
     }
 }

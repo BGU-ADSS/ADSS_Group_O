@@ -52,6 +52,7 @@ public class Product {
         this.discount = discount;
         this.onSale=false;
 
+
     }
     public int getMKT(){
         return this.MKT;
@@ -119,4 +120,17 @@ public class Product {
     public void setCategory(Category c){
         this.category = c;
     }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public String getCompanyManufacturer() {
+        return companyManufacturer;
+    }
+
 }

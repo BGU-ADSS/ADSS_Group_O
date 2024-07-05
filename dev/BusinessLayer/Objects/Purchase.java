@@ -14,14 +14,12 @@ public class Purchase {
     private double total;
     private HashMap<Product, List<Item>> products;
     private int customerID;
-    private String customerName;
-    public Purchase(int purchaseID, LocalDate purchaseDate, int customerID, String customerName){
+    public Purchase(int purchaseID, LocalDate purchaseDate, int customerID){
         this.purchaseID = purchaseID;
         this.purchaseDate = purchaseDate;
         this.customerID = customerID;
         this.products = new HashMap<>();
         this.total = 0;
-        this.customerName = customerName;
     }
     public HashMap<Product, List<Item>> getProducts()
     {
@@ -36,9 +34,6 @@ public class Purchase {
     }
     public int getCustomerID(){
         return customerID;
-    }
-    public String getCustomerName(){
-        return customerName;
     }
     public int getPurchaseID(){
         return purchaseID;
