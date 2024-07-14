@@ -12,6 +12,8 @@ import java.time.format.DateTimeFormatter;
 import static org.junit.Assert.*;
 
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 class PurchaseServiceTest {
     private  PurchaseService purchaseService;
     private static ProductFacade productFacade;
@@ -22,7 +24,7 @@ class PurchaseServiceTest {
     private ProductService productService;
     private DiscountService discountService;
 
-    @BeforeEach
+    @Before
      void setUp() {
 
         // Initialize services with shared facades

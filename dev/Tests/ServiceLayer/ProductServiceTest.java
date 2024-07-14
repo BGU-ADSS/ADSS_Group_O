@@ -6,14 +6,14 @@ import BusinessLayer.Fascades.ProductFacade;
 import BusinessLayer.Objects.Category;
 import BusinessLayer.Objects.Item;
 import BusinessLayer.Objects.Product;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.*;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.time.LocalDate;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class ProductServiceTest {
 
@@ -23,7 +23,7 @@ class ProductServiceTest {
     private static CategoryFascade categoryFascade;
 
 
-    @BeforeAll
+    @Before
     static void setUp() {
         // Initialize the service
         productFacade = new ProductFacade();

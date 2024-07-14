@@ -5,14 +5,18 @@ import BusinessLayer.Fascades.DiscountFacade;
 import BusinessLayer.Fascades.ProductFacade;
 import BusinessLayer.Objects.Category;
 import DataAccessLayer.Categories.CategoryDAO;
-import org.junit.jupiter.api.*;
+import static org.junit.Assert.*;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.nio.file.Paths;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 public class CategoryFascadeTest {
     private static Connection connection;
@@ -21,7 +25,7 @@ public class CategoryFascadeTest {
     private static DiscountFacade discountFacade;
 
 
-    @BeforeAll
+    @Before
     public static void setupFacade() throws SQLException {
 
         String path = Paths.get("").toAbsolutePath().toString();
@@ -57,7 +61,7 @@ public class CategoryFascadeTest {
 
 
 
-    @BeforeEach
+    @Before
     public void setup() throws SQLException {
         categoryFascade.deleteData();
     }
@@ -125,7 +129,7 @@ public class CategoryFascadeTest {
     }
 
 
-    @AfterAll
+    @After
     public static void tearDown() throws SQLException {
         // Establish the connection
 

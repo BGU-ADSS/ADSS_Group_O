@@ -1,14 +1,17 @@
 package BusinessLayer.Fascades;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.*;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.nio.file.Paths;
 import java.sql.*;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+
 
 class ReportFascadeTest {
     private static Connection connection;
@@ -16,7 +19,7 @@ class ReportFascadeTest {
     private static ProductFacade productFacade;
     private static DiscountFacade discountFacade;
     private static ReportFascade reportFascade;
-    @BeforeAll
+    @Before
     public static void setup() throws SQLException {
 
         String path = Paths.get("").toAbsolutePath().toString();
@@ -111,7 +114,7 @@ class ReportFascadeTest {
         }
     }
 
-    @AfterAll
+    @After
     public static void deleteData() throws SQLException {
         productFacade.deleteData();
         discountFacade.deleteData();

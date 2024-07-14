@@ -2,15 +2,16 @@ package BusinessLayer.Fascades;
 
 import BusinessLayer.Objects.Purchase;
 import DataAccessLayer.Categories.CategoryDAO;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.*;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.nio.file.Paths;
 import java.sql.*;
 import java.time.LocalDate;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PurchaseFacadeTest {
     private static Connection connection;
@@ -18,7 +19,7 @@ class PurchaseFacadeTest {
     private static ProductFacade productFacade;
     private static DiscountFacade discountFacade;
     private static CategoryFascade categoryFascade;
-    @BeforeAll
+    @Before
     public static void setup() throws SQLException {
 
         String path = Paths.get("").toAbsolutePath().toString();
@@ -69,7 +70,7 @@ class PurchaseFacadeTest {
 
     }
 
-    @BeforeEach
+    @Before
     void setupEach() throws SQLException
     {
         productFacade.deleteData();
@@ -106,7 +107,7 @@ class PurchaseFacadeTest {
             fail("Exception occurred during the test.");
         }
     }
-    @AfterAll
+    @After
     public static void delete() throws SQLException {
         productFacade.deleteData();
         purchaseFacade.deleteData();

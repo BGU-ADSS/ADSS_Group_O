@@ -1,23 +1,25 @@
 package BusinessLayer.Fascades;
 
 import DataAccessLayer.Categories.CategoryDAO;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.*;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.nio.file.Paths;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+
 
 class DiscountFacadeTest {
     private static Connection connection;
     private static CategoryFascade categoryFascade;
     private static ProductFacade productFacade;
     private static DiscountFacade discountFacade;
-    @BeforeAll
+    @Before
     public static void setup() throws SQLException {
 
         String path = Paths.get("").toAbsolutePath().toString();

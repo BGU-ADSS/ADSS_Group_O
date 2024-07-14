@@ -6,13 +6,15 @@ import BusinessLayer.Fascades.ProductFacade;
 import BusinessLayer.Objects.Category;
 import BusinessLayer.Objects.Discount;
 import org.junit.Before;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+import org.junit.Assert;
+import org.junit.Before;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 class DiscountServiceTest {
 
@@ -22,7 +24,7 @@ class DiscountServiceTest {
     private static CategoryFascade categoryFascade;
 
 
-    @BeforeAll
+    @Before
     static void setUp() {
         productFacade = new ProductFacade();
         discountFacade = new DiscountFacade();

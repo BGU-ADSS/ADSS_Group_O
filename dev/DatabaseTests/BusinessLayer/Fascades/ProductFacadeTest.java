@@ -3,16 +3,16 @@ package BusinessLayer.Fascades;
 import BusinessLayer.Objects.Product;
 import DataAccessLayer.Categories.CategoryDAO;
 import DataAccessLayer.ReportProduct.ProductDAO;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.*;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.nio.file.Paths;
 import java.sql.*;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 class ProductFacadeTest {
     private static Connection connection;
@@ -20,7 +20,7 @@ class ProductFacadeTest {
     private static ProductFacade productFacade;
     private static DiscountFacade discountFacade;
 
-    @BeforeAll
+    @Before
     public static void setup() throws SQLException {
 
         String path = Paths.get("").toAbsolutePath().toString();
