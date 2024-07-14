@@ -17,12 +17,17 @@ import static org.junit.jupiter.api.Assertions.*;
 class DiscountServiceTest {
 
     private static DiscountService discountService;
+    private static ProductFacade productFacade;
+    private static DiscountFacade discountFacade;
+    private static CategoryFascade categoryFascade;
 
-    private CategoryFascade categoryFascade;
 
     @BeforeAll
     static void setUp() {
-        discountService = new DiscountService();
+        productFacade = new ProductFacade();
+        discountFacade = new DiscountFacade();
+        categoryFascade = new CategoryFascade(discountFacade,productFacade);
+        discountService = new DiscountService(discountFacade,productFacade,categoryFascade);
     }
 
     @Test

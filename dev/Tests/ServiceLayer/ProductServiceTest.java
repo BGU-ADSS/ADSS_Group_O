@@ -1,5 +1,8 @@
 package ServiceLayer;
 
+import BusinessLayer.Fascades.CategoryFascade;
+import BusinessLayer.Fascades.DiscountFacade;
+import BusinessLayer.Fascades.ProductFacade;
 import BusinessLayer.Objects.Category;
 import BusinessLayer.Objects.Item;
 import BusinessLayer.Objects.Product;
@@ -15,19 +18,25 @@ import static org.junit.jupiter.api.Assertions.*;
 class ProductServiceTest {
 
     private static ProductService productService;
+    private static ProductFacade productFacade;
+    private static DiscountFacade discountFacade;
+    private static CategoryFascade categoryFascade;
+
 
     @BeforeAll
     static void setUp() {
         // Initialize the service
-        productService = new ProductService();
+        productFacade = new ProductFacade();
+        discountFacade = new DiscountFacade();
+        categoryFascade = new CategoryFascade(discountFacade,productFacade);
+        productService = new ProductService(productFacade, discountFacade, categoryFascade);
 
         try {
             // Set up initial data
             productService.buildCategory("Electronics");
             productService.buildProduct("iPhone", "Apple", 5000, 10, 1, productService.getCategoryByName("Electronics"), "Test1 Location Description", 1, 2);
             productService.buildProduct("TV", "Samsung", 2000, 20, 1, productService.getCategoryByName("Electronics"), "Test2 Location Description", 1, 2);
-            productService.buildItem(1, LocalDate.of(2025, 12, 31));
-            productService.addToStorage(1);
+            productService.buildItem(1, LocalDate.of(2025, 12, 31), true);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -79,7 +88,7 @@ class ProductServiceTest {
         // Act
         String result = "";
         try {
-            result = productService.buildItem(productID, expirationDate);
+            result = productService.buildItem(productID, expirationDate, true);
         } catch (Exception e) {
             fail("Exception should not be thrown: " + e.getMessage());
         }
@@ -88,22 +97,6 @@ class ProductServiceTest {
         assertEquals("Item built successfully", result);
     }
 
-    @Test
-    void test_add_item_to_store_success() {
-        // Arrange
-        int itemID = 1;
-
-        // Act
-        String result = "";
-        try {
-            result = productService.addToStore(itemID);
-        } catch (Exception e) {
-            fail("Exception should not be thrown: " + e.getMessage());
-        }
-
-        // Assert
-        assertEquals("Item added to store successfully", result);
-    }
 
     @Test
     void testRemoveItemThrowsException() {
