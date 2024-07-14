@@ -2,15 +2,12 @@ package ServiceLayer;
 
 import BusinessLayer.Objects.Category;
 import BusinessLayer.Objects.Product;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import static org.junit.Assert.*;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import org.junit.Assert;
 class PurchaseServiceTest {
     private  PurchaseService purchaseService;
     private ProductService productService = new ProductService();

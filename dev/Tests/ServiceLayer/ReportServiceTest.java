@@ -1,18 +1,18 @@
 package ServiceLayer;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.Assert;
+import org.junit.Before;
 
 class ReportServiceTest {
     private static ReportService reportService;
     private ProductService productService;
-    @BeforeAll
+    @Before
     static void setUp() {
         reportService = new ReportService();
     }
-    @Test
+    @org.junit.Test
     void buildReport() throws Exception {
         productService = new ProductService();
         productService.buildCategory("Cola");
