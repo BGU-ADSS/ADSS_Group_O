@@ -249,7 +249,7 @@ public class Logs {
         return getInput();
     }
     public static void debug(String string) {
-        print(ANSI_RED+string+ANSI_RESET);
+      //  print(ANSI_RED+string+ANSI_RESET);
     }
 
 
