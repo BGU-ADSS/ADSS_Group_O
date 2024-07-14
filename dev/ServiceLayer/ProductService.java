@@ -146,7 +146,7 @@ public class ProductService {
             throw new Exception(e.getMessage());
         }
     }
-    public String buildItem(int prodID, LocalDate expirationDate, boolean inStore) throws Exception{
+    public String buildItem(int prodID, LocalDate expirationDate, boolean inStore,int storeId) throws Exception{
         try {
             productFascade.buildItem(prodID, expirationDate, inStore);
 //            productFascade.addToStorage(productFascade.getFirstItemByProductID(prodID));
