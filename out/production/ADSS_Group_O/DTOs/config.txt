@@ -1,0 +1,6 @@
+the format is #key-value
+#deadLineConstrains-6
+#breakDays-2025-05-25
+#breakDays-2025-06-18
+#minEmployees-1
+#hrPassword-1234567

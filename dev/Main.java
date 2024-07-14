@@ -1,24 +1,21 @@
-import PresentationLayer.MainController;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+
+import PresentationLayer.Logs;
+import PresentationLayer.presentationController;
+
 public class Main {
-    public static void main(String[] args) throws Exception {
-        System.out.println("           Login");
-        String login = "";
-        String pass = "";
-        BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
-        while (!login.equals("omryadam@gmail.com") || !pass.equals("omryadam123")){
-            System.out.print("Email: ");
-            login = r.readLine();
-            System.out.println();
-            System.out.print("Password: ");
-            pass = r.readLine();
-            System.out.println();
-            if(!login.equals("omryadam@gmail.com") || !pass.equals("omryadam123")){
-                System.out.println("Email or Password that you entered is wrong, Try again");
-            }
+
+    public static void main(String[] args) {
+        new presentationController(withOrWithout()).runPresentation();
+    }
+
+    public static boolean withOrWithout(){
+        Logs.withDataOrNot();
+        String input = Logs.getInput();
+        if(input.equals("1")){ return true;}
+        else if (input.equals("2")) { return false;}
+        else {
+            System.out.println("invalid input! try again");
+            return withOrWithout();
         }
-        MainController m = new MainController();
-        m.start();
     }
 }
