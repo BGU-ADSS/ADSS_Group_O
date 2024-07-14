@@ -5,8 +5,7 @@ import BusinessLayer.Fascades.CategoryFascade;
 import BusinessLayer.Fascades.DiscountFacade;
 import BusinessLayer.Fascades.ProductFacade;
 import BusinessLayer.Fascades.ReportFascade;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+
 
 import org.junit.Assert;
 import org.junit.Before;
