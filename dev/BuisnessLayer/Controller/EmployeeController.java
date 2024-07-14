@@ -585,4 +585,19 @@ public class EmployeeController {
     public ShiftInStoreDTO convertShiftToDTO(Shift shift, int id) {
         return new ShiftInStoreDTO(id, shift.getDay().toString(), shift.getShiftTime().toString(), shift.getId());
     }
+
+    public boolean employeeIsStoreKeeperToday(String empId) {
+        try{
+            int storeNum = dbEmployeeController.getEmployeeStore(empId);
+            checkStore(storeNum);
+            Store store = stores.get(storeNum);
+            return store.employeeIsStoreKeeperToday(empId);
+        }catch(Exception ex){
+            return false;
+        }
+    }
+
+    public int getEmployeeStoreNumber(String empId) {
+        return employeesStore.get(empId);
+    }
 }

@@ -148,4 +148,12 @@ public class employeeService {
         }
         return gson.toJson(res);
     }
+
+    public boolean employeeIsStoreKeeperToday(String empId) {
+        return empController.employeeIsStoreKeeperToday(empId);
+    }
+
+    public int getEmployeeStoreNumber(String empId) {
+        return empController.getEmployeeStoreNumber(empId);
+    }
 }

@@ -322,4 +322,12 @@ public class Schedule {
     public HashMap<LocalDate, Shift[]> getDayShifts(){
         return dayShifts;
     }
+
+    public boolean workerIsStoreKeeperToday(String empId){
+        Shift[] todayShifts = dayShifts.get(LocalDate.now());
+
+        if(todayShifts==null || todayShifts[0]==null) return false;
+
+        return todayShifts[0].employeeIsStoreKeeperInShift(empId);
+    }
 }

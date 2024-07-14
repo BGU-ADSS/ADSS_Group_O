@@ -145,4 +145,12 @@ public class ServiceFactory {
 	public EmployeeController getEmpControlerr() {
 		return employeeController;
 	}
+
+    public boolean employeeIsStoreKeeperToday(String empId) {
+        return employeeService.employeeIsStoreKeeperToday(empId);
+    }
+
+	public int getEmployeeStoreNumber(String empId) {
+		return employeeService.getEmployeeStoreNumber(empId);
+	}
 }

@@ -195,4 +195,8 @@ public class Store {
     public boolean isReadyToPublish(){
         return schedule.doesItReadyToPublish();
     }
+
+    public boolean employeeIsStoreKeeperToday(String empId){
+        return schedule.workerIsStoreKeeperToday(empId);
+    }
 }

@@ -3,6 +3,8 @@ package PresentationLayer;
 import java.time.LocalDate;
 
 import ServiceLayer.ServiceFactory;
+import ServiceLayer.employeeService;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -15,6 +17,9 @@ public class EmployeePres {
     private String empPassword;
     private ServiceFactory serviceFactory;
     private boolean hasLoggedIn;
+    private boolean isStoreKeeper;
+    private MainController stockC;
+    private int storeNum;
     
     public static final String SET_PASSWORD = "set-Password";
     public static final String ADD_CONSTRAINS = "add-constrains";
@@ -28,6 +33,7 @@ public class EmployeePres {
 
     public EmployeePres(ServiceFactory serviceFactory){
         this.serviceFactory = serviceFactory;
+        stockC = new MainController();
     }
 
 
@@ -39,7 +45,8 @@ public class EmployeePres {
             System.out.println("Failed :"+getError(res));
             return false;
         }else{
-            setIdPassword(input);
+            setEmployeeProbs(input);
+            
             System.out.println("Login successed!!");
             dealWithActions();
             return true;
@@ -53,7 +60,7 @@ public class EmployeePres {
     private void dealWithActions() {
 
         while(hasLoggedIn){
-            Logs.logEmployeeActionsInstructions();
+            Logs.logEmployeeActionsInstructions(isStoreKeeper);
             Logs.print("Please choose an option :-");
             dealWithInput(Logs.getInput());
         }
@@ -92,12 +99,44 @@ public class EmployeePres {
             case "9":
                 logout();
                 break;
+            case "10":
+            case "11":
+            case "12":
+                if(isStoreKeeper){
+                    dealWithStoreKeeper(input);
+                }
+                break; 
             default:
                 Logs.print("invalid input");
         }
     }
 
     //============================================= Actions ==================================================
+
+    private void dealWithStoreKeeper(String input) {
+        try{
+
+            switch (input) {
+                case "10":
+                    stockC.addingCategoryAction();
+                    break;
+                case "11":
+                    stockC.addingProductAction();
+                    break;
+                case "12":
+                    stockC.addingItem(serviceFactory.getEmployeeStoreNumber(empId));
+                    break;
+            
+                default:
+                    Logs.print("invalid input");
+                    
+            }
+        }catch(Exception e){
+            System.out.print(e.getStackTrace());
+        }
+    }
+
+
 
     private void logout(){
         hasLoggedIn = false;
@@ -172,11 +211,13 @@ public class EmployeePres {
     }
 
     //recieve the response that contain Id and password , we have to set them and declare them 
-    private void setIdPassword(String res) {
+    private void setEmployeeProbs(String res) {
         hasLoggedIn=true;
         String[] params = extractIdAndPassword(res);
         this.empId=params[0];
         this.empPassword = params[1];
+        this.isStoreKeeper = serviceFactory.employeeIsStoreKeeperToday(empId);
+        storeNum = serviceFactory.getEmployeeStoreNumber(empId);
     }
 
     public static String[] extractIdAndPassword(String input) {

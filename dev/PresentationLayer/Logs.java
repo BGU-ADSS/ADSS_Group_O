@@ -27,7 +27,7 @@ public class Logs {
         System.out.println(" - to finish write: finish");
     }
 
-    public static void logEmployeeActionsInstructions() {
+    public static void logEmployeeActionsInstructions(boolean isStoreKeeper) {
         print("1. " + EmployeePres.SET_PASSWORD + " :to set a new Password");
         print("2. " + EmployeePres.ADD_CONSTRAINS + " : to add constrains.");
         print("3. " + EmployeePres.ADD_ROLE + " :to add role.");
@@ -37,6 +37,9 @@ public class Logs {
         print("7. " + EmployeePres.SET_NEW_BANK_ACCOUNT + " :to set new bank account");
         print("8. " + EmployeePres.PROFIE + " :to print profile info");
         print("9. " + EmployeePres.LOGOUT + " :to logout from the employee user.");
+        print("10. adding-category :to add new category");
+        print("11. adding-product :to add new product");
+        print("12. adding-item :to add new item");
     }
 
 

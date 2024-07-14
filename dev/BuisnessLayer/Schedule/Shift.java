@@ -187,4 +187,11 @@ public class Shift {
     public int getId(){
         return id;
     }
+    public boolean employeeIsStoreKeeperInShift(String empId) {
+        List<Employee> storeKeepers = workersInShift.get(empId);
+        for(int i=0 ; i<storeKeepers.size();i++){
+            if(storeKeepers.get(i).getID().equals(empId))return true;
+        }
+        return false;
+    }
 }
