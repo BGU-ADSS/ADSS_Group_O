@@ -304,11 +304,10 @@ public class MainController {
         } else if (kind.equals("sub category")) {
             System.out.println("Enter name: ");
             String name = reader.readLine();
-            System.out.println(productService.buildCategory(name));
             productService.buildCategory(name);
             System.out.println("Enter father name: ");
             String name2 = reader.readLine();
-            productService.getCategoryByName(name).setCategoryFather(productService.getCategoryByName(name2));
+            productService.setFatherCategory(productService.getCategoryByName(name).getCategoryID(),productService.getCategoryByName(name2).getCategoryID());
         } else {
             System.out.println("Invalid category kind entered, Try again");
         }
