@@ -11,7 +11,7 @@ public class presentationController {
     public presentationController(boolean withData){
         if(withData) {
             serviceFactory = new ServiceFactory(withData);
-            emPres = new EmployeePres(serviceFactory);
+            emPres = new EmployeePres(serviceFactory,withData);
             hrPres = new HRPres(serviceFactory);
         }
         else {

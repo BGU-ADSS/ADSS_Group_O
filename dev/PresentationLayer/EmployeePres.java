@@ -31,9 +31,9 @@ public class EmployeePres {
     public static final String PROFIE = "profile";
     public static final String LOGOUT = "logout";
 
-    public EmployeePres(ServiceFactory serviceFactory){
+    public EmployeePres(ServiceFactory serviceFactory,boolean withData){
         this.serviceFactory = serviceFactory;
-        stockC = new MainController();
+        stockC = new MainController();//when adding param for main controller you can change this line
     }
 
 
