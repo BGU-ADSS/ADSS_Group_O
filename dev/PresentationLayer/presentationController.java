@@ -56,6 +56,6 @@ public class presentationController {
             opt = Logs.getInput();
         }
         hrPres = new HRPres(serviceFactory);
-        emPres = new EmployeePres(serviceFactory);
+        emPres = new EmployeePres(serviceFactory,false);
     }
 }
