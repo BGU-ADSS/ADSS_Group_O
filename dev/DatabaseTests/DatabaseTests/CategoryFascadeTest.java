@@ -1,4 +1,4 @@
-package DatabaseTests;
+package DatabaseTests.BusinessLayer.Fascades;
 
 import BusinessLayer.Fascades.CategoryFascade;
 import BusinessLayer.Fascades.DiscountFacade;
