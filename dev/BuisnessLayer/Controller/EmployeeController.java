@@ -598,6 +598,7 @@ public class EmployeeController {
     }
 
     public int getEmployeeStoreNumber(String empId) {
+        checkStore(employeesStore.get(empId));
         return employeesStore.get(empId);
     }
 }

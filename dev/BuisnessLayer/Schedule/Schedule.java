@@ -324,10 +324,11 @@ public class Schedule {
     }
 
     public boolean workerIsStoreKeeperToday(String empId){
+        Logs.debug("we are here in schedule");
         Shift[] todayShifts = dayShifts.get(LocalDate.now());
 
         if(todayShifts==null || todayShifts[0]==null) return false;
-
+        Logs.debug("there are shifts today ");
         return todayShifts[0].employeeIsStoreKeeperInShift(empId);
     }
 }

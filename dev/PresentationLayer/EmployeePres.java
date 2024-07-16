@@ -102,7 +102,9 @@ public class EmployeePres {
             case "10":
             case "11":
             case "12":
+            Logs.debug("join 10,11,12");
                 if(isStoreKeeper){
+                    Logs.debug("is store keeper");
                     dealWithStoreKeeper(input);
                 }
                 break; 
