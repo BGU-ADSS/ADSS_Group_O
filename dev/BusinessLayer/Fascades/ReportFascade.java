@@ -38,7 +38,7 @@ public class ReportFascade {
         reports.put(report.getID(), report);
     }
 
-    public String buildReport(List<Category> categories) throws Exception {
+    public String buildReport(List<Category> categories,int storeId) throws Exception {
         String ans = "";
         if (categories == null) {
             throw new Exception("Categories are null");
@@ -47,12 +47,12 @@ public class ReportFascade {
         List<Product> productNeeds = new LinkedList<>();
         for (Category category : categories) {
             try {
-                List<Product> products = productFacade.getProductsByCategory(category.getCategoryName());
+                List<Product> products = productFacade.getProductsByCategory(category.getCategoryName(),storeId);
                 if (products.size() == 0) {
                     return "No report of given categories";
                 }
                 for (Product product : products) {
-                    if (!productFacade.checkMinimumStock(product.getMKT())) {
+                    if (!productFacade.checkMinimumStock(product.getMKT(),storeId)) {
                         ReportProductDTO rp = new ReportProductDTO(counterID, product.getMKT());
                         reportProductDAO.insert(rp);
                         productNeeds.add(product);
@@ -64,7 +64,7 @@ public class ReportFascade {
                             ItemReportDTO rp = new ItemReportDTO(counterID, item.getItemID());
                             ItemReportDAO.insert(rp);
                             itemConditions.put(item, item.getCondition());
-                            productFacade.removeItem(item.getItemID(), true);
+                            productFacade.removeItem(item.getItemID(), true,storeId);
                         }
                     }
                 }
@@ -74,7 +74,7 @@ public class ReportFascade {
                             ItemReportDTO rp = new ItemReportDTO(counterID, item.getItemID());
                             ItemReportDAO.insert(rp);
                             itemConditions.put(item, item.getCondition());
-                            productFacade.removeItem(item.getItemID(), false);
+                            productFacade.removeItem(item.getItemID(), false,storeId);
                         }
                     }
                 }
@@ -101,7 +101,7 @@ public class ReportFascade {
         return ans;
     }
 
-    public String buildReport(Category category) throws Exception {
+    public String buildReport(Category category,int storeId) throws Exception {
         String ans = "";
         HashMap<Item, ItemCondition> itemConditions = new HashMap<>();
         List<Item> itemInStore = new LinkedList<>();
@@ -114,14 +114,14 @@ public class ReportFascade {
             throw new Exception("Category is null");
         }
         try {
-            List<Product> products = productFacade.getProductsByCategory(category.getCategoryName());
+            List<Product> products = productFacade.getProductsByCategory(category.getCategoryName(),storeId);
             if (products.size() == 0) {
 
                 return "No report of category";
             }
             for (Product product : products) {
 
-                if (!productFacade.checkMinimumStock(product.getMKT())) {
+                if (!productFacade.checkMinimumStock(product.getMKT(),storeId)) {
                     ReportProductDTO rp = new ReportProductDTO(counterID, product.getMKT());
                     reportProductDAO.insert(rp);
                     productNeeds.add(product);
@@ -180,15 +180,19 @@ public class ReportFascade {
         return ans;
     }
 
-    public String buildReportShortages() throws Exception {
+    public String buildReportShortages(int storeId) throws Exception {
         String ans = "";
         if (productFacade.getProducts() == null || productFacade.getProducts().size() == 0) {
             throw new Exception("there are no products yet");
         }
+        if(productFacade.getProducts().get(storeId)==null)
+        {
+            throw new Exception("storeId invalid");
+        }
         HashMap<Item, ItemCondition> itemConditions = new HashMap<>();
         List<Product> productNeeds = new LinkedList<>();
-        for (Product product : productFacade.getProducts().values()) {
-            if (!productFacade.checkMinimumStock(product.getMKT())) {
+        for (Product product : productFacade.getProducts().get(storeId).values()) {
+            if (!productFacade.checkMinimumStock(product.getMKT(),storeId)) {
                 ReportProductDTO rp = new ReportProductDTO(counterID, product.getMKT());
                 reportProductDAO.insert(rp);
                 productNeeds.add(product);
@@ -213,10 +217,20 @@ public class ReportFascade {
         HashMap<Integer, List<Product>> rp = new HashMap<>();
         for (ReportProductDTO r : reportProductDAO.getAllReportProducts()) {
             if (rp.containsKey(r.getReportID())) {
-                rp.get(r.getReportID()).add(productFacade.getProducts().get(r.getProductID()));
+                for (HashMap<Integer, Product> reportProduct : productFacade.getProducts().values()) {
+                    if(reportProduct.get(r.getProductID()) != null)
+                    {
+                        rp.get(r.getReportID()).add(reportProduct.get(r.getProductID()));
+                    }
+                }
             } else {
                 List<Product> prod = new LinkedList<>();
-                prod.add(productFacade.getProducts().get(r.getProductID()));
+                for (HashMap<Integer, Product> reportProduct : productFacade.getProducts().values()) {
+                    if(reportProduct.get(r.getProductID()) != null)
+                    {
+                        prod.add(reportProduct.get(r.getProductID()));
+                    }
+                }
                 rp.put(r.getReportID(), prod);
             }
         }

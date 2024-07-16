@@ -14,29 +14,39 @@ public class ReportService {
         this.productFacade =  productFacade;
         this.reportFacade = reportFascade;
     }
-    public String buildReport(List<Category> categories){
+    public String buildReport(List<Category> categories ,int storeId){
         try {
-            String ans = reportFacade.buildReport(categories);
+            String ans = reportFacade.buildReport(categories,storeId);
             return ans;
         }
         catch(Exception e){
             return e.getMessage();
         }
     }
-    public String buildReport(Category category) throws Exception {
+//    public String buildReport(List<Category> categories){
+//        try {
+//
+//            String ans = reportFacade.buildReport(categories,storeId);
+//            return ans;
+//        }
+//        catch(Exception e){
+//            return e.getMessage();
+//        }
+//    }
+    public String buildReport(Category category,int storeId) throws Exception {
 
         try {
-            String ans = reportFacade.buildReport(category);
+            String ans = reportFacade.buildReport(category, storeId);
             return ans;
         }
         catch(Exception e){
             return e.getMessage();
         }
     }
-    public  String buildShoratgeReport() throws  Exception{
+    public  String buildShoratgeReport(int storeId) throws  Exception{
         try
         {
-            return reportFacade.buildReportShortages();
+            return reportFacade.buildReportShortages(storeId);
         }
         catch (Exception e)
         {

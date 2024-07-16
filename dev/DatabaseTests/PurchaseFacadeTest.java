@@ -1,5 +1,9 @@
-package BusinessLayer.Fascades;
+package DatabaseTests;
 
+import BusinessLayer.Fascades.CategoryFascade;
+import BusinessLayer.Fascades.DiscountFacade;
+import BusinessLayer.Fascades.ProductFacade;
+import BusinessLayer.Fascades.PurchaseFacade;
 import BusinessLayer.Objects.Purchase;
 import DataAccessLayer.Categories.CategoryDAO;
 import static org.junit.Assert.*;
@@ -84,22 +88,22 @@ class PurchaseFacadeTest {
         categoryFascade.buildCategory("Electronics");
 
         productFacade.buildProduct("Laptop", "Dell",4000,15,0,categoryFascade.getCategoryByName("Electronics"),"near the door",
-                2,2,1);
+                2,2);
         LocalDate expirationDate = LocalDate.of(2025, 12, 31);
         Date ex=Date.valueOf(expirationDate);
-        productFacade.buildItem(1,expirationDate,false,1);
+        productFacade.buildItem(1,expirationDate,false);
 
 
         purchaseFacade.buildPurchase(LocalDate.of(2023,1,1),1);
         Purchase purchase=purchaseFacade.getPurchase(1);
-        purchaseFacade.addItem(1,1,1);
+        purchaseFacade.addItem(1,1);
         String query = "SELECT * FROM Purchase WHERE purchaseID = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, 1);
             try (ResultSet rs = pstmt.executeQuery()) {
                 assertTrue(rs.next());
                 assertEquals(purchase.getPurchaseID(), rs.getInt("purchaseID"));
-                assertEquals(productFacade.getProducts().get(1).get(1).getPriceAfterDiscount(), rs.getInt("total"));
+                assertEquals(productFacade.getProducts().get(1).getPriceAfterDiscount(), rs.getInt("total"));
                 assertEquals(Date.valueOf(purchase.getPurchaseDate()),rs.getDate("purchaseDate"));
             }
         } catch (Exception e) {

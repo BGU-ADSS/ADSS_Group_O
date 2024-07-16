@@ -1,4 +1,4 @@
-package ServiceLayer;
+package Tests.ServiceLayer;
 
 import static org.junit.Assert.*;
 import BusinessLayer.Fascades.CategoryFascade;
@@ -7,6 +7,8 @@ import BusinessLayer.Fascades.ProductFacade;
 import BusinessLayer.Fascades.ReportFascade;
 
 
+import ServiceLayer.ProductService;
+import ServiceLayer.ReportService;
 import org.junit.Assert;
 import org.junit.Before;
 
@@ -31,7 +33,7 @@ class ReportServiceTest {
     void buildReport() throws Exception {
         productService = new ProductService(productFacade, discountFacade, categoryFascade);
         productService.buildCategory("Cola");
-        String res = reportService.buildReport(productService.getCategoryByName("Cola"));
+        String res = reportService.buildReport(productService.getCategoryByName("Cola"),1);
         assertEquals("No report of category", res);
     }
 

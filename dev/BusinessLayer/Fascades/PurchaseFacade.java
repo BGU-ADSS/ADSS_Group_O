@@ -65,13 +65,17 @@ public class PurchaseFacade {
         return purchase.getTotal();
 
     }
-    public void addItem(int purchaseId, int prodID) throws Exception{
+    public void addItem(int purchaseId, int prodID,int storeId) throws Exception{
         Purchase purchase=purchases.get(purchaseId);
         if(purchase==null)
         {
             throw new Exception("no purchase with this id");
         }
-        for (Product p : productFacade.getProducts().values()) {
+        if(productFacade.getProducts().get(storeId)==null)
+        {
+            throw new Exception("storeId invalid");
+        }
+        for (Product p : productFacade.getProducts().get(storeId).values()) {
             if(p.getMKT() == prodID){
                 int itemID = productFacade.getFirstItemByProductID(prodID);
                 Item t = null;

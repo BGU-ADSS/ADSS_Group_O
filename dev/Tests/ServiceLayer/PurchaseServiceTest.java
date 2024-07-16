@@ -1,4 +1,4 @@
-package ServiceLayer;
+package Tests.ServiceLayer;
 
 import BusinessLayer.Fascades.CategoryFascade;
 import BusinessLayer.Fascades.DiscountFacade;
@@ -11,11 +11,14 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import static org.junit.Assert.*;
 
+import ServiceLayer.DiscountService;
+import ServiceLayer.ProductService;
+import ServiceLayer.PurchaseService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 class PurchaseServiceTest {
-    private  PurchaseService purchaseService;
+    private PurchaseService purchaseService;
     private static ProductFacade productFacade;
     private static PurchaseFacade purchaseFacade;
 
@@ -54,17 +57,17 @@ class PurchaseServiceTest {
         productService.buildCategory("Cola");
         productService.buildProduct("cola zero", "adam", 10, 2,
                 5, productService.getCategoryByName("Cola"),
-                "Found in the Top", 3, 7);
+                "Found in the Top", 3, 7,1);
         productService.buildProduct("fanta", "adam", 10, 2,
                 5, productService.getCategoryByName("Cola"),
-                "Found in the Top", 3, 7);
+                "Found in the Top", 3, 7,1);
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate date = LocalDate.parse("12/12/2025", dateFormat);
         productService.buildItem(1, date,true,0);
         productService.buildItem(2, date,true,0);
 
-        purchaseService.addItem(1, 1);
-        purchaseService.addItem(1, 2);
+        purchaseService.addItem(1, 1,1);
+        purchaseService.addItem(1, 2,1);
         String res = purchaseService.calculateTotal(1);
 
         assertEquals("20.0", res);
@@ -77,11 +80,11 @@ class PurchaseServiceTest {
         productService.buildCategory("Cola");
         productService.buildProduct("cola zero", "adam", 10, 2,
                 5, productService.getCategoryByName("Cola"),
-                "Found in the Top", 3, 7);
+                "Found in the Top", 3, 7,1);
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate date = LocalDate.parse("12/12/2025", dateFormat);
-        productService.buildItem(1, date,true,0);
-        String res = purchaseService.addItem(1, 1);
+        productService.buildItem(1, date,true,1);
+        String res = purchaseService.addItem(1, 1,1);
 
         assertEquals("added item", res);
     }

@@ -32,9 +32,9 @@ public class ProductService {
         return categoryFascade.getCategories();
     }
 
-    public String removeItem(int itemID, boolean inStore) throws Exception {
+    public String removeItem(int itemID, boolean inStore ,int storeId) throws Exception {
         try {
-            productFascade.removeItem(itemID, inStore);
+            productFascade.removeItem(itemID, inStore, storeId);
             if(inStore) {
                 return "Item removed from store successfully";
             }
@@ -44,27 +44,27 @@ public class ProductService {
         }
     }
 
-    public String addToStorage(int itemID) throws Exception {
+    public String addToStorage(int itemID ,int storeId) throws Exception {
         try {
-            productFascade.addToStorage(itemID);
+            productFascade.addToStorage(itemID,storeId);
             return "Item added to storage successfully";
         } catch (Exception e) {
             return e.getMessage();
         }
     }
 
-    public String addToStore(int itemID) throws Exception {
+    public String addToStore(int itemID,int storeId) throws Exception {
         try {
-            productFascade.addToStore(itemID);
+            productFascade.addToStore(itemID,storeId);
             return "Item added to store successfully";
         } catch (Exception e) {
             return e.getMessage();
         }
     }
 
-    public List<Product> getProductsByCategory(String categoryName) throws Exception {
+    public List<Product> getProductsByCategory(String categoryName ,int storeId) throws Exception {
         try {
-            List<Product> products = productFascade.getProductsByCategory(categoryName);
+            List<Product> products = productFascade.getProductsByCategory(categoryName,storeId);
 
             return products;
         } catch (Exception e) {
@@ -73,9 +73,9 @@ public class ProductService {
         }
     }
 
-    public String checkMinimumStock(int productId) throws Exception {
+    public String checkMinimumStock(int productId,int storeId) throws Exception {
         try {
-            boolean isMin = productFascade.checkMinimumStock(productId);
+            boolean isMin = productFascade.checkMinimumStock(productId,storeId);
             if (isMin) {
                 return "true";
             }
@@ -85,9 +85,9 @@ public class ProductService {
         }
     }
 
-    public String updateStock(int productId, int storeQuantity, int storageQuantity) throws Exception {
+    public String updateStock(int productId, int storeQuantity, int storageQuantity,int storeId) throws Exception {
         try {
-            productFascade.updateStock(productId, storeQuantity, storageQuantity);
+            productFascade.updateStock(productId, storeQuantity, storageQuantity,storeId);
             return "Stock updated successfully";
         } catch (Exception e) {
             return e.getMessage();
@@ -129,18 +129,18 @@ public class ProductService {
             throw new Exception(e.getMessage());
         }
     }
-    public int getProductIDByName(String name) throws Exception {
+    public int getProductIDByName(String name,int storeId) throws Exception {
         try {
-            int p = productFascade.getProductIDByName(name);
+            int p = productFascade.getProductIDByName(name,storeId);
             return p;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
-    public String buildProduct(String productName, String companyManufacturer, int price, int size, int minimumQuantity, Category c, String description,int section,int shelf) throws Exception {
+    public String buildProduct(String productName, String companyManufacturer, int price, int size, int minimumQuantity, Category c, String description,int section,int shelf,int storeId) throws Exception {
         try {
-            productFascade.buildProduct(productName, companyManufacturer, price, size, minimumQuantity, c, description, section, shelf);
+            productFascade.buildProduct(productName, companyManufacturer, price, size, minimumQuantity, c, description, section, shelf,storeId);
             return "Product built successfully";
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -148,7 +148,7 @@ public class ProductService {
     }
     public String buildItem(int prodID, LocalDate expirationDate, boolean inStore,int storeId) throws Exception{
         try {
-            productFascade.buildItem(prodID, expirationDate, inStore);
+            productFascade.buildItem(prodID, expirationDate, inStore,storeId);
 //            productFascade.addToStorage(productFascade.getFirstItemByProductID(prodID));
             return "Item built successfully";
         } catch (Exception e) {

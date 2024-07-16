@@ -41,16 +41,18 @@ public class CategoryFascade {
     {
         return categories;
     }
-    public void applyCategoryDiscount(Category category, double percent, LocalDate startDate, LocalDate endDate){
+    public void applyCategoryDiscount(Category category, double percent, LocalDate startDate, LocalDate endDate ,int storeId){
         try{
             Discount d = discountFacade.builedCategoryDiscount(percent, startDate, endDate);
-            HashMap<Integer, Product> products = productFascade.getProducts();
-            for (Product product : products.values()){
-                productFascade.applyProductDiscount(product.getMKT(),d);
-                productFascade.getProductDAO().getProductById(product.getMKT()).setDiscountID(d.getDiscountID());
-                Product p1=productFascade.getProducts().get(product.getMKT());
-                ProductDTO p2 = new ProductDTO(p1.getMKT(),p1.getProductName(), p1.getCompanyManufacturer(), p1.getCategory().getCategoryID(),p1.getPriceBeforeDiscount(),p1.getPriceBeforeDiscount(), p1.getSize(), p1.getMinimumQuantity(),p1.getStoreQuantity(),p1.getStorageQuantity(),p1.getLocation().getId(),p1.getDiscount().getDiscountID());
-                productFascade.getProductDAO().update(p2);
+            HashMap<Integer,HashMap<Integer, Product>> products = productFascade.getProducts();
+            if(products.get(storeId) != null) {
+                for (Product product : products.get(storeId).values()) {
+                    productFascade.applyProductDiscount(product.getMKT(),storeId,d);
+                    productFascade.getProductDAO().getProductById(product.getMKT()).setDiscountID(d.getDiscountID());
+                    Product p1 = productFascade.getProducts().get(storeId).get(product.getMKT());
+                    ProductDTO p2 = new ProductDTO(p1.getMKT(), p1.getProductName(), p1.getCompanyManufacturer(), p1.getCategory().getCategoryID(), p1.getPriceBeforeDiscount(), p1.getPriceBeforeDiscount(), p1.getSize(), p1.getMinimumQuantity(), p1.getStoreQuantity(), p1.getStorageQuantity(), p1.getLocation().getId(), p1.getDiscount().getDiscountID(), p1.getStoreId());
+                    productFascade.getProductDAO().update(p2);
+                }
             }
         }
         catch (Exception e){

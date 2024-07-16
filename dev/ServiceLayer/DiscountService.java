@@ -39,18 +39,18 @@ public class DiscountService {
             return e.getMessage();
         }
     }
-    public String applyProductDiscount(int productID, Discount discount){
+    public String applyProductDiscount(int productID, Discount discount ,int storeId){
         try {
-            productFacade.applyProductDiscount(productID, discount);
+            productFacade.applyProductDiscount(productID, storeId,discount);
             return "Applied product discount";
         }
         catch (Exception e){
             return e.getMessage();
         }
     }
-    public String applyCategoryDiscount(Category category, double percent, LocalDate startDate, LocalDate endDate){
+    public String applyCategoryDiscount(Category category, double percent, LocalDate startDate, LocalDate endDate,int storeId){
         try {
-            categoryFascade.applyCategoryDiscount(category,percent, startDate, endDate);
+            categoryFascade.applyCategoryDiscount(category,percent, startDate, endDate,storeId);
             return "Applied category discount";
         }
         catch (Exception e){

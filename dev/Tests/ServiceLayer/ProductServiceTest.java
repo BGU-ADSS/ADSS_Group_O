@@ -1,4 +1,4 @@
-package ServiceLayer;
+package Tests.ServiceLayer;
 
 import BusinessLayer.Fascades.CategoryFascade;
 import BusinessLayer.Fascades.DiscountFacade;
@@ -8,6 +8,7 @@ import BusinessLayer.Objects.Item;
 import BusinessLayer.Objects.Product;
 import static org.junit.Assert.*;
 
+import ServiceLayer.ProductService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,9 +35,9 @@ class ProductServiceTest {
         try {
             // Set up initial data
             productService.buildCategory("Electronics");
-            productService.buildProduct("iPhone", "Apple", 5000, 10, 1, productService.getCategoryByName("Electronics"), "Test1 Location Description", 1, 2);
-            productService.buildProduct("TV", "Samsung", 2000, 20, 1, productService.getCategoryByName("Electronics"), "Test2 Location Description", 1, 2);
-            productService.buildItem(1, LocalDate.of(2025, 12, 31), true,0);
+            productService.buildProduct("iPhone", "Apple", 5000, 10, 1, productService.getCategoryByName("Electronics"), "Test1 Location Description", 1, 2,1);
+            productService.buildProduct("TV", "Samsung", 2000, 20, 1, productService.getCategoryByName("Electronics"), "Test2 Location Description", 1, 2,1);
+            productService.buildItem(1, LocalDate.of(2025, 12, 31), true,1);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -71,7 +72,7 @@ class ProductServiceTest {
         // Act
         String result = "";
         try {
-            result = productService.buildProduct("Laptop", "Dell", 1000, 15, 5, productService.getCategoryByName("Electronics"), "High-end laptop", 1, 1);
+            result = productService.buildProduct("Laptop", "Dell", 1000, 15, 5, productService.getCategoryByName("Electronics"), "High-end laptop", 1, 1,1);
         } catch (Exception e) {
             fail("Exception should not be thrown: " + e.getMessage());
         }
@@ -88,7 +89,7 @@ class ProductServiceTest {
         // Act
         String result = "";
         try {
-            result = productService.buildItem(productID, expirationDate, true,0);
+            result = productService.buildItem(productID, expirationDate, true,1);
         } catch (Exception e) {
             fail("Exception should not be thrown: " + e.getMessage());
         }
@@ -106,7 +107,7 @@ class ProductServiceTest {
 
         // Act & Assert
         try {
-            String res= productService.removeItem(itemID, inStore);
+            String res= productService.removeItem(itemID, inStore,1);
             System.out.println(res);
             assertEquals("item doesnt exist", res);
         }
@@ -124,7 +125,7 @@ catch (Exception e)
 
         // Act
         try {
-            String result = productService.checkMinimumStock(productID);
+            String result = productService.checkMinimumStock(productID,1);
             // Assert
             assertEquals("false", result);
         }
@@ -139,7 +140,7 @@ catch (Exception e){System.out.println(e.getMessage());}
         int newStock = 50;
         try {
             // Act
-            String result = productService.updateStock(productID, newStock, newStock);
+            String result = productService.updateStock(productID, newStock, newStock,1);
 
             // Assert
             assertEquals("Provided product doesn't have items yet", result);
