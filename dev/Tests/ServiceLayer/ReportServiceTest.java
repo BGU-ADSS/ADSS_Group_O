@@ -1,4 +1,4 @@
-package Tests.ServiceLayer;
+package ServiceLayer;
 
 import static org.junit.Assert.*;
 import BusinessLayer.Fascades.CategoryFascade;

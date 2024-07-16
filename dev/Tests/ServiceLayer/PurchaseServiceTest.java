@@ -1,4 +1,4 @@
-package Tests.ServiceLayer;
+package ServiceLayer;
 
 import BusinessLayer.Fascades.CategoryFascade;
 import BusinessLayer.Fascades.DiscountFacade;

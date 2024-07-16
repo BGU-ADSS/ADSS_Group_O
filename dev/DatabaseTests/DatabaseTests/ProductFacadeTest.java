@@ -86,7 +86,7 @@ class ProductFacadeTest {
                 4,4);
         LocalDate expirationDate = LocalDate.of(2025, 12, 31);
         Date ex=Date.valueOf(expirationDate);
-        productFacade.buildItem(4,expirationDate,false);
+        productFacade.buildItem(4,expirationDate,false,0);
         productFacade.removeItem(3,false);
         // Verify the item is no longer in the database using an SQL query
         String query = "SELECT * FROM Item WHERE itemID = ?";
