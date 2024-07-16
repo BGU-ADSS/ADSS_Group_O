@@ -115,7 +115,7 @@ public class EmployeePres {
 
     private void dealWithStoreKeeper(String input) {
         try{
-
+            Logs.debug("enter 10");
             switch (input) {
                 case "10":
                     stockC.addingCategoryAction();

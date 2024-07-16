@@ -16,7 +16,7 @@ public class CategoryDAO {
     private static CategoryDAO instance = new CategoryDAO();
     protected Connection connection(){
         String path = Paths.get("").toAbsolutePath().toString();
-        String _connectionString = "jdbc:sqlite:" + path + "\\StockData.db";
+        String _connectionString = "jdbc:sqlite:C:\\Users\\bhaah\\ADSS_Group_O\\dev\\StockData.db";
 
         Connection connection=null;
         try {

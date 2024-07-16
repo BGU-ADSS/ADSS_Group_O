@@ -19,7 +19,8 @@ public class ItemDAO {
     }
     protected Connection connection2(){
         String path = Paths.get("").toAbsolutePath().toString() ;
-        String _connectionString = "jdbc:sqlite:" + path+"\\StockData.db";
+        String _connectionString = "jdbc:sqlite:dev\\StockData.db";
+
         Connection connection=null;
         try {
             // Load the SQLite JDBC driver
