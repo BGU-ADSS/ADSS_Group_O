@@ -1,11 +1,7 @@
-package DatabaseTests;
+package BusinessLayer.Fascades;
 
 import static org.junit.Assert.*;
 
-import BusinessLayer.Fascades.CategoryFascade;
-import BusinessLayer.Fascades.DiscountFacade;
-import BusinessLayer.Fascades.ProductFacade;
-import BusinessLayer.Fascades.ReportFascade;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -94,9 +90,9 @@ class ReportFascadeTest {
         try {
             categoryFascade.buildCategory("Electronics");
             productFacade.buildProduct("Laptop","Dell",4000,15,0,
-                    categoryFascade.getCategoryByName("Electronics"),"Near the window",1,1);
-            productFacade.buildItem(1, LocalDate.of(2025,1,1),true);
-            reportFascade.buildReport(categoryFascade.getCategoryByName("Electronics"));
+                    categoryFascade.getCategoryByName("Electronics"),"Near the window",1,1,1);
+            productFacade.buildItem(1, LocalDate.of(2025,1,1),true,1);
+            reportFascade.buildReport(categoryFascade.getCategoryByName("Electronics"),1);
             String query = "SELECT * FROM Report WHERE reportID = ?";
             try (PreparedStatement pstmt = connection.prepareStatement(query)) {
                 pstmt.setInt(1, 0);

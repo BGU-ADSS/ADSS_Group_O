@@ -1,4 +1,4 @@
-package DatabaseTests;
+package DatabaseTests.BusinessLayer.Fascades;
 
 import BusinessLayer.Fascades.CategoryFascade;
 import BusinessLayer.Fascades.DiscountFacade;
@@ -91,7 +91,7 @@ class DiscountFacadeTest {
         LocalDate end = LocalDate.of(2026, 12, 25);
         categoryFascade.buildCategory("Milk");
         productFacade.buildProduct("Milk 3 Percent", "Tnova", 10, 3, 0,
-                categoryFascade.getCategoryByName("Milk"), "near the window", 2, 2);
+                categoryFascade.getCategoryByName("Milk"), "near the window", 2, 2,1);
         discountFacade.builedProductDiscount(93, start, end);
 
         String query = "SELECT * FROM Discount WHERE percent = ?";

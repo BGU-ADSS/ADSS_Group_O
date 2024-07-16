@@ -1,4 +1,4 @@
-package DatabaseTests;
+package DatabaseTests.BusinessLayer.Fascades;
 
 import BusinessLayer.Fascades.CategoryFascade;
 import BusinessLayer.Fascades.DiscountFacade;
@@ -83,11 +83,11 @@ class ProductFacadeTest {
     @Test
     void removeItem() throws Exception{
         productFacade.buildProduct("Laptop", "Dell",4000,15,0,categoryFascade.getCategoryByName("Electronics"),"near the door",
-                4,4);
+                4,4,1);
         LocalDate expirationDate = LocalDate.of(2025, 12, 31);
         Date ex=Date.valueOf(expirationDate);
-        productFacade.buildItem(4,expirationDate,false);
-        productFacade.removeItem(3,false);
+        productFacade.buildItem(4,expirationDate,false,1);
+        productFacade.removeItem(3,false,1);
         // Verify the item is no longer in the database using an SQL query
         String query = "SELECT * FROM Item WHERE itemID = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -105,7 +105,7 @@ class ProductFacadeTest {
     void buildProduct() throws Exception{
         // Build a product using the facade
         productFacade.buildProduct("Laptop", "Dell",4000,15,0,categoryFascade.getCategoryByName("Electronics"),"near the door",
-                1,1);
+                1,1,1);
 
         // Verify the product is in the database using an SQL query
         String query = "SELECT * FROM Product WHERE MKT = ?";
@@ -131,10 +131,10 @@ class ProductFacadeTest {
     @Test
     void buildItem() throws Exception{
         productFacade.buildProduct("Laptop", "Dell",4000,15,0,categoryFascade.getCategoryByName("Electronics"),"near the door",
-                2,2);
+                2,2,1);
         LocalDate expirationDate = LocalDate.of(2025, 12, 31);
         Date ex=Date.valueOf(expirationDate);
-        productFacade.buildItem(1,expirationDate,false);
+        productFacade.buildItem(1,expirationDate,false,1);
         // Verify the product is in the database using an SQL query
         String query = "SELECT * FROM Item WHERE itemID = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -142,7 +142,7 @@ class ProductFacadeTest {
             try (ResultSet rs = pstmt.executeQuery()) {
                 assertTrue(rs.next());
                 assertEquals(1, rs.getInt("itemID"));
-                assertEquals(productFacade.getProductIDByName("Laptop"), rs.getInt("productID"));
+                assertEquals(productFacade.getProductIDByName("Laptop",1), rs.getInt("productID"));
                 assertEquals(ex, rs.getDate("expirationDate"));
             }
         } catch (Exception e) {
@@ -153,11 +153,11 @@ class ProductFacadeTest {
     @Test
     void addToStore() throws Exception{
         productFacade.buildProduct("Smartphone", "Apple",4000,15,0,categoryFascade.getCategoryByName("Electronics"),"near the door",
-                3,3);
+                3,3,1);
         LocalDate expirationDate = LocalDate.of(2025, 12, 31);
         Date ex=Date.valueOf(expirationDate);
-        productFacade.buildItem(3,expirationDate,false);
-        productFacade.addToStore(2);
+        productFacade.buildItem(3,expirationDate,false,1);
+        productFacade.addToStore(2,1);
         // Verify the product is in the database using an SQL query
         String query = "SELECT * FROM Product WHERE MKT = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
