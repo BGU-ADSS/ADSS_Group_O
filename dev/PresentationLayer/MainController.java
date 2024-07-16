@@ -30,7 +30,7 @@ public class MainController {
     private ReportFascade reportFascade;
     private int itemCounter;
 
-    public MainController() {
+    public MainController(boolean withData) {
         productFacade = new ProductFacade();
         discountFacade = new DiscountFacade();
         purchaseFacade = new PurchaseFacade(productFacade, discountFacade);
@@ -41,11 +41,21 @@ public class MainController {
         reportService = new ReportService(productFacade, reportFascade);
         purchaseService = new PurchaseService(productFacade, discountFacade, purchaseFacade);
         itemCounter = 0;
-        try {
-            loadData();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        if(withData){
+            try {
+                loadData();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
         }
+        else{
+            try {
+                deleteData();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
 
     }
 
@@ -58,9 +68,16 @@ public class MainController {
         reportFascade.loadData();
 
     }
+    public void deleteData() throws SQLException {
+        categoryFascade.deleteData();
+        discountFacade.deleteData();
+        productFacade.deleteData();
+        purchaseFacade.deleteData();
+        reportFascade.deleteData();
+
+    }
 
     public void start() throws Exception {
-
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         int input = -1;
         if (LocalDate.now().getDayOfWeek().equals(0)) {
