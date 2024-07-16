@@ -1,4 +1,4 @@
-package BusinessLayer.Fascades;
+package DatabaseTests;
 
 import static org.junit.Assert.*;
 
@@ -6,6 +6,11 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import BusinessLayer.Fascades.CategoryFascade;
+import BusinessLayer.Fascades.DiscountFacade;
+import BusinessLayer.Fascades.ProductFacade;
+import BusinessLayer.Fascades.ReportFascade;
 
 import java.nio.file.Paths;
 import java.sql.*;

@@ -1,5 +1,9 @@
-package BusinessLayer.Fascades;
+package DatabaseTests;
 
+import BusinessLayer.Fascades.CategoryFascade;
+import BusinessLayer.Fascades.DiscountFacade;
+import BusinessLayer.Fascades.ProductFacade;
+import BusinessLayer.Fascades.PurchaseFacade;
 import BusinessLayer.Objects.Purchase;
 import DataAccessLayer.Categories.CategoryDAO;
 import static org.junit.Assert.*;
