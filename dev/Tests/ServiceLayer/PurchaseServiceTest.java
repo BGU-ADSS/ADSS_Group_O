@@ -60,8 +60,8 @@ class PurchaseServiceTest {
                 "Found in the Top", 3, 7);
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate date = LocalDate.parse("12/12/2025", dateFormat);
-        productService.buildItem(1, date,true);
-        productService.buildItem(2, date,true);
+        productService.buildItem(1, date,true,0);
+        productService.buildItem(2, date,true,0);
 
         purchaseService.addItem(1, 1);
         purchaseService.addItem(1, 2);
@@ -80,7 +80,7 @@ class PurchaseServiceTest {
                 "Found in the Top", 3, 7);
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate date = LocalDate.parse("12/12/2025", dateFormat);
-        productService.buildItem(1, date,true);
+        productService.buildItem(1, date,true,0);
         String res = purchaseService.addItem(1, 1);
 
         assertEquals("added item", res);

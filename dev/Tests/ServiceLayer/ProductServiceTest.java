@@ -36,7 +36,7 @@ class ProductServiceTest {
             productService.buildCategory("Electronics");
             productService.buildProduct("iPhone", "Apple", 5000, 10, 1, productService.getCategoryByName("Electronics"), "Test1 Location Description", 1, 2);
             productService.buildProduct("TV", "Samsung", 2000, 20, 1, productService.getCategoryByName("Electronics"), "Test2 Location Description", 1, 2);
-            productService.buildItem(1, LocalDate.of(2025, 12, 31), true);
+            productService.buildItem(1, LocalDate.of(2025, 12, 31), true,0);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -88,7 +88,7 @@ class ProductServiceTest {
         // Act
         String result = "";
         try {
-            result = productService.buildItem(productID, expirationDate, true);
+            result = productService.buildItem(productID, expirationDate, true,0);
         } catch (Exception e) {
             fail("Exception should not be thrown: " + e.getMessage());
         }
