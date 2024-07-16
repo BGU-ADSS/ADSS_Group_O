@@ -17,10 +17,11 @@ public class ProductDTO {
     private int storageQuantity;
     private int locationID;
     private int discountID;
+    private int storeId;
     public ProductDTO(int MKT, String name, String companyManufacturer, int categoryID,
                       double priceBeforeDiscount, double priceAfterDiscount, int size,
                       int minimumQuantity, int storeQuantity, int storageQuantity,
-                      int locationID, int discountID){
+                      int locationID, int discountID,int storeId){
         this.MKT = MKT;
         this.name = name;
         this.companyManufacturer = companyManufacturer;
@@ -33,6 +34,7 @@ public class ProductDTO {
         this.storageQuantity = storageQuantity;
         this.locationID = locationID;
         this.discountID = discountID;
+        this.storeId=storeId;
     }
     public int getMKT(){
         return MKT;
@@ -70,7 +72,10 @@ public class ProductDTO {
     public double getPriceBeforeDiscount(){
         return priceBeforeDiscount;
     }
-
+    public int getStoreId()
+    {
+        return  storeId;
+    }
     public void setCategoryID(int categoryID) {
         this.categoryID = categoryID;
     }

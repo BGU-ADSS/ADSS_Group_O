@@ -29,7 +29,7 @@ public class HRservice {
     }
 
     public String getConstrains(String Id) {
-        Response res = new Response();
+        DTOs.Response res = new DTOs.Response();
         try {
             List<Shift> value = empController.getAvailableDaysForEmployee(Id);
             String str = "";
@@ -39,132 +39,132 @@ public class HRservice {
             res.setReturnValue(str);
 
         } catch (Exception ex) {
-            res = new Response(ex.getMessage(), null);
+            res = new DTOs.Response(ex.getMessage(), null);
         }
         return gson.toJson(res);
     }
 
     public String setShift(LocalDate localDate, ShiftTime shiftTime, String emplId, Role role) {
-        Response res;
+        DTOs.Response res;
         try {
             empController.setEmployeeInShift(localDate, shiftTime, emplId, role);
-            res = new Response(null,"shift successfully added to the list");
+            res = new DTOs.Response(null,"shift successfully added to the list");
         } catch (Exception ex) {
-            res = new Response(ex.getMessage(), null);
+            res = new DTOs.Response(ex.getMessage(), null);
         }
         return gson.toJson(res);
     }
 
     public String addEmployee(String emplId, String emplName, String bankAccount, int mounthSalary, Role[] roles,
             LocalDate startDate, LocalDate endDate, int storeNum) {
-        Response res;
+        DTOs.Response res;
         try {
             
             LinkedList<Role> rolesToSend = new LinkedList<>();
             for (Role role : roles) rolesToSend.add(role);
             empController.addEmployee(new Employee(emplId, emplName, bankAccount, mounthSalary, mounthSalary,
                     rolesToSend, startDate, endDate, storeNum));
-            res = new Response(null,"employee added successfully");
+            res = new DTOs.Response(null,"employee added successfully");
         } catch (Exception ex) {
-            res = new Response(ex.getMessage(), null);
+            res = new DTOs.Response(ex.getMessage(), null);
             ex.printStackTrace();
         }
         return gson.toJson(res);
     }
 
     public String removeEmployee(String emplId) {
-        Response res;
+        DTOs.Response res;
         try {
             empController.removeEmployee(emplId);
-            res = new Response(null,"employee removed successfully");
+            res = new DTOs.Response(null,"employee removed successfully");
         } catch (Exception ex) {
-            res = new Response(ex.getMessage(), null);
+            res = new DTOs.Response(ex.getMessage(), null);
         }
         return gson.toJson(res);
     }
 
     public String getShiftHistory(LocalDate day, int storeNumber) {
-        Response res;
+        DTOs.Response res;
         try {
             String value = empController.getShiftHistory(day, storeNumber);
-            res = new Response(null,value);
+            res = new DTOs.Response(null,value);
         } catch (Exception ex) {
-            res = new Response(ex.getMessage(), null);
+            res = new DTOs.Response(ex.getMessage(), null);
         }
         return gson.toJson(res);
     }
 
     public String updateSalary(String emplId, int monthSalary) {
-        Response res;
+        DTOs.Response res;
         try {
             empController.updateSalary(emplId, monthSalary);
-            res = new Response(null,"salary updated successfully");
+            res = new DTOs.Response(null,"salary updated successfully");
         } catch (Exception ex) {
-            res = new Response(ex.getMessage(), null);
+            res = new DTOs.Response(ex.getMessage(), null);
         }
         return gson.toJson(res);
     }
 
     public String loginForHR(String password) {
 
-        Response res;
+        DTOs.Response res;
         try {
             empController.loginForHR(password);
-            res = new Response(null, "Login Successful");
+            res = new DTOs.Response(null, "Login Successful");
         } catch (Exception e) {
-            res = new Response(e.getMessage());
+            res = new DTOs.Response(e.getMessage());
         }
         return gson.toJson(res);
     }
 
     public String startAddingConstrainsForNextWeek(int storeNum) {
 
-        Response res;
+        DTOs.Response res;
         try {
             empController.startAddingConstrainsForNextWeek(storeNum);
-            res = new Response(null,"success! - all employees can put there constrains now");
+            res = new DTOs.Response(null,"success! - all employees can put there constrains now");
         } catch (Exception e) {
-            res = new Response(e.getMessage());
+            res = new DTOs.Response(e.getMessage());
         }
         return gson.toJson(res);
     }
 
     public String scheduleReadyToPublish(int storeNumber){
 
-        Response res;
+        DTOs.Response res;
         try
         {
             empController.scheduleReadyToPublish(storeNumber);
-            res = new Response(null,"schedule is ready to publish");
+            res = new DTOs.Response(null,"schedule is ready to publish");
         }
         catch(Exception e){
-            res = new Response(e.getMessage());
+            res = new DTOs.Response(e.getMessage());
         }
         return gson.toJson(res);
     }
 
     public String getEmployeeProf(String employeeId) {
 
-        Response res;
+        DTOs.Response res;
         try
         {
-            res = new Response(null,empController.getEmployeeProf(employeeId));
+            res = new DTOs.Response(null,empController.getEmployeeProf(employeeId));
         }
         catch(Exception e){
-            res = new Response(e.getMessage());
+            res = new DTOs.Response(e.getMessage());
         }
         return gson.toJson(res);
     }
 
     public String getCurrentSchedule(int storeNumber) {
 
-        Response res;
+        DTOs.Response res;
         try
         {
-            res = new Response(null,empController.getCurrentSchedule(storeNumber));
+            res = new DTOs.Response(null,empController.getCurrentSchedule(storeNumber));
         }
         catch(Exception e){
-            res = new Response(e.getMessage());
+            res = new DTOs.Response(e.getMessage());
         }
         return gson.toJson(res);
     }

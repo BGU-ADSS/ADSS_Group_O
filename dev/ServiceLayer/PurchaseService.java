@@ -31,9 +31,9 @@ public class PurchaseService {
         }
     }
 
-    public String addItem(int purchaseId, int prodID) throws Exception {
+    public String addItem(int purchaseId, int prodID ,int storeId) throws Exception {
         try {
-            purchaseFacade.addItem(purchaseId, prodID);
+            purchaseFacade.addItem(purchaseId, prodID,storeId);
             return "added item";
         } catch (Exception e) {
             return e.getMessage();

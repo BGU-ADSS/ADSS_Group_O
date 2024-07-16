@@ -62,7 +62,7 @@ public class ProductDAO {
 
 
     public void addProduct(Product product) throws SQLException {
-        String query = "INSERT INTO Product (MKT, productName, companyManufacturer, categoryID, priceBeforeDiscount, priceAfterDiscount, size, minimumQuantity, storageQuantity,storeQuantity , locationID, discountID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Product (MKT, productName, companyManufacturer, categoryID, priceBeforeDiscount, priceAfterDiscount, size, minimumQuantity, storageQuantity,storeQuantity , discountID, locationID, storeId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, product.getMKT());
             pstmt.setString(2, product.getProductName());
@@ -76,12 +76,14 @@ public class ProductDAO {
             pstmt.setInt(10, product.getStorageQuantity());
             pstmt.setInt(11, product.getLocation().getId());
             pstmt.setInt(12, product.getDiscount().getDiscountID());
+            pstmt.setInt(13, product.getStoreId());
+
             pstmt.executeUpdate();
         }
     }
 
     public void addProduct(ProductDTO productDTO) throws SQLException {
-        String query = "INSERT INTO Product (MKT, productName, companyManufacturer, categoryID, priceBeforeDiscount, priceAfterDiscount, size, minimumQuantity,storageQuantity , storeQuantity, discountID , locationID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Product (MKT, productName, companyManufacturer, categoryID, priceBeforeDiscount, priceAfterDiscount, size, minimumQuantity,storageQuantity , storeQuantity, discountID , locationID , storeId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, productDTO.getMKT());
             pstmt.setString(2, productDTO.getName());
@@ -95,6 +97,8 @@ public class ProductDAO {
             pstmt.setInt(10, productDTO.getStorageQuantity());
             pstmt.setInt(11, productDTO.getDiscountID());
             pstmt.setInt(12, productDTO.getLocationID());
+            pstmt.setInt(13, productDTO.getStoreId());
+
             pstmt.executeUpdate();
         }
         catch (Exception e)
@@ -119,8 +123,9 @@ public class ProductDAO {
                             rs.getInt("minimumQuantity"),
                             rs.getInt("storageQuantity"),
                             rs.getInt("storeQuantity"),
+                            rs.getInt("discountID"),
                             rs.getInt("locationID"),
-                            rs.getInt("discountID")
+                            rs.getInt("storeId")
                     );
                 }
             }
@@ -148,8 +153,9 @@ public class ProductDAO {
                             rs.getInt("minimumQuantity"),
                             rs.getInt("storageQuantity"),
                             rs.getInt("storeQuantity"),
+                            rs.getInt("discountID"),
                             rs.getInt("locationID"),
-                            rs.getInt("discountID")
+                            rs.getInt("storeId")
                     ));
                 }
             }
@@ -162,7 +168,7 @@ public class ProductDAO {
     }
 
     public void update(ProductDTO productDTO) throws SQLException {
-        String query = "UPDATE Product SET productName = ?, companyManufacturer = ?, categoryID = ?, priceBeforeDiscount = ?, priceAfterDiscount = ?, size = ?, minimumQuantity = ?, storageQuantity = ?, storeQuantity = ?, locationID = ?, discountID = ? WHERE MKT = ?";
+        String query = "UPDATE Product SET productName = ?, companyManufacturer = ?, categoryID = ?, priceBeforeDiscount = ?, priceAfterDiscount = ?, size = ?, minimumQuantity = ?, storageQuantity = ?, storeQuantity = ?, locationID = ?, storeId = ?, discountID = ? WHERE MKT = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, productDTO.getName());
             pstmt.setString(2, productDTO.getCompanyManufacturer());
@@ -174,13 +180,15 @@ public class ProductDAO {
             pstmt.setInt(8, productDTO.getStorageQuantity());
             pstmt.setInt(9, productDTO.getStoreQuantity());
             pstmt.setInt(10, productDTO.getLocationID());
-            pstmt.setInt(11, productDTO.getDiscountID());
-            pstmt.setInt(12, productDTO.getMKT());
+            pstmt.setInt(11, productDTO.getStoreId());
+
+            pstmt.setInt(12, productDTO.getDiscountID());
+            pstmt.setInt(13, productDTO.getMKT());
             pstmt.executeUpdate();
         }
     }
     public void update(Product product) throws SQLException {
-        String query = "UPDATE Product SET productName = ?, companyManufacturer = ?, categoryID = ?, priceBeforeDiscount = ?, priceAfterDiscount = ?, size = ?, minimumQuantity = ?, storageQuantity = ?, storeQuantity = ?, locationID = ?, discountID = ? WHERE MKT = ?";
+        String query = "UPDATE Product SET productName = ?, companyManufacturer = ?, categoryID = ?, priceBeforeDiscount = ?, priceAfterDiscount = ?, size = ?, minimumQuantity = ?, storageQuantity = ?, storeQuantity = ?, locationID = ?, storeId = ?, discountID = ? WHERE MKT = ? AND storeId = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, product.getProductName());
             pstmt.setString(2, product.getCompanyManufacturer());
@@ -192,16 +200,21 @@ public class ProductDAO {
             pstmt.setInt(8, product.getStorageQuantity());
             pstmt.setInt(9, product.getStoreQuantity());
             pstmt.setInt(10, product.getLocation().getId());
+
             pstmt.setInt(11, product.getDiscount().getDiscountID());
             pstmt.setInt(12, product.getMKT());
+            pstmt.setInt(13, product.getStoreId());
+
             pstmt.executeUpdate();
         }
     }
 
-    public void delete(int id) throws SQLException {
-        String query = "DELETE FROM Product WHERE MKT = ?";
+    public void delete(int id,int storeid) throws SQLException {
+        String query = "DELETE FROM Product WHERE MKT = ? AND storeId = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, id);
+            pstmt.setInt(2, storeid);
+
             pstmt.executeUpdate();
         }
     }

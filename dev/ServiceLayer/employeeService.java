@@ -26,15 +26,15 @@ public class employeeService {
 
     public String setPassword(String empId,String password) {
 
-        Response res;
+        DTOs.Response res;
         try
         {
             empController.setPassword(password,empId);
-            res = new Response(null,"Successfully set password");
+            res = new DTOs.Response(null,"Successfully set password");
         }
         catch (Exception e){
             Logs.debug("set pass ex: "+e.getMessage());
-            res = new Response(e.getMessage());
+            res = new DTOs.Response(e.getMessage());
         }
 
         return gson.toJson(res);
@@ -42,109 +42,109 @@ public class employeeService {
 
     public String addConstrains(String Id,String password, LocalDate localDate, ShiftTime shiftTime) {
 
-        Response res;
+        DTOs.Response res;
         try
         {
             empController.addConstrains(Id, localDate, shiftTime);
-            res = new Response(null,"Successfully add constrains");
+            res = new DTOs.Response(null,"Successfully add constrains");
         }
         catch (Exception e){
-            res = new Response(e.getMessage(),null);
+            res = new DTOs.Response(e.getMessage(),null);
         }
         return gson.toJson(res);
     }
 
     public String addRole(String Id, String password, Role role){
 
-        Response res;
+        DTOs.Response res;
         try
         {
             empController.addRoleForEmployee(Id,role);
-            res = new Response(null,"Successfully add role");
+            res = new DTOs.Response(null,"Successfully add role");
         }
         catch (Exception e){
-            res = new Response(e.getMessage());
+            res = new DTOs.Response(e.getMessage());
         }
         return gson.toJson(res);
     }
 
     public String removeRole(String Id,String password, Role role) {
 
-        Response res;
+        DTOs.Response res;
         try
         {
 
             empController.removeRoleFromEmployee(Id,role);
-            res = new Response(null,"Successfully remove role");
+            res = new DTOs.Response(null,"Successfully remove role");
         }
         catch (Exception e){
-            res = new Response(e.getMessage());
+            res = new DTOs.Response(e.getMessage());
         }
         return gson.toJson(res);
     }
 
     public String terminateJobReq(String Id,String password, LocalDate day) {
 
-        Response res;
+        DTOs.Response res;
         try
         {
             empController.terminateJobReq(Id,day);
-            res = new Response(null,"Successfully terminate job request");
+            res = new DTOs.Response(null,"Successfully terminate job request");
         }
         catch (Exception e){
-            res = new Response(e.getMessage());
+            res = new DTOs.Response(e.getMessage());
         }
         return gson.toJson(res);
     }
 
     public String getWeekShiftForAll(String Id){
 
-        Response res;
+        DTOs.Response res;
         try
         {
             String str = empController.getCurrentWeekSchedule(Id) + empController.getNextWeekSchedule(Id);
-            res = new Response(null,str);
+            res = new DTOs.Response(null,str);
         }
         catch (Exception e){
-            res = new Response(e.getMessage());
+            res = new DTOs.Response(e.getMessage());
         }
         return gson.toJson(res);
     }
 
     public String setBankAccount(String Id,String password, String newAccount){
 
-        Response res;
+        DTOs.Response res;
         try
         {
             empController.setBankAccountForEmployee(Id,newAccount);
-            res = new Response(null,"Successfully set bank account");
+            res = new DTOs.Response(null,"Successfully set bank account");
         }
         catch (Exception e){
-            res = new Response(e.getMessage());
+            res = new DTOs.Response(e.getMessage());
         }
         return gson.toJson(res);
     }
 
     public String loginForEmployee(String Id, String password){
 
-        Response res;
+        DTOs.Response res;
         try
         {
             empController.loginForEmployee(Id,password);
-            res = new Response(null,"Successfully logged in");
+            res = new DTOs.Response(null,"Successfully logged in");
         }
         catch (Exception e){
-            res = new Response(e.getMessage());
+            res = new DTOs.Response(e.getMessage());
         }
         return gson.toJson(res);
     }
 
     public String getProfile(String id){
-        Response res;
+        DTOs.Response res;
         try{
-            res = new Response(null,empController.getEmployee(id).getProf());
+            res = new DTOs.Response(null,empController.getEmployee(id).getProf());
         }catch(Exception e ){
-            res = new Response(e.getMessage(), null);
+            res = new DTOs.Response(e.getMessage(), null);
         }
         return gson.toJson(res);
     }

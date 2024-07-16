@@ -17,9 +17,10 @@ public class Product {
     private Location location;
     private Discount discount;
     private boolean onSale;
+    private int storeId;
 
     //check about this consructor
-    public Product(int MKT , String productName, String companyManufacturer, int price, int size, int minimumQuantity , Category catagory, Location location, Discount discount)
+    public Product(int MKT , String productName, String companyManufacturer, int price, int size, int minimumQuantity , Category catagory, Location location, Discount discount,int storeId)
     {
         this.MKT=MKT;
         this.productName=productName;
@@ -34,9 +35,11 @@ public class Product {
         this.location = location;
         this.discount = discount;
         this.onSale=false;
+        this.storeId=storeId;
+
     }
 
-    public Product(int MKT , String productName, String companyManufacturer, int price, int size, int minimumQuantity, int storeQuantity, int storageQuantity , Category catagory, Location location, Discount discount)
+    public Product(int MKT , String productName, String companyManufacturer, int price, int size, int minimumQuantity, int storeQuantity, int storageQuantity , Category catagory, Location location, Discount discount ,int storeId)
     {
         this.MKT=MKT;
         this.productName=productName;
@@ -51,7 +54,7 @@ public class Product {
         this.location = location;
         this.discount = discount;
         this.onSale=false;
-
+        this.storeId=storeId;
 
     }
     public int getMKT(){
@@ -133,4 +136,7 @@ public class Product {
         return companyManufacturer;
     }
 
+    public int getStoreId() {
+        return storeId;
+    }
 }

@@ -6,7 +6,6 @@ import BuisnessLayer.Workers.Employee;
 import DTOs.Errors;
 import DTOs.Role;
 import DTOs.ShiftTime;
-import PresentationLayer.Logs;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -198,7 +197,6 @@ public class Store {
     }
 
     public boolean employeeIsStoreKeeperToday(String empId){
-        Logs.debug("we are here in store");
         return schedule.workerIsStoreKeeperToday(empId);
     }
 }

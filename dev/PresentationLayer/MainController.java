@@ -10,6 +10,7 @@ import java.util.List;
 
 import BusinessLayer.Fascades.*;
 import BusinessLayer.Objects.Category;
+import BusinessLayer.Objects.Product;
 import ServiceLayer.DiscountService;
 import ServiceLayer.ProductService;
 import ServiceLayer.PurchaseService;
@@ -63,8 +64,12 @@ public class MainController {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         int input = -1;
         if (LocalDate.now().getDayOfWeek().equals(0)) {
+            for (int storeId:productFacade.getProducts().keySet()
+                 ) {
+                System.out.println("storeId " + storeId + " Report: ");
+                System.out.println(reportService.buildReport(productService.getCategories(),storeId));
 
-            System.out.println(reportService.buildReport(productService.getCategories()));
+            }
         }
         while (true) {
             System.out.println(
@@ -134,8 +139,10 @@ public class MainController {
                 int sname = Integer.parseInt(reader.readLine());
                 System.out.println("Enter location shelf");
                 int shname = Integer.parseInt(reader.readLine());
+                System.out.println("Enter storeId");
+                int storeId = Integer.parseInt(reader.readLine());
                 System.out.println(productService.buildProduct(name, com, price, size, min,
-                        productService.getCategoryByName(cname), dname, sname, shname));
+                        productService.getCategoryByName(cname), dname, sname, shname,storeId));
             }
             if (input == 3) {
                 System.out.println("Enter expiration date: ");
@@ -144,35 +151,45 @@ public class MainController {
                 LocalDate date = LocalDate.parse(userInput, dateFormat);
                 System.out.println("Enter Product name: ");
                 String name = reader.readLine();
-                System.out.println(productService.buildItem(productService.getProductIDByName(name), date, true,0));
+                System.out.println("Enter storeId");
+                int storeId = Integer.parseInt(reader.readLine());
+                System.out.println(productService.buildItem(productService.getProductIDByName(name,storeId), date, true,0));
             }
             if (input == 4) {
                 System.out.println("Enter Product name: ");
                 String name = reader.readLine();
+                System.out.println("Enter storeId");
+                int storeId = Integer.parseInt(reader.readLine());
                 System.out.println(productService
-                        .addToStore(productService.getFirstItemByProductID(productService.getProductIDByName(name))));
+                        .addToStore(productService.getFirstItemByProductID(productService.getProductIDByName(name,storeId)),storeId));
             }
             if (input == 5) {
                 System.out.println("Enter Product name: ");
                 String name = reader.readLine();
+                System.out.println("Enter storeId");
+                int storeId = Integer.parseInt(reader.readLine());
                 System.out.println(productService
-                        .addToStorage(productService.getFirstItemByProductID(productService.getProductIDByName(name))));
+                        .addToStorage(productService.getFirstItemByProductID(productService.getProductIDByName(name,storeId)),storeId));
             }
             if (input == 6) {
                 System.out.println("Enter Category name: ");
                 String name = reader.readLine();
-                productService.getProductsByCategory(name);
+                System.out.println("Enter storeId");
+                int storeId = Integer.parseInt(reader.readLine());
+                productService.getProductsByCategory(name,storeId);
 
             }
             if (input == 7) {
                 System.out.println("Enter Product name: ");
                 String name = reader.readLine();
-                productService.getProductIDByName(name);
+                System.out.println("Enter storeId");
+                int storeId = Integer.parseInt(reader.readLine());
+                productService.getProductIDByName(name,storeId);
                 System.out.println("Enter quantity for storage: ");
                 int s1 = Integer.parseInt(reader.readLine());
                 System.out.println("Enter quantity for store: ");
                 int s2 = Integer.parseInt(reader.readLine());
-                System.out.println(productService.updateStock(productService.getProductIDByName(name), s2, s1));
+                System.out.println(productService.updateStock(productService.getProductIDByName(name,storeId), s2, s1,storeId));
             }
             if (input == 8) {
                 System.out.println("Enter discount percentage: ");
@@ -204,8 +221,10 @@ public class MainController {
             if (input == 10) {
                 System.out.println("Enter Product name: ");
                 String name = reader.readLine();
-                System.out.println(discountService.applyProductDiscount(productService.getProductIDByName(name),
-                        discountService.getDiscountByProductID(productService.getProductIDByName(name))));
+                System.out.println("Enter storeId");
+                int storeId = Integer.parseInt(reader.readLine());
+                System.out.println(discountService.applyProductDiscount(productService.getProductIDByName(name,storeId),
+                        discountService.getDiscountByProductID(productService.getProductIDByName(name,storeId)),storeId));
             }
             if (input == 11) {
                 System.out.println("Enter category name: ");
@@ -218,9 +237,11 @@ public class MainController {
                 LocalDate startDate = LocalDate.parse(sd, dateFormat);
                 System.out.println("Enter end date: ");
                 String ed = reader.readLine();
+                System.out.println("Enter storeId");
+                int storeId = Integer.parseInt(reader.readLine());
                 LocalDate endDate = LocalDate.parse(ed, dateFormat);
                 System.out.println(discountService.applyCategoryDiscount(productService.getCategoryByName(name), per,
-                        startDate, endDate));
+                        startDate, endDate,storeId));
             }
             if (input == 12) {
                 System.out.println("Enter customer id: ");
@@ -235,22 +256,28 @@ public class MainController {
             if (input == 13) {
                 System.out.println("Enter category name: ");
                 String name = reader.readLine();
-                System.out.println(reportService.buildReport(productService.getCategoryByName(name)));
+                System.out.println("Enter storeId");
+                int storeId = Integer.parseInt(reader.readLine());
+                System.out.println(reportService.buildReport(productService.getCategoryByName(name),storeId));
             }
             if (input == 14) {
-                reportService.buildShoratgeReport();
+                System.out.println("Enter storeId");
+                int storeId = Integer.parseInt(reader.readLine());
+                reportService.buildShoratgeReport(storeId);
             }
             if (input == 15) {
                 System.out.println("Enter Product name: ");
                 String name = reader.readLine();
+                System.out.println("Enter storeId");
+                int storeId = Integer.parseInt(reader.readLine());
                 System.out.println("From Store or Storage: ");
                 String name1 = reader.readLine();
                 if (name1.equals("Store")) {
                     System.out.println(productService.removeItem(
-                            productService.getFirstItemByProductID(productService.getProductIDByName(name)), true));
+                            productService.getFirstItemByProductID(productService.getProductIDByName(name,storeId)), true,storeId));
                 } else if (name1.equals("Storage")) {
                     System.out.println(productService.removeItem(
-                            productService.getFirstItemByProductID(productService.getProductIDByName(name)), false));
+                            productService.getFirstItemByProductID(productService.getProductIDByName(name,storeId)), false ,storeId));
                 } else {
                     System.out.println("You typed neither store nor storage, try again");
                 }
@@ -264,9 +291,13 @@ public class MainController {
                 LocalDate purchaseDate = LocalDate.parse(pd, dateFormat);
                 System.out.println("Enter product name: ");
                 String pname = reader.readLine();
+                System.out.println("Enter storeId");
+                int storeId = Integer.parseInt(reader.readLine());
+
+
                 System.out.println(
                         purchaseService.addItem(purchaseService.getPurchaseIDByCustomerAndDate(id, purchaseDate),
-                                productService.getProductIDByName(pname)));
+                                productService.getProductIDByName(pname,storeId),storeId));
             }
             if (input == 17) {
                 System.out.println("Enter purchase date: ");
@@ -316,6 +347,8 @@ public class MainController {
     public void addingProductAction() throws Exception {
         System.out.println("Enter Product name: ");
         String name = reader.readLine();
+        System.out.println("Enter storeId");
+        int storeId = Integer.parseInt(reader.readLine());
         System.out.println("Enter company manufacturer name: ");
         String com = reader.readLine();
         System.out.println("Enter price: ");
@@ -333,7 +366,7 @@ public class MainController {
         System.out.println("Enter location shelf");
         int shname = Integer.parseInt(reader.readLine());
         System.out.println(productService.buildProduct(name, com, price, size, min,
-                productService.getCategoryByName(cname), dname, sname, shname));
+                productService.getCategoryByName(cname), dname, sname, shname,storeId));
     }
 
     public void addingItem(int storeId) throws Exception{
@@ -343,7 +376,9 @@ public class MainController {
         LocalDate date = LocalDate.parse(userInput, dateFormat);
         System.out.println("Enter Product name: ");
         String name = reader.readLine();
-        System.out.println(productService.buildItem(productService.getProductIDByName(name), date, true,storeId));
+
+
+        System.out.println(productService.buildItem(productService.getProductIDByName(name,storeId), date, true,storeId));
 
     }
 }

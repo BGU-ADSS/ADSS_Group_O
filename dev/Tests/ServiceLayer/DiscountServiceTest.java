@@ -67,7 +67,7 @@ class DiscountServiceTest {
         Discount discount = new Discount(1, 10.0, LocalDate.now(), LocalDate.now().plusDays(10));
 
         // Act
-        String result = discountService.applyProductDiscount(productID, discount);
+        String result = discountService.applyProductDiscount(productID, discount,1);
 
         // Assert
         assertEquals("Applied product discount", result);
@@ -83,7 +83,7 @@ class DiscountServiceTest {
             LocalDate endDate = LocalDate.now().plusDays(10);
 
             // Act
-            String result = discountService.applyCategoryDiscount(category, 20.0, startDate, endDate);
+            String result = discountService.applyCategoryDiscount(category, 20.0, startDate, endDate,1);
 
             // Assert
             assertEquals("Applied category discount", result);

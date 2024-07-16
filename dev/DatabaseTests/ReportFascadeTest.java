@@ -1,11 +1,12 @@
-package DatabaseTests.BusinessLayer.Fascades;
+package DatabaseTests;
+
+import static org.junit.Assert.*;
 
 import BusinessLayer.Fascades.CategoryFascade;
 import BusinessLayer.Fascades.DiscountFacade;
 import BusinessLayer.Fascades.ProductFacade;
-import DataAccessLayer.Categories.CategoryDAO;
-import static org.junit.Assert.*;
-
+import BusinessLayer.Fascades.ReportFascade;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,22 +14,20 @@ import org.junit.Test;
 import java.nio.file.Paths;
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 
 
-class DiscountFacadeTest {
+class ReportFascadeTest {
     private static Connection connection;
     private static CategoryFascade categoryFascade;
     private static ProductFacade productFacade;
     private static DiscountFacade discountFacade;
+    private static ReportFascade reportFascade;
     @Before
     public static void setup() throws SQLException {
 
         String path = Paths.get("").toAbsolutePath().toString();
         String _connectionString = "jdbc:sqlite:" + path+ "\\StockData.db";
-
-
         try {
             // Load the SQLite JDBC driver
             Class.forName("org.sqlite.JDBC");
@@ -56,8 +55,23 @@ class DiscountFacadeTest {
             try (Statement stmt = connection.createStatement()) {
                 stmt.execute("DELETE FROM Location");
             }
+            catch (Exception e){
+                System.out.println(e.getMessage());
+            }
             try (Statement stmt = connection.createStatement()) {
-                stmt.execute("DELETE FROM Discount");
+                stmt.execute("DELETE FROM Report");
+            }
+            catch (Exception e){
+                System.out.println(e.getMessage());
+            }
+            try (Statement stmt = connection.createStatement()) {
+                stmt.execute("DELETE FROM ReportProduct");
+            }
+            catch (Exception e){
+                System.out.println(e.getMessage());
+            }
+            try (Statement stmt = connection.createStatement()) {
+                stmt.execute("DELETE FROM ItemConditionReport");
             }
             catch (Exception e){
                 System.out.println(e.getMessage());
@@ -69,48 +83,46 @@ class DiscountFacadeTest {
             System.err.println("Failed to connect to the database.");
             e.printStackTrace();
         }
-
-
         discountFacade=new DiscountFacade();
         productFacade=new ProductFacade();
         categoryFascade = new CategoryFascade(discountFacade, productFacade);
-        // Clear the categories table before each test
+        reportFascade = new ReportFascade(productFacade);
+
+    }
+    @Test
+    void buildReport() {
         try {
             categoryFascade.buildCategory("Electronics");
-            discountFacade.deleteData();
+            productFacade.buildProduct("Laptop","Dell",4000,15,0,
+                    categoryFascade.getCategoryByName("Electronics"),"Near the window",1,1);
+            productFacade.buildItem(1, LocalDate.of(2025,1,1),true);
+            reportFascade.buildReport(categoryFascade.getCategoryByName("Electronics"));
+            String query = "SELECT * FROM Report WHERE reportID = ?";
+            try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+                pstmt.setInt(1, 0);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    assertTrue(rs.next());
+                    assertEquals(0, rs.getInt("reportID"));
+                    assertEquals("Report ID: 0\n" +
+                            "Date of report: 2024-07-05\n" +
+                            "In Store: Item Information: ID = 1, Item Condition: GOOD\n" +
+                            "The required product: Laptop\n", rs.getString("description"));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                fail("Exception occurred during the test.");
+            }
         }
         catch (Exception e){
             System.out.println(e.getMessage());
         }
-
-
-    }
-    @Test
-    public void builedProductDiscount() throws Exception {
-        LocalDate start = LocalDate.now();
-        LocalDate end = LocalDate.of(2026, 12, 25);
-        categoryFascade.buildCategory("Milk");
-        productFacade.buildProduct("Milk 3 Percent", "Tnova", 10, 3, 0,
-                categoryFascade.getCategoryByName("Milk"), "near the window", 2, 2,1);
-        discountFacade.builedProductDiscount(93, start, end);
-
-        String query = "SELECT * FROM Discount WHERE percent = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setInt(1, 93);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    assertEquals(0, rs.getInt("discountID"));
-                    assertEquals(93, rs.getInt("percent"));
-                    assertEquals(Date.valueOf(start), rs.getDate("startDate"));
-                    assertEquals(Date.valueOf(end), rs.getDate("endDate"));
-                } else {
-                    fail("No data found for discountID 93.");
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail("Exception occurred during the test.");
-        }
     }
 
+    @After
+    public static void deleteData() throws SQLException {
+        productFacade.deleteData();
+        discountFacade.deleteData();
+        reportFascade.deleteData();
+        categoryFascade.deleteData();
+    }
 }
