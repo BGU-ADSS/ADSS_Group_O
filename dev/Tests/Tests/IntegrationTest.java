@@ -1,4 +1,4 @@
-package Tests.Tests;
+package Tests;
 
 import java.nio.file.Paths;
 import java.sql.*;
@@ -12,8 +12,7 @@ import org.junit.Test;
 
 import DTOs.Role;
 import DTOs.ShiftTime;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -30,12 +29,16 @@ public class IntegrationTest {
     private static Category c;
 
 
-    @BeforeAll
-    public static void setUpTestWithStoreKeeper() throws Exception {
+    @Before
+    public void setUpTestWithStoreKeeper() throws Exception {
         productFacade = new ProductFacade();
         discountFacade = new DiscountFacade();
         categoryFascade = new CategoryFascade(discountFacade, productFacade);
         productService = new ProductService(productFacade, discountFacade, categoryFascade);
+        categoryFascade.deleteData();
+        discountFacade.deleteData();
+        productFacade.deleteData();
+        
         String _connectionString = "jdbc:sqlite:dev\\StockData.db";
         try {
             // Load the SQLite JDBC driver
