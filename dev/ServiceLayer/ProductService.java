@@ -32,7 +32,11 @@ public class ProductService {
         return categoryFascade.getCategories();
     }
 
-    public String removeItem(int itemID, boolean inStore ,int storeId) throws Exception {
+    public CategoryFascade getCategoryFascade() {
+        return categoryFascade;
+    }
+
+    public String removeItem(int itemID, boolean inStore , int storeId) throws Exception {
         try {
             productFascade.removeItem(itemID, inStore, storeId);
             if(inStore) {

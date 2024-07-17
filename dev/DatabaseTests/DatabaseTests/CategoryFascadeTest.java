@@ -1,4 +1,4 @@
-package DatabaseTests;
+package DatabaseTests.DatabaseTests;
 
 import BusinessLayer.Fascades.CategoryFascade;
 import BusinessLayer.Fascades.DiscountFacade;
@@ -73,7 +73,7 @@ public class CategoryFascadeTest {
         categoryFascade.buildCategory("Electronics");
 
         // Verify the category is in the database using an SQL query
-        String query = "SELECT * FROM categories WHERE categoryID = ?";
+        String query = "SELECT * FROM Category WHERE categoryID = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, 1);
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -93,7 +93,7 @@ public class CategoryFascadeTest {
         categoryFascade.buildCategory("Electronics");
         categoryFascade.buildCategory("kitchen", categoryFascade.getCategoryByName("Electronics"));
         // Verify the category is in the database using an SQL query
-        String query = "SELECT * FROM categories WHERE categoryID = ?";
+        String query = "SELECT * FROM Category WHERE categoryID = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 //            pstmt.setInt(1, 1);
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -114,7 +114,7 @@ public class CategoryFascadeTest {
         sub.add(categoryFascade.getCategoryByName("maxVerstappen"));
         categoryFascade.buildCategory("F1", sub);
         // Verify the category is in the database using an SQL query
-        String query = "SELECT * FROM categories WHERE categoryID = ?";
+        String query = "SELECT * FROM Category WHERE categoryID = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, 1);
             try (ResultSet rs = pstmt.executeQuery()) {

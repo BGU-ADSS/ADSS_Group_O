@@ -26,7 +26,7 @@ public class ProductFacade {
     private int firstItemID;
     private Connection connection;
 
-    private int locationId=1;
+    private int locationId;
     private ProductDAO productDAO;
     private ItemDAO itemDAO;
     private LocationDAO locationDAO;
@@ -42,6 +42,7 @@ public class ProductFacade {
         productDAO = new ProductDAO();
         itemDAO = new ItemDAO();
         locationDAO = new LocationDAO();
+        locationId = 1;
     }
     public ProductFacade()
     {
@@ -390,7 +391,7 @@ public class ProductFacade {
 
     }
     public void buildItem(int prodID, LocalDate expirationDate, boolean inStore , int storeId) throws Exception{
-        if(storeToProducts.get(prodID) == null){
+        if(storeToProducts.get(storeId).get(prodID) == null){
             throw new Exception("Product is null");
         }
         if(expirationDate == null){

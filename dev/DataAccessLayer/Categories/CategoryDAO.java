@@ -61,10 +61,8 @@ public class CategoryDAO {
             pstmt.setString(2,categoryDTO.getCategoryName());
             pstmt.setInt(3,categoryDTO.getFatherCategoryID());
             pstmt.executeUpdate();
-        } finally {
-            if (pstmt != null) {
-                pstmt.close();
-            }
+
+        } catch (Exception e){
         }
     }
 
