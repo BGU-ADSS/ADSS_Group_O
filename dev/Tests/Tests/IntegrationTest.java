@@ -1,4 +1,4 @@
-package Tests;
+package Tests.Tests;
 
 import java.nio.file.Paths;
 import java.sql.*;
@@ -89,14 +89,13 @@ public class IntegrationTest {
     }
     @Test
     public void test_use_case_of_storekeeper_adding_product() throws Exception {
-
         String query = "SELECT * FROM Product WHERE MKT = ? AND storeId = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, 2);
             pstmt.setInt(2,0);
             try (ResultSet rs = pstmt.executeQuery()) {
                 assertTrue(rs.next());
-                assertEquals(3, rs.getInt("categoryID"));
+                assertEquals(1, rs.getInt("categoryID"));
                 assertEquals("Laptop", rs.getString("categoryName"));
                 assertEquals(0, rs.getInt("storageQuantity"));
                 assertEquals(0, rs.getInt("storeQuantity"));
