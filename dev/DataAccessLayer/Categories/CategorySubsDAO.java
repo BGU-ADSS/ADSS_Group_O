@@ -7,7 +7,7 @@ import java.util.List;
 public class CategorySubsDAO {
     protected Connection connection(){
         String path = Paths.get("").toAbsolutePath().toString();
-        String _connectionString = "jdbc:sqlite:C:\\Users\\bhaah\\ADSS_Group_O\\dev\\StockData.db";
+        String _connectionString = "jdbc:sqlite:dev\\StockData.db";
 
         Connection connection=null;
         try {

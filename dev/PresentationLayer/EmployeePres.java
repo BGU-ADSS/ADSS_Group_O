@@ -33,7 +33,7 @@ public class EmployeePres {
 
     public EmployeePres(ServiceFactory serviceFactory,boolean withData){
         this.serviceFactory = serviceFactory;
-        stockC = new MainController();//when adding param for main controller you can change this line
+        stockC = new MainController(withData);//when adding param for main controller you can change this line
     }
 
 
