@@ -1,6 +1,7 @@
 package DataAccessLayer.DBs;
 
 import java.sql.Statement;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import DataAccessLayer.PathForDB;
 import DataAccessLayer.DTOs.DTO;
 import PresentationLayer.Logs;
 
@@ -21,7 +23,6 @@ public abstract class DB {
     // we have to add the names of the columns as a static members
 
     protected String url = "jdbc:sqlite:ADSS_DB_EMPLOYEE_MODULE.db";
-
     protected String tableName;
     protected List<String> columnNamesSet;
 
@@ -88,10 +89,12 @@ public abstract class DB {
 
     public List<DTO> getDTOsWhere(String whereQuery) {
         String sql = "SELECT * FROM " + tableName + whereQuery;
+         Logs.debug(url);
         try (Connection conn = DriverManager.getConnection(url);
+        
                 Statement stmt = conn.createStatement();
                 ResultSet queryResult = stmt.executeQuery(sql)) {
-
+                    
             return excuteResultSetToDTOs(queryResult);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
