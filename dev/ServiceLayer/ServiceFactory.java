@@ -19,10 +19,10 @@ public class ServiceFactory {
 
     public ServiceFactory(boolean withData) {
         if (withData) {
-            employeeController = new EmployeeController(new File("dev\\DTOs\\config.txt"),
-                    new File("dev\\DTOs\\Data.txt"));
+            employeeController = new EmployeeController(new File("config.txt"),
+                    new File("Data.txt"));
         } else {
-            employeeController = new EmployeeController(new File("dev\\DTOs\\config.txt"));
+            employeeController = new EmployeeController(new File("config.txt"));
         }
         employeeService = new employeeService(employeeController);
         hrService = new HRservice(employeeController);
@@ -36,14 +36,14 @@ public class ServiceFactory {
     public String addHRmanager(String password) {
         try {
             employeeController.addHRmanager(password);
-            List<String> lines = Files.readAllLines(Paths.get("dev\\DTOs\\config.txt"));
+            List<String> lines = Files.readAllLines(Paths.get("config.txt"));
             int hrPassLine = -1;
             for (int i = 0; i < lines.size(); i++)
                 if (lines.get(i).startsWith("#hrPassword"))
                     hrPassLine = i;
             if(hrPassLine==-1) hrPassLine= lines.size();
             lines.set(hrPassLine, "#hrPassword-"+password);
-            Files.write(Paths.get("dev\\DTOs\\config.txt"), lines);
+            Files.write(Paths.get("config.txt"), lines);
 
             return "hr added successfuly";
         } catch (Exception ex) {

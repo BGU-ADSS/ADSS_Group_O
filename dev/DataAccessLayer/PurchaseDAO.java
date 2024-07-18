@@ -8,7 +8,7 @@ import java.util.List;
 public class PurchaseDAO {
     protected Connection connection(){
         String path = Paths.get("").toAbsolutePath().toString() ;
-        String _connectionString = "jdbc:sqlite:dev\\StockData.db";
+        String _connectionString = "jdbc:sqlite:StockData.db";
 
         Connection connection=null;
         try {
