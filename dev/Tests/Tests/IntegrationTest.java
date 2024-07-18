@@ -1,4 +1,4 @@
-package Tests.Tests;
+package Tests;
 
 import java.nio.file.Paths;
 import java.sql.*;
