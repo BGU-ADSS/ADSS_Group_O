@@ -25,6 +25,7 @@ public class Logs {
         System.out.println("welcome to super lee ");
         System.out.println(" - to login as an employee write: login-<Id>-<password>");
         System.out.println(" - to login as HR manager write: hr-<password>");
+        System.out.println(" - to check inventory funcs that *in progress* write : inventory");
         System.out.println(" - to finish write: finish");
     }
 

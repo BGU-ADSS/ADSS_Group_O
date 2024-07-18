@@ -259,4 +259,15 @@ public class EmployeePres {
         return new ResponseManager(res).hasErrorOccured;
     }
 
+
+
+    public void startInventoryFuncs() {
+        try {
+            stockC.start();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
 }

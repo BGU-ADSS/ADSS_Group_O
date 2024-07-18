@@ -29,6 +29,8 @@ public class presentationController {
                 emPres.login(input);
             }else if(input.equals("finish")){
                 finish=true;
+            }else if(input.equals("inventory")){
+                emPres.startInventoryFuncs();
             }else{
                 System.out.println("Invalid Input!!");
             }
